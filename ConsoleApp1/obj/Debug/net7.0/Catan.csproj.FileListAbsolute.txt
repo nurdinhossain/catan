@@ -1,0 +1,15 @@
+D:\Visual Studio Projects\Catan\ConsoleApp1\bin\Debug\net7.0\Catan.exe
+D:\Visual Studio Projects\Catan\ConsoleApp1\bin\Debug\net7.0\Catan.deps.json
+D:\Visual Studio Projects\Catan\ConsoleApp1\bin\Debug\net7.0\Catan.runtimeconfig.json
+D:\Visual Studio Projects\Catan\ConsoleApp1\bin\Debug\net7.0\Catan.dll
+D:\Visual Studio Projects\Catan\ConsoleApp1\bin\Debug\net7.0\Catan.pdb
+D:\Visual Studio Projects\Catan\ConsoleApp1\obj\Debug\net7.0\Catan.csproj.AssemblyReference.cache
+D:\Visual Studio Projects\Catan\ConsoleApp1\obj\Debug\net7.0\Catan.GeneratedMSBuildEditorConfig.editorconfig
+D:\Visual Studio Projects\Catan\ConsoleApp1\obj\Debug\net7.0\Catan.AssemblyInfoInputs.cache
+D:\Visual Studio Projects\Catan\ConsoleApp1\obj\Debug\net7.0\Catan.AssemblyInfo.cs
+D:\Visual Studio Projects\Catan\ConsoleApp1\obj\Debug\net7.0\Catan.csproj.CoreCompileInputs.cache
+D:\Visual Studio Projects\Catan\ConsoleApp1\obj\Debug\net7.0\Catan.dll
+D:\Visual Studio Projects\Catan\ConsoleApp1\obj\Debug\net7.0\refint\Catan.dll
+D:\Visual Studio Projects\Catan\ConsoleApp1\obj\Debug\net7.0\Catan.pdb
+D:\Visual Studio Projects\Catan\ConsoleApp1\obj\Debug\net7.0\Catan.genruntimeconfig.cache
+D:\Visual Studio Projects\Catan\ConsoleApp1\obj\Debug\net7.0\ref\Catan.dll
