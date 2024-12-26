@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Catan;
+﻿using Catan;
 
 namespace CatanTest
 {
@@ -219,6 +214,161 @@ namespace CatanTest
 
             // assert hand size is still 0 
             Assert.AreEqual(0, two.HandSize());
+        }
+
+        [TestMethod]
+        public void BuildSettlementSuccess()
+        {
+            Player one = new Player(0);
+            Coordinate coord = new Coordinate(Port.NoPort, Building.NoBuilding, new Resource[] { }, new int[] { });
+
+            // make player one hand
+            one.AddResource(Resource.Brick, 4);
+            one.AddResource(Resource.Lumber, 4);
+            one.AddResource(Resource.Grain, 4);
+            one.AddResource(Resource.Wool, 4);
+
+            // create settlement
+            Assert.AreEqual(true, one.BuildSettlement(coord));
+            Assert.AreEqual(Building.Settlement, coord.Building);
+            Assert.AreEqual(4, one.Settlements);
+            Assert.AreEqual(1, one.VictoryPoints);
+
+            Assert.AreEqual(12, one.HandSize());
+            Assert.AreEqual(3, one.ResourceCount(Resource.Brick));
+            Assert.AreEqual(3, one.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(3, one.ResourceCount(Resource.Grain));
+            Assert.AreEqual(3, one.ResourceCount(Resource.Wool));
+        }
+
+        [TestMethod]
+        public void BuildSettlementNoneLeft()
+        {
+            Player one = new Player(0);
+            Coordinate coord = new Coordinate(Port.NoPort, Building.NoBuilding, new Resource[] { }, new int[] { });
+
+            // make player one hand
+            one.AddResource(Resource.Brick, 4);
+            one.AddResource(Resource.Lumber, 4);
+            one.AddResource(Resource.Grain, 4);
+            one.AddResource(Resource.Wool, 4);
+
+            one.Settlements = 0;
+            Assert.AreEqual(false, one.BuildSettlement(coord));
+            Assert.AreEqual(0, one.Settlements);
+        }
+
+        [TestMethod]
+        public void BuildSettlementOnBuilding()
+        {
+            Player one = new Player(0);
+            Coordinate coord = new Coordinate(Port.NoPort, Building.Settlement, new Resource[] { }, new int[] { });
+
+            // make player one hand
+            one.AddResource(Resource.Brick, 4);
+            one.AddResource(Resource.Lumber, 4);
+            one.AddResource(Resource.Grain, 4);
+            one.AddResource(Resource.Wool, 4);
+
+            Assert.AreEqual(false, one.BuildSettlement(coord));
+            coord.Building = Building.City;
+            Assert.AreEqual(false, one.BuildSettlement(coord));
+            Assert.AreEqual(5, one.Settlements);
+        }
+
+        [TestMethod]
+        public void BuildSettlementInsufficientResources()
+        {
+            Player one = new Player(0);
+            Coordinate coord = new Coordinate(Port.NoPort, Building.Settlement, new Resource[] { }, new int[] { });
+
+            // make player one hand
+            one.AddResource(Resource.Brick, 4);
+            one.AddResource(Resource.Lumber, 4);
+            one.AddResource(Resource.Grain, 4);
+
+            Assert.AreEqual(false, one.BuildSettlement(coord));
+            Assert.AreEqual(5, one.Settlements);
+        }
+
+        [TestMethod]
+        public void BuildCitySuccess()
+        {
+            Player one = new Player(0);
+            Coordinate coord = new Coordinate(Port.NoPort, Building.NoBuilding, new Resource[] { }, new int[] { });
+
+            // make player one hand
+            one.AddResource(Resource.Brick, 4);
+            one.AddResource(Resource.Lumber, 4);
+            one.AddResource(Resource.Grain, 3);
+            one.AddResource(Resource.Ore, 4);
+            one.AddResource(Resource.Wool, 4);
+            one.BuildSettlement(coord);
+
+            // create city
+            Assert.AreEqual(true, one.BuildCity(coord));
+            Assert.AreEqual(Building.City, coord.Building);
+            Assert.AreEqual(5, one.Settlements);
+            Assert.AreEqual(3, one.Cities);
+            Assert.AreEqual(2, one.VictoryPoints);
+
+            Assert.AreEqual(10, one.HandSize());
+            Assert.AreEqual(3, one.ResourceCount(Resource.Brick));
+            Assert.AreEqual(3, one.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(0, one.ResourceCount(Resource.Grain));
+            Assert.AreEqual(1, one.ResourceCount(Resource.Ore));
+            Assert.AreEqual(3, one.ResourceCount(Resource.Wool));
+        }
+
+        [TestMethod]
+        public void BuildCityNoneLeft()
+        {
+            Player one = new Player(0);
+            Coordinate coord = new Coordinate(Port.NoPort, Building.NoBuilding, new Resource[] { }, new int[] { });
+            one.Cities = 0;
+
+            // make player one hand
+            one.AddResource(Resource.Brick, 4);
+            one.AddResource(Resource.Lumber, 4);
+            one.AddResource(Resource.Grain, 3);
+            one.AddResource(Resource.Ore, 4);
+            one.AddResource(Resource.Wool, 4);
+            one.BuildSettlement(coord);
+            Assert.AreEqual(false, one.BuildCity(coord));
+        }
+
+        [TestMethod]
+        public void BuiltCityOnWrongBuilding()
+        {
+            Player one = new Player(0);
+            Coordinate coord = new Coordinate(Port.NoPort, Building.NoBuilding, new Resource[] { }, new int[] { });
+
+            // make player one hand
+            one.AddResource(Resource.Brick, 8);
+            one.AddResource(Resource.Lumber, 8);
+            one.AddResource(Resource.Grain, 8);
+            one.AddResource(Resource.Ore, 8);
+            one.AddResource(Resource.Wool, 8);
+            Assert.AreEqual(false, one.BuildCity(coord));
+            Assert.AreEqual(true, one.BuildSettlement(coord));
+            Assert.AreEqual(true, one.BuildCity(coord));
+            Assert.AreEqual(false, one.BuildCity(coord));
+        }
+
+        [TestMethod]
+        public void BuiltCityInsufficientResources()
+        {
+            Player one = new Player(0);
+            Coordinate coord = new Coordinate(Port.NoPort, Building.NoBuilding, new Resource[] { }, new int[] { });
+
+            // make player one hand
+            one.AddResource(Resource.Brick, 1);
+            one.AddResource(Resource.Lumber, 1);
+            one.AddResource(Resource.Grain, 2);
+            one.AddResource(Resource.Ore, 3);
+            one.AddResource(Resource.Wool, 1);
+            Assert.AreEqual(true, one.BuildSettlement(coord));
+            Assert.AreEqual(false, one.BuildCity(coord));
         }
     }
 }

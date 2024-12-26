@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Catan
+﻿namespace Catan
 {
     public enum DevelopmentCard
     {
@@ -26,11 +20,19 @@ namespace Catan
         // unique identifier for each player
         public int ID { get; set; }
 
+        // number of structures
+        public int Settlements { get; set; }
+        public int Cities { get; set; }
+        public int Roads { get; set; }
+
         // army size
         public int Army { get; set; }
 
         // longest road size
         public int LongestRoad { get; set; }
+
+        // victory points
+        public int VictoryPoints { get; set; }
 
         // basic constructor
         public Player(int id)
@@ -38,8 +40,16 @@ namespace Catan
             ID = id;
             _resources = new int[Enum.GetNames(typeof(Resource)).Length];
             _devCards = new int[Enum.GetNames(typeof(DevelopmentCard)).Length];
+
+            // default quantities for structures
+            Settlements = 5;
+            Cities = 4;
+            Roads = 15;
+
             Army = 0;
             LongestRoad = 0;
+
+            VictoryPoints = 0;
         }
         // some info methods
         public int HandSize()
@@ -73,7 +83,7 @@ namespace Catan
             _devCards[(int)dev]--;
         }
 
-        // some actions
+        // player interaction
         public bool TradeWithPlayer(Player other, int[] toGive, int[] toGet)
         {
             // cannot trade empty hands
@@ -143,6 +153,52 @@ namespace Catan
             {
                 Console.WriteLine("Silly, this player has no cards!");
             }
+        }
+
+        // building
+        public bool BuildSettlement(Coordinate coordinate)
+        {
+            // ensure we have at least one settlement we can build
+            if (Settlements < 1) return false; 
+
+            // ensure coordinate does not have pre-existing building
+            if (coordinate.Building != Building.NoBuilding) return false;
+
+            // ensure we have sufficient resources to build settlement
+            if (ResourceCount(Resource.Brick) < 1 || ResourceCount(Resource.Grain) < 1 || ResourceCount(Resource.Wool) < 1 || ResourceCount(Resource.Lumber) < 1) return false;
+
+            // execute construction
+            RemoveResource(Resource.Brick, 1);
+            RemoveResource(Resource.Grain, 1);
+            RemoveResource(Resource.Wool, 1);
+            RemoveResource(Resource.Lumber, 1);
+            Settlements--;
+            coordinate.Building = Building.Settlement;
+            VictoryPoints++;
+
+            return true; 
+        }
+
+        public bool BuildCity(Coordinate coordinate)
+        {
+            // ensure we have at least one city we can build
+            if (Cities < 1) return false; 
+
+            // ensure coordinate has pre-existing settlement
+            if (coordinate.Building != Building.Settlement) return false;
+
+            // ensure we have sufficient resources to build settlement
+            if (ResourceCount(Resource.Grain) < 2 || ResourceCount(Resource.Ore) < 3) return false;
+
+            // execute construction
+            RemoveResource(Resource.Grain, 2);
+            RemoveResource(Resource.Ore, 3);
+            Cities--;
+            Settlements++;
+            coordinate.Building = Building.City;
+            VictoryPoints++;
+
+            return true; 
         }
     }
 }
