@@ -8,6 +8,9 @@
         // development cards held by each player
         private int[] _devCards;
 
+        // ports controlled by each player
+        private bool[] _ports; 
+
         // unique identifier for each player
         public int ID { get; set; }
 
@@ -31,6 +34,7 @@
             ID = id;
             _resources = new int[Enum.GetNames(typeof(Resource)).Length];
             _devCards = new int[Enum.GetNames(typeof(DevelopmentCard)).Length];
+            _ports = new bool[Enum.GetNames(typeof(Port)).Length];
 
             // default quantities for structures
             Settlements = 5;
@@ -78,6 +82,12 @@
         public void RemoveDevelopmentCard(DevelopmentCard dev)
         {
             _devCards[(int)dev]--;
+        }
+
+        // ** adding a port is permanent, so no need for a remove method **
+        public void AddPort(Port port)
+        {
+            _ports[(int)port] = true;
         }
 
         // player interaction
@@ -219,6 +229,73 @@
             if (card == DevelopmentCard.VictoryPoint) VictoryPoints++;
 
             _devCards[(int)card]++;
+            return true;
+        }
+
+        // trade cards with the bank
+        public bool ExchangeWithBank(int[] toGive, int[] toGet)
+        {
+            // arrays must be correct length
+            if (toGive.Length != Enum.GetNames(typeof(Resource)).Length || toGet.Length != Enum.GetNames(typeof(Resource)).Length) return false;
+
+            // ensure we have sufficient resources
+            for (int i = 0; i < toGive.Length; i++)
+            {
+                if (toGive[i] > ResourceCount((Resource)i)) return false;
+            }
+
+            int totalRequested = toGet.Sum();
+            int totalAvailable = 0;
+            for (int i = 0; i < toGive.Length; i++)
+            {
+                // if we have 0 of this resource, continue
+                if (toGive[i] == 0) continue;
+
+                // if we have 1 of this resource, it cannot be exchanged
+                if (toGive[i] == 1) return false;
+
+                // if we have an odd number of this resource and no 3:1 port, it cannot be exchanged
+                bool oddResources = toGive[i] % 2 == 1;
+                bool hasThreeToOnePort = _ports[(int)Port.AnyPort];
+                if (oddResources && !hasThreeToOnePort) return false; 
+
+                // establish whether we have 2:1 resource-specific port or not
+                bool hasTwoToOnePort = _ports[i];
+
+                // if we have a 2:1 port, find the quotient at a ratio of 2
+                if (hasTwoToOnePort)
+                {
+                    // if toGive[i] is odd, this means we MUST have a 3:1 port as well
+                    totalAvailable += toGive[i] / 2;
+                }
+
+                // if we have a 3:1 port, find the quotient at a ratio of 3
+                else if (hasThreeToOnePort)
+                {
+                    // if we have 2 or 5 resources, we cannot exchange
+                    if (toGive[i] == 2 || toGive[i] == 5) return false;
+
+                    totalAvailable += toGive[i] / 3;
+                }
+
+                // standard exchange
+                else
+                {
+                    if (toGive[i] % 4 != 0) return false;
+                    totalAvailable += toGive[i] / 4;
+                }
+            }
+
+            // check if total valid exchanges == requested exchanges
+            if (totalAvailable != totalRequested) return false; 
+
+            // make requested exchanges
+            for (int i = 0; i < toGive.Length; i++)
+            {
+                RemoveResource((Resource)i, toGive[i]);
+                AddResource((Resource)i, toGet[i]);
+            }
+
             return true;
         }
     }

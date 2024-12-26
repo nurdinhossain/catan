@@ -11,20 +11,20 @@
 
     public enum Building
     {
-        NoBuilding,
         City,
-        Settlement
+        Settlement,
+        NoBuilding
     }
 
     public enum Port
     {
-        NoPort,
         BrickPort,
         LumberPort,
         OrePort,
         GrainPort,
         WoolPort,
-        AnyPort
+        AnyPort,
+        NoPort
     }
 
     public class Coordinate
