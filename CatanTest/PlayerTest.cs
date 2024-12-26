@@ -370,5 +370,58 @@ namespace CatanTest
             Assert.AreEqual(true, one.BuildSettlement(coord));
             Assert.AreEqual(false, one.BuildCity(coord));
         }
+
+        [TestMethod]
+        public void DrawDevCardSuccess()
+        {
+            Player one = new Player(0);
+            DevDeck deck = new DevDeck();
+
+            // make player one hand
+            one.AddResource(Resource.Grain, 3);
+            one.AddResource(Resource.Ore, 3);
+            one.AddResource(Resource.Wool, 3);
+
+            // draw card
+            Assert.AreEqual(true, one.DrawDevCard(deck));
+            Assert.AreEqual(1, one.NumDevCards());
+            Assert.AreEqual(2, one.ResourceCount(Resource.Grain));
+            Assert.AreEqual(2, one.ResourceCount(Resource.Ore));
+            Assert.AreEqual(2, one.ResourceCount(Resource.Wool));
+        }
+
+        [TestMethod]
+        public void DrawDevCardNoCards()
+        {
+            Player one = new Player(0);
+            DevDeck deck = new DevDeck();
+            for (int i = 0; i < 25; i++)
+            {
+                deck.Draw();
+            }
+
+            // make player one hand
+            one.AddResource(Resource.Grain, 3);
+            one.AddResource(Resource.Ore, 3);
+            one.AddResource(Resource.Wool, 3);
+
+            // draw card 
+            Assert.AreEqual(false, one.DrawDevCard(deck));
+        }
+
+        [TestMethod]
+        public void DrawDevCardInsufficientResources()
+        {
+            Player one = new Player(0);
+            DevDeck deck = new DevDeck();
+
+            // make player one hand
+            one.AddResource(Resource.Grain, 1);
+            one.AddResource(Resource.Ore, 0);
+            one.AddResource(Resource.Wool, 2);
+
+            // draw card 
+            Assert.AreEqual(false, one.DrawDevCard(deck));
+        }
     }
 }

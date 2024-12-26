@@ -1,14 +1,5 @@
 ﻿namespace Catan
 {
-    public enum DevelopmentCard
-    {
-        Knight,
-        RoadBuilding,
-        YearOfPlenty,
-        Monopoly,
-        VictoryPoint
-    }
-
     public class Player
     {
         // resource cards held by each player
@@ -55,6 +46,12 @@
         public int HandSize()
         {
             return _resources.Sum();
+        }
+
+        // ** mainly for testing **
+        public int NumDevCards()
+        {
+            return _devCards.Sum();
         }
 
         public int ResourceCount(Resource resource)
@@ -199,6 +196,30 @@
             VictoryPoints++;
 
             return true; 
+        }
+
+        // draw dev card from deck
+        public bool DrawDevCard(DevDeck deck)
+        {
+            // ensure we aren't drawing from an empty deck 
+            if (deck.CardsRemaining() == 0) return false;
+
+            // ensure we have sufficient resources
+            if (ResourceCount(Resource.Wool) < 1 || ResourceCount(Resource.Grain) < 1 || ResourceCount(Resource.Ore) < 1) return false;
+
+            // consume resources 
+            RemoveResource(Resource.Wool, 1);
+            RemoveResource(Resource.Grain, 1);
+            RemoveResource(Resource.Ore, 1);
+
+            // draw from deck
+            DevelopmentCard card = deck.Draw();
+
+            // if card is a VP, add it to VPs
+            if (card == DevelopmentCard.VictoryPoint) VictoryPoints++;
+
+            _devCards[(int)card]++;
+            return true;
         }
     }
 }
