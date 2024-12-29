@@ -1,2 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using Catan;
+
+Game game = new Game("standard_map.txt");
+Console.WriteLine("Done!");

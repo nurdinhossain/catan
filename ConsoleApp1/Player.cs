@@ -6,7 +6,9 @@
         private int[] _resources;
 
         // development cards held by each player
-        private int[] _devCards;
+        private bool _devCardDrawn; // ** field ensuring we can only use 1 dev card per turn **
+        private List<DevelopmentCard> _devCardsTemp; // ** where dev cards go on current turn **
+        private int[] _devCards; // ** where dev cards are transferred on subsequent turns **
 
         // ports controlled by each player
         private bool[] _ports; 
@@ -34,6 +36,7 @@
             ID = id;
             _resources = new int[Enum.GetNames(typeof(Resource)).Length];
             _devCards = new int[Enum.GetNames(typeof(DevelopmentCard)).Length];
+            _devCardsTemp = new List<DevelopmentCard>();
             _ports = new bool[Enum.GetNames(typeof(Port)).Length];
 
             // default quantities for structures
@@ -53,7 +56,13 @@
         }
 
         // ** mainly for testing **
-        public int NumDevCards()
+        public int NumTempDevCards()
+        {
+            return _devCardsTemp.Count();
+        }
+
+        // ** mainly for testing **
+        public int NumPermanentDevCards()
         {
             return _devCards.Sum();
         }
@@ -163,13 +172,13 @@
         }
 
         // building
-        public bool BuildSettlement(Coordinate coordinate)
+        public bool BuildSettlement(Tile tile, Vertex vertex)
         {
             // ensure we have at least one settlement we can build
             if (Settlements < 1) return false; 
 
             // ensure coordinate does not have pre-existing building
-            if (coordinate.Building != Building.NoBuilding) return false;
+            if (tile.BuildingAt(vertex) != Building.NoBuilding) return false;
 
             // ensure we have sufficient resources to build settlement
             if (ResourceCount(Resource.Brick) < 1 || ResourceCount(Resource.Grain) < 1 || ResourceCount(Resource.Wool) < 1 || ResourceCount(Resource.Lumber) < 1) return false;
@@ -180,19 +189,19 @@
             RemoveResource(Resource.Wool, 1);
             RemoveResource(Resource.Lumber, 1);
             Settlements--;
-            coordinate.Building = Building.Settlement;
+            tile.SetBuildingAt(vertex, Building.Settlement);
             VictoryPoints++;
 
             return true; 
         }
 
-        public bool BuildCity(Coordinate coordinate)
+        public bool BuildCity(Tile tile, Vertex vertex)
         {
             // ensure we have at least one city we can build
-            if (Cities < 1) return false; 
+            if (Cities < 1) return false;
 
             // ensure coordinate has pre-existing settlement
-            if (coordinate.Building != Building.Settlement) return false;
+            if (tile.BuildingAt(vertex) != Building.Settlement) return false;
 
             // ensure we have sufficient resources to build settlement
             if (ResourceCount(Resource.Grain) < 2 || ResourceCount(Resource.Ore) < 3) return false;
@@ -202,7 +211,7 @@
             RemoveResource(Resource.Ore, 3);
             Cities--;
             Settlements++;
-            coordinate.Building = Building.City;
+            tile.SetBuildingAt(vertex, Building.City);
             VictoryPoints++;
 
             return true; 
@@ -228,8 +237,33 @@
             // if card is a VP, add it to VPs
             if (card == DevelopmentCard.VictoryPoint) VictoryPoints++;
 
-            _devCards[(int)card]++;
+            // add to temp storage since it is unusable at the moment 
+            _devCardsTemp.Add(card);
             return true;
+        }
+
+        // methods for playing dev cards
+        public void PlayDevCard(DevelopmentCard card)
+        {
+            if (!_devCardDrawn)
+            {
+                _devCardDrawn = true;
+            }
+        }
+
+        // change state upon new turn (like transferring temp dev cards to main hand and resetting dev card lock to play a dev card)
+        public void NewTurn()
+        {
+            // move temp cards into permanent storage
+            while (_devCardsTemp.Count() > 0)
+            {
+                DevelopmentCard card = _devCardsTemp.Last();
+                _devCards[(int)card]++;
+                _devCardsTemp.RemoveAt(_devCardsTemp.Count() - 1);
+            }
+
+            // reset dev card lock
+            _devCardDrawn = false;
         }
 
         // trade cards with the bank

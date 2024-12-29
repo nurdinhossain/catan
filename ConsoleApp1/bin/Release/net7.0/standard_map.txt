@@ -1,0 +1,7 @@
+5
+5
+-,o [a|a] [TopLeft|Top] 10,w [g|g] [Top|TopRight] 2,l [g|o] [TopLeft|BottomRight] 9,-
+g [l|l] [TopLeft|BottomLeft] 12,b [n] [n] 6,w [n] [n] 4,b [o|o] [Top|TopRight] 10,-
+g [l|b] [Top|Bottom] 9,l [n] [n] 11,n [n] [n] n,l [n] [n] 3,o [a|a] [TopRight|BottomRight] 8
+l [b|b] [TopLeft|BottomLeft] 8,o [n] [n] 3,g [n] [n] 4,w [w|w] [BottomRight|Bottom] 5,-
+-,b [a|a] [BottomLeft|Bottom] 5,g [a|a] [Bottom|BottomRight] 6,w [a|w] [BottomLeft|TopRight] 11,-

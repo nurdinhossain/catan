@@ -26,7 +26,7 @@ namespace CatanTest
             Assert.AreEqual(3, two.ResourceCount(Resource.Lumber));
 
             // make a valid trade
-            bool trade = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 0, 1 }, new int[] { 1, 0, 0, 0, 0 });
+            bool trade = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 0, 0, 1 }, new int[] { 0, 1, 0, 0, 0, 0 });
             Assert.AreEqual(true, trade);
 
             // verify post conditions
@@ -46,8 +46,8 @@ namespace CatanTest
         {
             Player one = new Player(0);
             Player two = new Player(1);
-            bool trade1 = one.TradeWithPlayer(two, new int[] { 1, 0, 0, 0 }, new int[] { 1, 0, 0, 0, 0 });
-            bool trade2 = one.TradeWithPlayer(two, new int[] { 1, 0, 0, 0, 0 }, new int[] { 1, 0, 0, 0 });
+            bool trade1 = one.TradeWithPlayer(two, new int[] { 0, 1, 0, 0, 0 }, new int[] { 0, 1, 0, 0, 0, 0 });
+            bool trade2 = one.TradeWithPlayer(two, new int[] { 0, 1, 0, 0, 0, 0 }, new int[] { 0, 1, 0, 0, 0 });
             Assert.AreEqual(false, trade1);
             Assert.AreEqual(false, trade2);
         }
@@ -57,8 +57,8 @@ namespace CatanTest
         {
             Player one = new Player(0);
             Player two = new Player(1);
-            bool trade1 = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 0, 0 }, new int[] { 1, 0, 0, 0, 0 });
-            bool trade2 = one.TradeWithPlayer(two, new int[] { 1, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0 });
+            bool trade1 = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 0, 0, 0 }, new int[] { 0, 1, 0, 0, 0, 0 });
+            bool trade2 = one.TradeWithPlayer(two, new int[] { 0, 1, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0 });
             Assert.AreEqual(false, trade1);
             Assert.AreEqual(false, trade2);
         }
@@ -84,28 +84,28 @@ namespace CatanTest
             two.AddResource(Resource.Wool, 4);
 
             // trade like resources
-            bool trade1 = one.TradeWithPlayer(two, new int[] { 0, 0,  2, 0, 0}, new int[] { 0, 0, 2, 0, 0 }); // false
-            bool trade2 = one.TradeWithPlayer(two, new int[] { 0, 0, 2, 0, 0 }, new int[] { 0, 0, 1, 0, 0 }); // false
-            bool trade3 = one.TradeWithPlayer(two, new int[] { 0, 0, 2, 0, 0 }, new int[] { 0, 0, 2, 0, 1 }); // false 
-            bool trade5 = one.TradeWithPlayer(two, new int[] { 0, 0, 2, 0, 4 }, new int[] { 0, 0, 2, 0, 2 }); // false
-            bool trade6 = one.TradeWithPlayer(two, new int[] { 1, 2, 1, 0, 4 }, new int[] { 1, 1, 1, 0, 0 }); // false
-            bool trade7 = one.TradeWithPlayer(two, new int[] { 0, 0, 2, 0, 0 }, new int[] { 0, 0, 2, 1, 0 }); // false
-            bool trade11 = one.TradeWithPlayer(two, new int[] { 0, 0, 2, 2, 1 }, new int[] { 1, 0, 2, 2, 1 }); // false
-            bool trade13 = one.TradeWithPlayer(two, new int[] { 1, 0, 3, 2, 1 }, new int[] { 0, 0, 2, 1, 1 }); // false
-            bool trade14 = one.TradeWithPlayer(two, new int[] { 0, 0, 1, 2, 1 }, new int[] { 1, 0, 2, 2, 1 }); // false
+            bool trade1 = one.TradeWithPlayer(two, new int[] { 0, 0, 0,  2, 0, 0}, new int[] { 0, 0, 0, 2, 0, 0 }); // false
+            bool trade2 = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 2, 0, 0 }, new int[] { 0, 0, 0, 1, 0, 0 }); // false
+            bool trade3 = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 2, 0, 0 }, new int[] { 0, 0, 0, 2, 0, 1 }); // false 
+            bool trade5 = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 2, 0, 4 }, new int[] { 0, 0, 0, 2, 0, 2 }); // false
+            bool trade6 = one.TradeWithPlayer(two, new int[] { 0, 1, 2, 1, 0, 4 }, new int[] { 0, 1, 1, 1, 0, 0 }); // false
+            bool trade7 = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 2, 0, 0 }, new int[] { 0, 0, 0, 2, 1, 0 }); // false
+            bool trade11 = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 2, 2, 1 }, new int[] { 0, 1, 0, 2, 2, 1 }); // false
+            bool trade13 = one.TradeWithPlayer(two, new int[] { 0, 1, 0, 3, 2, 1 }, new int[] { 0, 0, 0, 2, 1, 1 }); // false
+            bool trade14 = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 1, 2, 1 }, new int[] { 0, 1, 0, 2, 2, 1 }); // false
 
-            bool trade4 = one.TradeWithPlayer(two, new int[] { 0, 0, 2, 0, 0 }, new int[] { 1, 0, 1, 0, 0 }); // true
-            Assert.AreEqual(true, one.TradeWithPlayer(two, new int[] { 1, 0, 1, 0, 0 }, new int[] { 0, 0, 2, 0, 0 }));
-            bool trade8 = one.TradeWithPlayer(two, new int[] { 2, 1, 2, 0, 0 }, new int[] { 1, 0, 0, 1, 0 }); // true
-            Assert.AreEqual(true, one.TradeWithPlayer(two, new int[] { 1, 0, 0, 1, 0 }, new int[] { 2, 1, 2, 0, 0 }));
-            bool trade9 = one.TradeWithPlayer(two, new int[] { 1, 1, 1, 0, 0 }, new int[] { 0, 0, 1, 1, 1 }); // true
-            Assert.AreEqual(true, one.TradeWithPlayer(two, new int[] { 0, 0, 1, 1, 1 }, new int[] { 1, 1, 1, 0, 0 }));
-            bool trade10 = one.TradeWithPlayer(two, new int[] { 2, 1, 1, 0, 0 }, new int[] { 2, 1, 0, 1, 0 }); // true
-            Assert.AreEqual(true, one.TradeWithPlayer(two, new int[] { 2, 1, 0, 1, 0 }, new int[] { 2, 1, 1, 0, 0 }));
-            bool trade12 = one.TradeWithPlayer(two, new int[] { 0, 0, 3, 2, 1 }, new int[] { 1, 0, 2, 1, 1 }); // true
-            Assert.AreEqual(true, one.TradeWithPlayer(two, new int[] { 1, 0, 2, 1, 1 }, new int[] { 0, 0, 3, 2, 1 }));
-            bool trade15 = one.TradeWithPlayer(two, new int[] { 0, 0, 2, 2, 1 }, new int[] { 1, 0, 1, 2, 1 }); // true
-            Assert.AreEqual(true, one.TradeWithPlayer(two, new int[] { 1, 0, 1, 2, 1 }, new int[] { 0, 0, 2, 2, 1 }));
+            bool trade4 = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 2, 0, 0 }, new int[] { 0, 1, 0, 1, 0, 0 }); // true
+            Assert.AreEqual(true, one.TradeWithPlayer(two, new int[] { 0, 1, 0, 1, 0, 0 }, new int[] { 0, 0, 0, 2, 0, 0 }));
+            bool trade8 = one.TradeWithPlayer(two, new int[] { 0, 2, 1, 2, 0, 0 }, new int[] { 0, 1, 0, 0, 1, 0 }); // true
+            Assert.AreEqual(true, one.TradeWithPlayer(two, new int[] { 0, 1, 0, 0, 1, 0 }, new int[] { 0, 2, 1, 2, 0, 0 }));
+            bool trade9 = one.TradeWithPlayer(two, new int[] { 0, 1, 1, 1, 0, 0 }, new int[] { 0, 0, 0, 1, 1, 1 }); // true
+            Assert.AreEqual(true, one.TradeWithPlayer(two, new int[] { 0, 0, 0, 1, 1, 1 }, new int[] { 0, 1, 1, 1, 0, 0 }));
+            bool trade10 = one.TradeWithPlayer(two, new int[] { 0, 2, 1, 1, 0, 0 }, new int[] { 0, 2, 1, 0, 1, 0 }); // true
+            Assert.AreEqual(true, one.TradeWithPlayer(two, new int[] { 0, 2, 1, 0, 1, 0 }, new int[] { 0, 2, 1, 1, 0, 0 }));
+            bool trade12 = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 3, 2, 1 }, new int[] { 0, 1, 0, 2, 1, 1 }); // true
+            Assert.AreEqual(true, one.TradeWithPlayer(two, new int[] { 0, 1, 0, 2, 1, 1 }, new int[] { 0, 0, 0, 3, 2, 1 }));
+            bool trade15 = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 2, 2, 1 }, new int[] { 0, 1, 0, 1, 2, 1 }); // true
+            Assert.AreEqual(true, one.TradeWithPlayer(two, new int[] { 0, 1, 0, 1, 2, 1 }, new int[] { 0, 0, 0, 2, 2, 1 }));
 
             // verify
             Assert.AreEqual(false, trade1);
@@ -146,8 +146,8 @@ namespace CatanTest
             two.AddResource(Resource.Wool, 4);
 
             // trade w/ insufficient resources
-            bool trade1 = one.TradeWithPlayer(two, new int[] { 0, 0, 5, 0, 0 }, new int[] { 0, 2, 0, 0, 0 }); // false
-            bool trade2 = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 1, 0 }, new int[] { 0, 0, 0, 0, 8 }); // false
+            bool trade1 = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 5, 0, 0 }, new int[] { 0, 0, 2, 0, 0, 0 }); // false
+            bool trade2 = one.TradeWithPlayer(two, new int[] { 0, 0, 0, 0, 1, 0 }, new int[] { 0, 0, 0, 0, 0, 8 }); // false
 
             // verify 
             Assert.AreEqual(false, trade1);
@@ -220,7 +220,7 @@ namespace CatanTest
         public void BuildSettlementSuccess()
         {
             Player one = new Player(0);
-            Coordinate coord = new Coordinate(Port.NoPort, Building.NoBuilding, new Resource[] { }, new int[] { });
+            Tile tile = new Tile(Resource.Lumber, 10);
 
             // make player one hand
             one.AddResource(Resource.Brick, 4);
@@ -229,8 +229,8 @@ namespace CatanTest
             one.AddResource(Resource.Wool, 4);
 
             // create settlement
-            Assert.AreEqual(true, one.BuildSettlement(coord));
-            Assert.AreEqual(Building.Settlement, coord.Building);
+            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft));
+            Assert.AreEqual(Building.Settlement, tile.BuildingAt(Vertex.TopLeft));
             Assert.AreEqual(4, one.Settlements);
             Assert.AreEqual(1, one.VictoryPoints);
 
@@ -245,7 +245,7 @@ namespace CatanTest
         public void BuildSettlementNoneLeft()
         {
             Player one = new Player(0);
-            Coordinate coord = new Coordinate(Port.NoPort, Building.NoBuilding, new Resource[] { }, new int[] { });
+            Tile tile = new Tile(Resource.Lumber, 10);
 
             // make player one hand
             one.AddResource(Resource.Brick, 4);
@@ -254,7 +254,7 @@ namespace CatanTest
             one.AddResource(Resource.Wool, 4);
 
             one.Settlements = 0;
-            Assert.AreEqual(false, one.BuildSettlement(coord));
+            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft));
             Assert.AreEqual(0, one.Settlements);
         }
 
@@ -262,7 +262,8 @@ namespace CatanTest
         public void BuildSettlementOnBuilding()
         {
             Player one = new Player(0);
-            Coordinate coord = new Coordinate(Port.NoPort, Building.Settlement, new Resource[] { }, new int[] { });
+            Tile tile = new Tile(Resource.Lumber, 10);
+            tile.SetBuildingAt(Vertex.TopLeft, Building.Settlement);
 
             // make player one hand
             one.AddResource(Resource.Brick, 4);
@@ -270,9 +271,9 @@ namespace CatanTest
             one.AddResource(Resource.Grain, 4);
             one.AddResource(Resource.Wool, 4);
 
-            Assert.AreEqual(false, one.BuildSettlement(coord));
-            coord.Building = Building.City;
-            Assert.AreEqual(false, one.BuildSettlement(coord));
+            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft));
+            tile.SetBuildingAt(Vertex.TopLeft, Building.City);
+            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft));
             Assert.AreEqual(5, one.Settlements);
         }
 
@@ -280,14 +281,14 @@ namespace CatanTest
         public void BuildSettlementInsufficientResources()
         {
             Player one = new Player(0);
-            Coordinate coord = new Coordinate(Port.NoPort, Building.Settlement, new Resource[] { }, new int[] { });
+            Tile tile = new Tile(Resource.Lumber, 10);
 
             // make player one hand
             one.AddResource(Resource.Brick, 4);
             one.AddResource(Resource.Lumber, 4);
             one.AddResource(Resource.Grain, 4);
 
-            Assert.AreEqual(false, one.BuildSettlement(coord));
+            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft));
             Assert.AreEqual(5, one.Settlements);
         }
 
@@ -295,7 +296,7 @@ namespace CatanTest
         public void BuildCitySuccess()
         {
             Player one = new Player(0);
-            Coordinate coord = new Coordinate(Port.NoPort, Building.NoBuilding, new Resource[] { }, new int[] { });
+            Tile tile = new Tile(Resource.Lumber, 10);
 
             // make player one hand
             one.AddResource(Resource.Brick, 4);
@@ -303,11 +304,11 @@ namespace CatanTest
             one.AddResource(Resource.Grain, 3);
             one.AddResource(Resource.Ore, 4);
             one.AddResource(Resource.Wool, 4);
-            one.BuildSettlement(coord);
+            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft));
 
             // create city
-            Assert.AreEqual(true, one.BuildCity(coord));
-            Assert.AreEqual(Building.City, coord.Building);
+            Assert.AreEqual(true, one.BuildCity(tile, Vertex.TopLeft)); 
+            Assert.AreEqual(Building.City, tile.BuildingAt(Vertex.TopLeft));
             Assert.AreEqual(5, one.Settlements);
             Assert.AreEqual(3, one.Cities);
             Assert.AreEqual(2, one.VictoryPoints);
@@ -324,7 +325,7 @@ namespace CatanTest
         public void BuildCityNoneLeft()
         {
             Player one = new Player(0);
-            Coordinate coord = new Coordinate(Port.NoPort, Building.NoBuilding, new Resource[] { }, new int[] { });
+            Tile tile = new Tile(Resource.Lumber, 10);
             one.Cities = 0;
 
             // make player one hand
@@ -333,15 +334,15 @@ namespace CatanTest
             one.AddResource(Resource.Grain, 3);
             one.AddResource(Resource.Ore, 4);
             one.AddResource(Resource.Wool, 4);
-            one.BuildSettlement(coord);
-            Assert.AreEqual(false, one.BuildCity(coord));
+            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft));
+            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft));
         }
 
         [TestMethod]
         public void BuiltCityOnWrongBuilding()
         {
             Player one = new Player(0);
-            Coordinate coord = new Coordinate(Port.NoPort, Building.NoBuilding, new Resource[] { }, new int[] { });
+            Tile tile = new Tile(Resource.Lumber, 10);
 
             // make player one hand
             one.AddResource(Resource.Brick, 8);
@@ -349,17 +350,17 @@ namespace CatanTest
             one.AddResource(Resource.Grain, 8);
             one.AddResource(Resource.Ore, 8);
             one.AddResource(Resource.Wool, 8);
-            Assert.AreEqual(false, one.BuildCity(coord));
-            Assert.AreEqual(true, one.BuildSettlement(coord));
-            Assert.AreEqual(true, one.BuildCity(coord));
-            Assert.AreEqual(false, one.BuildCity(coord));
+            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft));
+            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft));
+            Assert.AreEqual(true, one.BuildCity(tile, Vertex.TopLeft));
+            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft));
         }
 
         [TestMethod]
         public void BuiltCityInsufficientResources()
         {
             Player one = new Player(0);
-            Coordinate coord = new Coordinate(Port.NoPort, Building.NoBuilding, new Resource[] { }, new int[] { });
+            Tile tile = new Tile(Resource.Lumber, 10);
 
             // make player one hand
             one.AddResource(Resource.Brick, 1);
@@ -367,8 +368,8 @@ namespace CatanTest
             one.AddResource(Resource.Grain, 2);
             one.AddResource(Resource.Ore, 3);
             one.AddResource(Resource.Wool, 1);
-            Assert.AreEqual(true, one.BuildSettlement(coord));
-            Assert.AreEqual(false, one.BuildCity(coord));
+            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft));
+            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft));
         }
 
         [TestMethod]
@@ -384,7 +385,8 @@ namespace CatanTest
 
             // draw card
             Assert.AreEqual(true, one.DrawDevCard(deck));
-            Assert.AreEqual(1, one.NumDevCards());
+            Assert.AreEqual(1, one.NumTempDevCards());
+            Assert.AreEqual(0, one.NumPermanentDevCards());
             Assert.AreEqual(2, one.ResourceCount(Resource.Grain));
             Assert.AreEqual(2, one.ResourceCount(Resource.Ore));
             Assert.AreEqual(2, one.ResourceCount(Resource.Wool));
@@ -433,7 +435,7 @@ namespace CatanTest
             one.AddResource(Resource.Brick, 8);
 
             // make exchange
-            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 8, 0, 0, 0, 0 }, new int[] { 0, 2, 0, 0, 0 }));
+            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 8, 0, 0, 0, 0 }, new int[] { 0, 0, 2, 0, 0, 0 }));
             Assert.AreEqual(2, one.HandSize());
             Assert.AreEqual(0, one.ResourceCount(Resource.Brick));
             Assert.AreEqual(2, one.ResourceCount(Resource.Lumber));
@@ -450,7 +452,7 @@ namespace CatanTest
             one.AddResource(Resource.Lumber, 10);
 
             // make exchange
-            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 8, 10, 0, 0, 0 }, new int[] { 1, 1, 2, 1, 2 }));
+            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 8, 10, 0, 0, 0 }, new int[] { 0, 1, 1, 2, 1, 2 }));
             Assert.AreEqual(7, one.HandSize());
             Assert.AreEqual(1, one.ResourceCount(Resource.Brick));
             Assert.AreEqual(1, one.ResourceCount(Resource.Lumber));
@@ -470,7 +472,7 @@ namespace CatanTest
             one.AddResource(Resource.Lumber, 10);
 
             // make exchange
-            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 8, 10, 0, 0, 0 }, new int[] { 0, 1, 2, 0, 2 }));
+            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 8, 10, 0, 0, 0 }, new int[] { 0, 0, 1, 2, 0, 2 }));
             Assert.AreEqual(5, one.HandSize());
             Assert.AreEqual(0, one.ResourceCount(Resource.Brick));
             Assert.AreEqual(1, one.ResourceCount(Resource.Lumber));
@@ -492,7 +494,7 @@ namespace CatanTest
             one.AddResource(Resource.Wool, 9);
 
             // make exchange
-            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 11, 10, 0, 0, 9 }, new int[] { 3, 1, 2, 3, 2 }));
+            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 11, 10, 0, 0, 9 }, new int[] { 0, 3, 1, 2, 3, 2 }));
             Assert.AreEqual(11, one.HandSize());
             Assert.AreEqual(3, one.ResourceCount(Resource.Brick));
             Assert.AreEqual(1, one.ResourceCount(Resource.Lumber));
@@ -515,7 +517,7 @@ namespace CatanTest
             one.AddResource(Resource.Wool, 4);
 
             // make exchange
-            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 2, 3, 0, 0, 4 }, new int[] { 3, 0, 0, 0, 0 }));
+            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 2, 3, 0, 0, 4 }, new int[] { 0, 3, 0, 0, 0, 0 }));
             Assert.AreEqual(3, one.HandSize());
             Assert.AreEqual(3, one.ResourceCount(Resource.Brick));
             Assert.AreEqual(0, one.ResourceCount(Resource.Lumber));
@@ -537,7 +539,7 @@ namespace CatanTest
             one.AddResource(Resource.Wool, 5);
 
             // make exchange
-            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 17, 3, 0, 0, 5 }, new int[] { 4, 4, 0, 0, 0 }));
+            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 17, 3, 0, 0, 5 }, new int[] { 0, 4, 4, 0, 0, 0 }));
             Assert.AreEqual(8, one.HandSize());
             Assert.AreEqual(4, one.ResourceCount(Resource.Brick));
             Assert.AreEqual(4, one.ResourceCount(Resource.Lumber));
@@ -556,8 +558,8 @@ namespace CatanTest
             one.AddResource(Resource.Lumber, 3);
             one.AddResource(Resource.Wool, 5);
 
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 16, 0, 0, 0 }, new int[] { 4, 0, 0, 0, 0 }));
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 16, 0, 0, 0, 0 }, new int[] { 4, 0, 0, 0 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 16, 0, 0, 0 }, new int[] { 0, 4, 0, 0, 0, 0 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 16, 0, 0, 0, 0 }, new int[] { 0, 4, 0, 0, 0 }));
         }
 
         [TestMethod]
@@ -570,9 +572,9 @@ namespace CatanTest
             one.AddResource(Resource.Lumber, 3);
             one.AddResource(Resource.Wool, 5);
 
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 20, 0, 0, 0, 0 }, new int[] { 5, 0, 0, 0, 0 }));
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 4, 0, 0, 0 }, new int[] { 0, 0, 1, 0, 0 }));
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 0, 8, 0, 0 }, new int[] { 0, 0, 0, 2, 0 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 20, 0, 0, 0, 0 }, new int[] { 0, 5, 0, 0, 0, 0 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 0, 4, 0, 0, 0 }, new int[] { 0, 0, 0, 1, 0, 0 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 0, 0, 8, 0, 0 }, new int[] { 0, 0, 0, 0, 2, 0 }));
         }
 
         [TestMethod]
@@ -585,7 +587,7 @@ namespace CatanTest
             one.AddResource(Resource.Lumber, 8);
             one.AddResource(Resource.Wool, 4);
 
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 1, 8, 0, 0, 4 }, new int[] { 4, 0, 0, 0, 0 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 1, 8, 0, 0, 4 }, new int[] { 0, 4, 0, 0, 0, 0 }));
         }
 
         [TestMethod]
@@ -598,7 +600,7 @@ namespace CatanTest
             one.AddResource(Resource.Lumber, 8);
             one.AddResource(Resource.Wool, 4);
 
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 9, 8, 0, 0, 4 }, new int[] { 4, 0, 3, 0, 0 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 9, 8, 0, 0, 4 }, new int[] { 0, 4, 0, 3, 0, 0 }));
         }
 
         [TestMethod]
@@ -612,7 +614,7 @@ namespace CatanTest
             one.AddResource(Resource.Lumber, 5);
             one.AddResource(Resource.Wool, 4);
 
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 9, 5, 0, 0, 4 }, new int[] { 1, 0, 4, 0, 0 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 9, 5, 0, 0, 4 }, new int[] { 0, 1, 0, 4, 0, 0 }));
         }
 
         [TestMethod]
@@ -626,7 +628,7 @@ namespace CatanTest
             one.AddResource(Resource.Lumber, 11);
             one.AddResource(Resource.Wool, 4);
 
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 9, 11, 0, 0, 4 }, new int[] { 1, 0, 4, 0, 4 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 9, 11, 0, 0, 4 }, new int[] { 0, 1, 0, 4, 0, 4 }));
         }
 
         [TestMethod]
@@ -641,7 +643,7 @@ namespace CatanTest
             one.AddResource(Resource.Lumber, 11);
             one.AddResource(Resource.Wool, 4);
 
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 13, 11, 0, 0, 4 }, new int[] { 1, 0, 4, 0, 4 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 13, 11, 0, 0, 4 }, new int[] { 0, 1, 0, 4, 0, 4 }));
         }
     }
 }
