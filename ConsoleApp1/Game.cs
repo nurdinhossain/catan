@@ -15,6 +15,59 @@
         {
             return _tiles[row, col];
         }
+
+        public Tile? GetNeighbor(int row, int col, Side side)
+        {
+            if (side == Side.Left)
+            {
+                // if we're on the left side of the board, there's no left pieces
+                if (col == 0) return null;
+                return _tiles[row, col-1];
+            }
+
+            else if (side == Side.Right)
+            {
+                if (col == _tiles.GetLength(1)-1) return null;
+                return _tiles[row, col+1];
+            }
+
+            else if (side == Side.TopRight)
+            {
+                if (row == 0) return null;
+                if (col == _tiles.GetLength(1) - 1 && row % 2 == 1) return null; 
+                if (row % 2 == 0) return _tiles[row - 1, col];
+                
+                return _tiles[row - 1, col + 1];
+            }
+            else if (side == Side.TopLeft)
+            {
+                if (row == 0) return null;
+                if (col == 0 && row % 2 == 0) return null;
+                if (row % 2 == 1) return _tiles[row - 1, col];
+
+                return _tiles[row - 1, col - 1];
+            }
+
+            else if (side == Side.BottomRight)
+            {
+                if (row == _tiles.GetLength(0) - 1) return null;
+                if (col == _tiles.GetLength(1) - 1 && row % 2 == 1) return null;
+                if (row % 2 == 0) return _tiles[row + 1, col];
+
+                return _tiles[row + 1, col + 1];
+            }
+
+            else if (side == Side.BottomLeft)
+            {
+                if (row == _tiles.GetLength(0) - 1) return null;
+                if (col == 0 && row % 2 == 0) return null;
+                if (row % 2 == 1) return _tiles[row + 1, col];
+
+                return _tiles[row + 1, col - 1];
+            }
+
+            return null;
+        }
         public void LoadMap(string fileName)
         {
             // split data into lines

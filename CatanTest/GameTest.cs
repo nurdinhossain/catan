@@ -248,5 +248,148 @@ namespace CatanTest
             Assert.AreEqual(Port.NoPort, tileThree.PortAt(Vertex.Bottom));
             Assert.AreEqual(Port.AnyPort, tileThree.PortAt(Vertex.BottomLeft));
         }
+
+        [TestMethod]
+        public void GetNeighborTestEdgeOne()
+        {
+            Game game = new Game("standard_map.txt");
+
+            Assert.AreEqual(Resource.Grain, game.GetNeighbor(2, 0, Side.TopRight).Resource);
+            Assert.AreEqual(Resource.Lumber, game.GetNeighbor(2, 0, Side.BottomRight).Resource);
+            Assert.AreEqual(Resource.Lumber, game.GetNeighbor(2, 0, Side.Right).Resource);
+            Assert.AreEqual(null, game.GetNeighbor(2, 0, Side.TopLeft));
+            Assert.AreEqual(null, game.GetNeighbor(2, 0, Side.Left));
+            Assert.AreEqual(null, game.GetNeighbor(2, 0, Side.BottomLeft));
+
+            Assert.AreEqual(Resource.Ore, game.GetNeighbor(1, 0, Side.TopRight).Resource);
+            Assert.AreEqual(Resource.Lumber, game.GetNeighbor(1, 0, Side.BottomRight).Resource);
+            Assert.AreEqual(Resource.Brick, game.GetNeighbor(1, 0, Side.Right).Resource);
+            Assert.AreEqual(null, game.GetNeighbor(1, 0, Side.TopLeft));
+            Assert.AreEqual(null, game.GetNeighbor(1, 0, Side.Left));
+            Assert.AreEqual(Resource.Grain, game.GetNeighbor(1, 0, Side.BottomLeft).Resource);
+
+            Assert.AreEqual(null, game.GetNeighbor(0, 1, Side.TopRight));
+            Assert.AreEqual(Resource.Brick, game.GetNeighbor(0, 1, Side.BottomRight).Resource);
+            Assert.AreEqual(Resource.Wool, game.GetNeighbor(0, 1, Side.Right).Resource);
+            Assert.AreEqual(null, game.GetNeighbor(0, 1, Side.TopLeft));
+            Assert.AreEqual(null, game.GetNeighbor(0, 1, Side.Left));
+            Assert.AreEqual(Resource.Grain, game.GetNeighbor(0, 1, Side.BottomLeft).Resource);
+
+            Assert.AreEqual(null, game.GetNeighbor(0, 2, Side.TopRight));
+            Assert.AreEqual(Resource.Wool, game.GetNeighbor(0, 2, Side.BottomRight).Resource);
+            Assert.AreEqual(Resource.Lumber, game.GetNeighbor(0, 2, Side.Right).Resource);
+            Assert.AreEqual(null, game.GetNeighbor(0, 2, Side.TopLeft));
+            Assert.AreEqual(Resource.Ore, game.GetNeighbor(0, 2, Side.Left).Resource);
+            Assert.AreEqual(Resource.Brick, game.GetNeighbor(0, 2, Side.BottomLeft).Resource);
+
+            Assert.AreEqual(Resource.Lumber, game.GetNeighbor(3, 0, Side.TopRight).Resource);
+            Assert.AreEqual(Resource.Brick, game.GetNeighbor(3, 0, Side.BottomRight).Resource);
+            Assert.AreEqual(Resource.Ore, game.GetNeighbor(3, 0, Side.Right).Resource);
+            Assert.AreEqual(Resource.Grain, game.GetNeighbor(3, 0, Side.TopLeft).Resource);
+            Assert.AreEqual(null, game.GetNeighbor(3, 0, Side.Left));
+            Assert.AreEqual(null, game.GetNeighbor(3, 0, Side.BottomLeft));
+
+            Assert.AreEqual(Resource.Ore, game.GetNeighbor(4, 1, Side.TopRight).Resource);
+            Assert.AreEqual(null, game.GetNeighbor(4, 1, Side.BottomRight));
+            Assert.AreEqual(Resource.Grain, game.GetNeighbor(4, 1, Side.Right).Resource);
+            Assert.AreEqual(Resource.Lumber, game.GetNeighbor(4, 1, Side.TopLeft).Resource);
+            Assert.AreEqual(null, game.GetNeighbor(4, 1, Side.Left));
+            Assert.AreEqual(null, game.GetNeighbor(4, 1, Side.BottomLeft));
+        }
+
+        [TestMethod]
+        public void GetNeighborTestEdgeTwo()
+        {
+            Game game = new Game("standard_map.txt");
+
+            Assert.AreEqual(null, game.GetNeighbor(0, 3, Side.TopRight));
+            Assert.AreEqual(Resource.Brick, game.GetNeighbor(0, 3, Side.BottomRight).Resource);
+            Assert.AreEqual(null, game.GetNeighbor(0, 3, Side.Right));
+            Assert.AreEqual(null, game.GetNeighbor(0, 3, Side.TopLeft));
+            Assert.AreEqual(Resource.Wool, game.GetNeighbor(0, 3, Side.Left).Resource);
+            Assert.AreEqual(Resource.Wool, game.GetNeighbor(0, 3, Side.BottomLeft).Resource);
+
+            Assert.AreEqual(null, game.GetNeighbor(1, 3, Side.TopRight));
+            Assert.AreEqual(Resource.Ore, game.GetNeighbor(1, 3, Side.BottomRight).Resource);
+            Assert.AreEqual(null, game.GetNeighbor(1, 3, Side.Right));
+            Assert.AreEqual(Resource.Lumber, game.GetNeighbor(1, 3, Side.TopLeft).Resource);
+            Assert.AreEqual(Resource.Wool, game.GetNeighbor(1, 3, Side.Left).Resource);
+            Assert.AreEqual(Resource.Lumber, game.GetNeighbor(1, 3, Side.BottomLeft).Resource);
+
+            Assert.AreEqual(null, game.GetNeighbor(2, 4, Side.TopRight));
+            Assert.AreEqual(null, game.GetNeighbor(2, 4, Side.BottomRight));
+            Assert.AreEqual(null, game.GetNeighbor(2, 4, Side.Right));
+            Assert.AreEqual(Resource.Brick, game.GetNeighbor(2, 4, Side.TopLeft).Resource);
+            Assert.AreEqual(Resource.Lumber, game.GetNeighbor(2, 4, Side.Left).Resource);
+            Assert.AreEqual(Resource.Wool, game.GetNeighbor(2, 4, Side.BottomLeft).Resource);
+
+            Assert.AreEqual(Resource.Ore, game.GetNeighbor(3, 3, Side.TopRight).Resource);
+            Assert.AreEqual(null, game.GetNeighbor(3, 3, Side.BottomRight));
+            Assert.AreEqual(null, game.GetNeighbor(3, 3, Side.Right));
+            Assert.AreEqual(Resource.Lumber, game.GetNeighbor(3, 3, Side.TopLeft).Resource);
+            Assert.AreEqual(Resource.Grain, game.GetNeighbor(3, 3, Side.Left).Resource);
+            Assert.AreEqual(Resource.Wool, game.GetNeighbor(3, 3, Side.BottomLeft).Resource);
+
+            Assert.AreEqual(Resource.Wool, game.GetNeighbor(4, 3, Side.TopRight).Resource);
+            Assert.AreEqual(null, game.GetNeighbor(4, 3, Side.BottomRight));
+            Assert.AreEqual(null, game.GetNeighbor(4, 3, Side.Right));
+            Assert.AreEqual(Resource.Grain, game.GetNeighbor(4, 3, Side.TopLeft).Resource);
+            Assert.AreEqual(Resource.Grain, game.GetNeighbor(4, 3, Side.Left).Resource);
+            Assert.AreEqual(null, game.GetNeighbor(4, 3, Side.BottomLeft));
+
+            Assert.AreEqual(Resource.Grain, game.GetNeighbor(4, 2, Side.TopRight).Resource);
+            Assert.AreEqual(null, game.GetNeighbor(4, 2, Side.BottomRight));
+            Assert.AreEqual(Resource.Wool, game.GetNeighbor(4, 2, Side.Right).Resource);
+            Assert.AreEqual(Resource.Ore, game.GetNeighbor(4, 2, Side.TopLeft).Resource);
+            Assert.AreEqual(Resource.Brick, game.GetNeighbor(4, 2, Side.Left).Resource);
+            Assert.AreEqual(null, game.GetNeighbor(4, 2, Side.BottomLeft));
+        }
+
+        [TestMethod]
+        public void GetNeighborTestMiddle()
+        {
+            Game game = new Game("standard_map.txt");
+
+            Assert.AreEqual(Resource.Wool, game.GetNeighbor(2, 2, Side.TopRight).Resource);
+            Assert.AreEqual(Resource.Grain, game.GetNeighbor(2, 2, Side.BottomRight).Resource);
+            Assert.AreEqual(Resource.Lumber, game.GetNeighbor(2, 2, Side.Right).Resource);
+            Assert.AreEqual(Resource.Brick, game.GetNeighbor(2, 2, Side.TopLeft).Resource);
+            Assert.AreEqual(Resource.Lumber, game.GetNeighbor(2, 2, Side.Left).Resource);
+            Assert.AreEqual(Resource.Ore, game.GetNeighbor(2, 2, Side.BottomLeft).Resource);
+        }
+
+        [TestMethod]
+        public void GetNeighborTestBoundary()
+        {
+            Game game = new Game("standard_map.txt");
+
+            Assert.AreEqual(null, game.GetNeighbor(0, 0, Side.TopRight));
+            Assert.AreEqual(null, game.GetNeighbor(0, 0, Side.TopLeft));
+            Assert.AreEqual(null, game.GetNeighbor(0, 0, Side.Left));
+
+            Assert.AreEqual(null, game.GetNeighbor(0, 1, Side.TopRight));
+            Assert.AreEqual(null, game.GetNeighbor(0, 1, Side.TopLeft));
+
+            Assert.AreEqual(null, game.GetNeighbor(0, 4, Side.TopRight));
+            Assert.AreEqual(null, game.GetNeighbor(0, 4, Side.TopLeft));
+            Assert.AreEqual(null, game.GetNeighbor(0, 4, Side.Right));
+
+            Assert.AreEqual(null, game.GetNeighbor(1, 4, Side.TopRight));
+            Assert.AreEqual(null, game.GetNeighbor(1, 4, Side.BottomRight));
+            Assert.AreEqual(null, game.GetNeighbor(1, 4, Side.Right));
+
+            Assert.AreEqual(null, game.GetNeighbor(4, 4, Side.BottomLeft));
+            Assert.AreEqual(null, game.GetNeighbor(4, 4, Side.BottomRight));
+            Assert.AreEqual(null, game.GetNeighbor(4, 4, Side.Right));
+
+            Assert.AreEqual(null, game.GetNeighbor(4, 3, Side.BottomLeft));
+            Assert.AreEqual(null, game.GetNeighbor(4, 3, Side.BottomRight));
+
+            Assert.AreEqual(null, game.GetNeighbor(4, 0, Side.BottomLeft));
+            Assert.AreEqual(null, game.GetNeighbor(4, 0, Side.BottomRight));
+            Assert.AreEqual(null, game.GetNeighbor(4, 0, Side.Left));
+
+            Assert.AreEqual(null, game.GetNeighbor(3, 0, Side.Left));
+        }
     }
 }
