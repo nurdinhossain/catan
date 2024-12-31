@@ -14,6 +14,9 @@
         // private storage for development cards
         private int[] _cards;
 
+        // private random variable for drawing random cards
+        private static Random _rand = new Random();
+
         // constructor with default card quantities
         public DevDeck()
         {
@@ -34,8 +37,7 @@
             }
 
             // pick random card 
-            Random rand = new Random();
-            int index = rand.Next(CardsRemaining());
+            int index = _rand.Next(CardsRemaining());
             int i;
             for (i = 0; i < _cards.Length; i++)
             {

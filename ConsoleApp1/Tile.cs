@@ -67,6 +67,9 @@
         // buildings on vertices
         private Building[] _buildings;
 
+        // players controlling each building
+        private Player[] _players; 
+
         // ports on vertices
         private Port[] _ports;
 
@@ -80,6 +83,7 @@
             _number = number;
 
             _buildings = new Building[Enum.GetNames(typeof(Vertex)).Length];
+            _players = new Player[Enum.GetNames(typeof(Vertex)).Length];
             _ports = new Port[Enum.GetNames(typeof(Vertex)).Length];
             _roads = new Road[Enum.GetNames(typeof(Side)).Length];
         }
@@ -93,6 +97,11 @@
         public Port PortAt(Vertex vertex)
         {
             return _ports[(int)vertex];
+        }
+
+        public Player PlayerAt(Vertex vertex)
+        {
+            return _players[(int)vertex];
         }
 
         public Road RoadAt(Side side)
@@ -111,6 +120,11 @@
             _ports[(int)vertex] = port;
         }
 
+        public void SetPlayerAt(Vertex vertex, Player player)
+        {
+            _players[(int)vertex] = player;
+        }
+
         public void SetRoadAt(Vertex vertex, Road road)
         {
             _roads[(int)vertex] = road;
@@ -120,6 +134,25 @@
         public bool CanHarvest(int roll)
         {
             return roll == _number;
+        }
+
+        // method for harvesting resources
+        public void Harvest()
+        {
+            for (int i = 0; i < _players.Length; i++)
+            {
+                // harvest 1 resource if settlement
+                if (_buildings[i] == Building.Settlement)
+                {
+                    _players[i].AddResource(_resource, 1);
+                }
+
+                // harvest 2 resources if city
+                else if (_buildings[i] == Building.City)
+                {
+                    _players[i].AddResource(_resource, 2);
+                }
+            }
         }
     }
 }

@@ -11,7 +11,10 @@
         private int[] _devCards; // ** where dev cards are transferred on subsequent turns **
 
         // ports controlled by each player
-        private bool[] _ports; 
+        private bool[] _ports;
+
+        // random variable for rolling dice
+        private static Random _rand = new Random();
 
         // unique identifier for each player
         public int ID { get; set; }
@@ -172,7 +175,7 @@
         }
 
         // building
-        public bool BuildSettlement(Tile tile, Vertex vertex)
+        public bool BuildSettlement(Tile tile, Vertex vertex, Bank bank)
         {
             // ensure we have at least one settlement we can build
             if (Settlements < 1) return false; 
@@ -183,19 +186,21 @@
             // ensure we have sufficient resources to build settlement
             if (ResourceCount(Resource.Brick) < 1 || ResourceCount(Resource.Grain) < 1 || ResourceCount(Resource.Wool) < 1 || ResourceCount(Resource.Lumber) < 1) return false;
 
-            // execute construction
-            RemoveResource(Resource.Brick, 1);
-            RemoveResource(Resource.Grain, 1);
-            RemoveResource(Resource.Wool, 1);
-            RemoveResource(Resource.Lumber, 1);
+            // add resources to bank
+            bank.Deposit(this, Resource.Brick, 1);
+            bank.Deposit(this, Resource.Grain, 1);
+            bank.Deposit(this, Resource.Wool, 1);
+            bank.Deposit(this, Resource.Lumber, 1);
+
             Settlements--;
             tile.SetBuildingAt(vertex, Building.Settlement);
+            tile.SetPlayerAt(vertex, this);
             VictoryPoints++;
 
             return true; 
         }
 
-        public bool BuildCity(Tile tile, Vertex vertex)
+        public bool BuildCity(Tile tile, Vertex vertex, Bank bank)
         {
             // ensure we have at least one city we can build
             if (Cities < 1) return false;
@@ -206,19 +211,21 @@
             // ensure we have sufficient resources to build settlement
             if (ResourceCount(Resource.Grain) < 2 || ResourceCount(Resource.Ore) < 3) return false;
 
-            // execute construction
-            RemoveResource(Resource.Grain, 2);
-            RemoveResource(Resource.Ore, 3);
+            // add resources to bank
+            bank.Deposit(this, Resource.Grain, 2);
+            bank.Deposit(this, Resource.Ore, 3);
+
             Cities--;
             Settlements++;
             tile.SetBuildingAt(vertex, Building.City);
+            tile.SetPlayerAt(vertex, this);
             VictoryPoints++;
 
             return true; 
         }
 
         // draw dev card from deck
-        public bool DrawDevCard(DevDeck deck)
+        public bool DrawDevCard(DevDeck deck, Bank bank)
         {
             // ensure we aren't drawing from an empty deck 
             if (deck.CardsRemaining() == 0) return false;
@@ -226,10 +233,10 @@
             // ensure we have sufficient resources
             if (ResourceCount(Resource.Wool) < 1 || ResourceCount(Resource.Grain) < 1 || ResourceCount(Resource.Ore) < 1) return false;
 
-            // consume resources 
-            RemoveResource(Resource.Wool, 1);
-            RemoveResource(Resource.Grain, 1);
-            RemoveResource(Resource.Ore, 1);
+            // add resources to bank
+            bank.Deposit(this, Resource.Wool, 1);
+            bank.Deposit(this, Resource.Grain, 1);
+            bank.Deposit(this, Resource.Ore, 1);
 
             // draw from deck
             DevelopmentCard card = deck.Draw();
@@ -264,6 +271,14 @@
 
             // reset dev card lock
             _devCardDrawn = false;
+        }
+
+        // roll dice
+        public int RollDice()
+        {
+            int diceOne = _rand.Next(1, 7);
+            int diceTwo = _rand.Next(1, 7);
+            return diceOne + diceTwo;
         }
 
         // trade cards with the bank

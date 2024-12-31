@@ -221,6 +221,7 @@ namespace CatanTest
         {
             Player one = new Player(0);
             Tile tile = new Tile(Resource.Lumber, 10);
+            Bank bank = new Bank();
 
             // make player one hand
             one.AddResource(Resource.Brick, 4);
@@ -229,7 +230,7 @@ namespace CatanTest
             one.AddResource(Resource.Wool, 4);
 
             // create settlement
-            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft));
+            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft, bank));
             Assert.AreEqual(Building.Settlement, tile.BuildingAt(Vertex.TopLeft));
             Assert.AreEqual(4, one.Settlements);
             Assert.AreEqual(1, one.VictoryPoints);
@@ -239,6 +240,12 @@ namespace CatanTest
             Assert.AreEqual(3, one.ResourceCount(Resource.Lumber));
             Assert.AreEqual(3, one.ResourceCount(Resource.Grain));
             Assert.AreEqual(3, one.ResourceCount(Resource.Wool));
+            Assert.AreEqual(one, tile.PlayerAt(Vertex.TopLeft));
+
+            Assert.AreEqual(20, bank.ResourceCount(Resource.Brick));
+            Assert.AreEqual(20, bank.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(20, bank.ResourceCount(Resource.Grain));
+            Assert.AreEqual(20, bank.ResourceCount(Resource.Wool));
         }
 
         [TestMethod]
@@ -246,6 +253,7 @@ namespace CatanTest
         {
             Player one = new Player(0);
             Tile tile = new Tile(Resource.Lumber, 10);
+            Bank bank = new Bank();
 
             // make player one hand
             one.AddResource(Resource.Brick, 4);
@@ -254,7 +262,7 @@ namespace CatanTest
             one.AddResource(Resource.Wool, 4);
 
             one.Settlements = 0;
-            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft));
+            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft, bank));
             Assert.AreEqual(0, one.Settlements);
         }
 
@@ -263,6 +271,7 @@ namespace CatanTest
         {
             Player one = new Player(0);
             Tile tile = new Tile(Resource.Lumber, 10);
+            Bank bank = new Bank();
             tile.SetBuildingAt(Vertex.TopLeft, Building.Settlement);
 
             // make player one hand
@@ -271,9 +280,9 @@ namespace CatanTest
             one.AddResource(Resource.Grain, 4);
             one.AddResource(Resource.Wool, 4);
 
-            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft));
+            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft, bank));
             tile.SetBuildingAt(Vertex.TopLeft, Building.City);
-            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft));
+            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft, bank));
             Assert.AreEqual(5, one.Settlements);
         }
 
@@ -282,13 +291,14 @@ namespace CatanTest
         {
             Player one = new Player(0);
             Tile tile = new Tile(Resource.Lumber, 10);
+            Bank bank = new Bank();
 
             // make player one hand
             one.AddResource(Resource.Brick, 4);
             one.AddResource(Resource.Lumber, 4);
             one.AddResource(Resource.Grain, 4);
 
-            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft));
+            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft, bank));
             Assert.AreEqual(5, one.Settlements);
         }
 
@@ -297,6 +307,7 @@ namespace CatanTest
         {
             Player one = new Player(0);
             Tile tile = new Tile(Resource.Lumber, 10);
+            Bank bank = new Bank();
 
             // make player one hand
             one.AddResource(Resource.Brick, 4);
@@ -304,10 +315,10 @@ namespace CatanTest
             one.AddResource(Resource.Grain, 3);
             one.AddResource(Resource.Ore, 4);
             one.AddResource(Resource.Wool, 4);
-            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft));
+            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft, bank));
 
             // create city
-            Assert.AreEqual(true, one.BuildCity(tile, Vertex.TopLeft)); 
+            Assert.AreEqual(true, one.BuildCity(tile, Vertex.TopLeft, bank)); 
             Assert.AreEqual(Building.City, tile.BuildingAt(Vertex.TopLeft));
             Assert.AreEqual(5, one.Settlements);
             Assert.AreEqual(3, one.Cities);
@@ -319,6 +330,13 @@ namespace CatanTest
             Assert.AreEqual(0, one.ResourceCount(Resource.Grain));
             Assert.AreEqual(1, one.ResourceCount(Resource.Ore));
             Assert.AreEqual(3, one.ResourceCount(Resource.Wool));
+            Assert.AreEqual(one, tile.PlayerAt(Vertex.TopLeft));
+
+            Assert.AreEqual(20, bank.ResourceCount(Resource.Brick));
+            Assert.AreEqual(20, bank.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(20, bank.ResourceCount(Resource.Wool));
+            Assert.AreEqual(22, bank.ResourceCount(Resource.Grain));
+            Assert.AreEqual(22, bank.ResourceCount(Resource.Ore));
         }
 
         [TestMethod]
@@ -326,6 +344,7 @@ namespace CatanTest
         {
             Player one = new Player(0);
             Tile tile = new Tile(Resource.Lumber, 10);
+            Bank bank = new Bank();
             one.Cities = 0;
 
             // make player one hand
@@ -334,8 +353,8 @@ namespace CatanTest
             one.AddResource(Resource.Grain, 3);
             one.AddResource(Resource.Ore, 4);
             one.AddResource(Resource.Wool, 4);
-            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft));
-            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft));
+            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft, bank));
+            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft, bank));
         }
 
         [TestMethod]
@@ -343,6 +362,7 @@ namespace CatanTest
         {
             Player one = new Player(0);
             Tile tile = new Tile(Resource.Lumber, 10);
+            Bank bank = new Bank();
 
             // make player one hand
             one.AddResource(Resource.Brick, 8);
@@ -350,10 +370,10 @@ namespace CatanTest
             one.AddResource(Resource.Grain, 8);
             one.AddResource(Resource.Ore, 8);
             one.AddResource(Resource.Wool, 8);
-            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft));
-            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft));
-            Assert.AreEqual(true, one.BuildCity(tile, Vertex.TopLeft));
-            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft));
+            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft, bank));
+            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft, bank));
+            Assert.AreEqual(true, one.BuildCity(tile, Vertex.TopLeft, bank));
+            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft, bank));
         }
 
         [TestMethod]
@@ -361,6 +381,7 @@ namespace CatanTest
         {
             Player one = new Player(0);
             Tile tile = new Tile(Resource.Lumber, 10);
+            Bank bank = new Bank();
 
             // make player one hand
             one.AddResource(Resource.Brick, 1);
@@ -368,8 +389,8 @@ namespace CatanTest
             one.AddResource(Resource.Grain, 2);
             one.AddResource(Resource.Ore, 3);
             one.AddResource(Resource.Wool, 1);
-            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft));
-            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft));
+            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft, bank));
+            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft, bank));
         }
 
         [TestMethod]
@@ -377,6 +398,7 @@ namespace CatanTest
         {
             Player one = new Player(0);
             DevDeck deck = new DevDeck();
+            Bank bank = new Bank();
 
             // make player one hand
             one.AddResource(Resource.Grain, 3);
@@ -384,12 +406,16 @@ namespace CatanTest
             one.AddResource(Resource.Wool, 3);
 
             // draw card
-            Assert.AreEqual(true, one.DrawDevCard(deck));
+            Assert.AreEqual(true, one.DrawDevCard(deck, bank));
             Assert.AreEqual(1, one.NumTempDevCards());
             Assert.AreEqual(0, one.NumPermanentDevCards());
             Assert.AreEqual(2, one.ResourceCount(Resource.Grain));
             Assert.AreEqual(2, one.ResourceCount(Resource.Ore));
             Assert.AreEqual(2, one.ResourceCount(Resource.Wool));
+
+            Assert.AreEqual(20, bank.ResourceCount(Resource.Grain));
+            Assert.AreEqual(20, bank.ResourceCount(Resource.Ore));
+            Assert.AreEqual(20, bank.ResourceCount(Resource.Wool));
         }
 
         [TestMethod]
@@ -397,6 +423,7 @@ namespace CatanTest
         {
             Player one = new Player(0);
             DevDeck deck = new DevDeck();
+            Bank bank = new Bank();
             for (int i = 0; i < 25; i++)
             {
                 deck.Draw();
@@ -408,7 +435,7 @@ namespace CatanTest
             one.AddResource(Resource.Wool, 3);
 
             // draw card 
-            Assert.AreEqual(false, one.DrawDevCard(deck));
+            Assert.AreEqual(false, one.DrawDevCard(deck, bank));
         }
 
         [TestMethod]
@@ -416,6 +443,7 @@ namespace CatanTest
         {
             Player one = new Player(0);
             DevDeck deck = new DevDeck();
+            Bank bank = new Bank();
 
             // make player one hand
             one.AddResource(Resource.Grain, 1);
@@ -423,7 +451,39 @@ namespace CatanTest
             one.AddResource(Resource.Wool, 2);
 
             // draw card 
-            Assert.AreEqual(false, one.DrawDevCard(deck));
+            Assert.AreEqual(false, one.DrawDevCard(deck, bank));
+        }
+
+        [TestMethod]
+        public void DiceRollValid()
+        {
+            Player one = new Player(0);
+            int[] rolls = new int[13];
+            
+            for (int i = 0; i < 100000; i++)
+            {
+                int roll = one.RollDice();
+                Assert.IsTrue(roll >= 2);
+                Assert.IsTrue(roll <= 12);
+                rolls[roll]++;
+            }
+
+            // verify distribution of rolls
+            int total = rolls.Sum();
+            Assert.AreEqual(0, rolls[0]);
+            Assert.AreEqual(0, rolls[1]);
+            Assert.AreEqual(0.03, (double)rolls[2] / total, 0.02);
+            Assert.AreEqual(0.06, (double)rolls[3] / total, 0.02);
+            Assert.AreEqual(0.08, (double)rolls[4] / total, 0.02);
+            Assert.AreEqual(0.11, (double)rolls[5] / total, 0.02);
+            Assert.AreEqual(0.14, (double)rolls[6] / total, 0.02);
+            Assert.AreEqual(0.17, (double)rolls[7] / total, 0.02);
+            Assert.AreEqual(0.14, (double)rolls[8] / total, 0.02);
+            Assert.AreEqual(0.11, (double)rolls[9] / total, 0.02);
+            Assert.AreEqual(0.08, (double)rolls[10] / total, 0.02);
+            Assert.AreEqual(0.06, (double)rolls[11] / total, 0.02);
+            Assert.AreEqual(0.03, (double)rolls[12] / total, 0.02);
+
         }
 
         [TestMethod]
