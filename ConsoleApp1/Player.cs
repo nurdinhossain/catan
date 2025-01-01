@@ -194,7 +194,7 @@
 
             Settlements--;
             tile.SetBuildingAt(vertex, Building.Settlement);
-            tile.SetPlayerAt(vertex, this);
+            tile.SetPlayerAtVertex(vertex, this);
             VictoryPoints++;
 
             return true; 
@@ -218,7 +218,7 @@
             Cities--;
             Settlements++;
             tile.SetBuildingAt(vertex, Building.City);
-            tile.SetPlayerAt(vertex, this);
+            tile.SetPlayerAtVertex(vertex, this);
             VictoryPoints++;
 
             return true; 
@@ -286,6 +286,9 @@
         {
             // arrays must be correct length
             if (toGive.Length != Enum.GetNames(typeof(Resource)).Length || toGet.Length != Enum.GetNames(typeof(Resource)).Length) return false;
+
+            // cannot trade nothing
+            if (toGive.Sum() == 0 || toGet.Sum() == 0) return false; 
 
             // ensure we have sufficient resources
             for (int i = 0; i < toGive.Length; i++)

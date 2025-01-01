@@ -1,4 +1,4 @@
-﻿using Catan; 
+﻿using Catan;
 
 namespace CatanTest
 {
@@ -390,6 +390,342 @@ namespace CatanTest
             Assert.AreEqual(null, game.GetNeighbor(4, 0, Side.Left));
 
             Assert.AreEqual(null, game.GetNeighbor(3, 0, Side.Left));
+        }
+
+        [TestMethod]
+        public void CanBuildTrueTypeOne()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            // type 1 
+            game.TileAt(1, 1).SetBuildingAt(Vertex.TopRight, Building.Settlement);
+            game.TileAt(1, 1).SetBuildingAt(Vertex.BottomRight, Building.Settlement);
+            game.TileAt(1, 1).SetBuildingAt(Vertex.Bottom, Building.Settlement);
+
+            game.TileAt(1, 0).SetBuildingAt(Vertex.TopLeft, Building.Settlement);
+            game.TileAt(1, 0).SetBuildingAt(Vertex.BottomLeft, Building.Settlement);
+            game.TileAt(1, 0).SetBuildingAt(Vertex.Bottom, Building.Settlement);
+
+            game.TileAt(0, 1).SetBuildingAt(Vertex.TopLeft, Building.Settlement);
+            game.TileAt(0, 1).SetBuildingAt(Vertex.TopRight, Building.Settlement);
+            game.TileAt(0, 1).SetBuildingAt(Vertex.Top, Building.Settlement);
+
+            game.TileAt(1, 1).SetRoadAt(Side.TopLeft, Road.Road);
+            game.TileAt(0, 1).SetRoadAt(Side.BottomRight, Road.Road);
+            game.TileAt(1, 1).SetPlayerAtSide(Side.TopLeft, player);
+            game.TileAt(0, 1).SetPlayerAtSide(Side.BottomRight, player);
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 1, 1, Vertex.TopLeft));
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 1, 0, Vertex.TopRight));
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 0, 1, Vertex.Bottom));
+            game.TileAt(1, 1).SetRoadAt(Side.TopLeft, Road.NoRoad);
+            game.TileAt(0, 1).SetRoadAt(Side.BottomRight, Road.NoRoad);
+
+            game.TileAt(1, 1).SetRoadAt(Side.Left, Road.Road);
+            game.TileAt(1, 0).SetRoadAt(Side.Right, Road.Road);
+            game.TileAt(1, 1).SetPlayerAtSide(Side.Left, player);
+            game.TileAt(1, 0).SetPlayerAtSide(Side.Right, player);
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 1, 1, Vertex.TopLeft));
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 1, 0, Vertex.TopRight));
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 0, 1, Vertex.Bottom));
+            game.TileAt(1, 1).SetRoadAt(Side.Left, Road.NoRoad);
+            game.TileAt(1, 0).SetRoadAt(Side.Right, Road.NoRoad);
+
+            game.TileAt(0, 1).SetRoadAt(Side.BottomLeft, Road.Road);
+            game.TileAt(1, 0).SetRoadAt(Side.TopRight, Road.Road);
+            game.TileAt(0, 1).SetPlayerAtSide(Side.BottomLeft, player);
+            game.TileAt(1, 0).SetPlayerAtSide(Side.TopRight, player);
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 1, 1, Vertex.TopLeft));
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 1, 0, Vertex.TopRight));
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 0, 1, Vertex.Bottom));
+            game.TileAt(0, 1).SetRoadAt(Side.BottomLeft, Road.NoRoad);
+            game.TileAt(1, 0).SetRoadAt(Side.TopRight, Road.NoRoad);
+        }
+
+        [TestMethod]
+        public void CanBuildTrueTypeTwo()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            // type 2
+            game.TileAt(3, 1).SetBuildingAt(Vertex.Top, Building.Settlement);
+            game.TileAt(3, 1).SetBuildingAt(Vertex.TopRight, Building.Settlement);
+            game.TileAt(3, 1).SetBuildingAt(Vertex.BottomRight, Building.Settlement);
+
+            game.TileAt(3, 0).SetBuildingAt(Vertex.Top, Building.Settlement);
+            game.TileAt(3, 0).SetBuildingAt(Vertex.TopLeft, Building.Settlement);
+            game.TileAt(3, 0).SetBuildingAt(Vertex.BottomLeft, Building.Settlement);
+
+            game.TileAt(4, 1).SetBuildingAt(Vertex.BottomLeft, Building.Settlement);
+            game.TileAt(4, 1).SetBuildingAt(Vertex.BottomRight, Building.Settlement);
+            game.TileAt(4, 1).SetBuildingAt(Vertex.Bottom, Building.Settlement);
+
+            game.TileAt(3, 0).SetRoadAt(Side.Right, Road.Road);
+            game.TileAt(3, 1).SetRoadAt(Side.Left, Road.Road);
+            game.TileAt(3, 0).SetPlayerAtSide(Side.Right, player);
+            game.TileAt(3, 1).SetPlayerAtSide(Side.Left, player);
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 4, 1, Vertex.Top));
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 3, 1, Vertex.BottomLeft));
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 3, 0, Vertex.BottomRight));
+            game.TileAt(3, 0).SetRoadAt(Side.Right, Road.NoRoad);
+            game.TileAt(3, 1).SetRoadAt(Side.Left, Road.NoRoad);
+
+            game.TileAt(3, 0).SetRoadAt(Side.BottomRight, Road.Road);
+            game.TileAt(4, 1).SetRoadAt(Side.TopLeft, Road.Road);
+            game.TileAt(3, 0).SetPlayerAtSide(Side.BottomRight, player);
+            game.TileAt(4, 1).SetPlayerAtSide(Side.TopLeft, player);
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 4, 1, Vertex.Top));
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 3, 1, Vertex.BottomLeft));
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 3, 0, Vertex.BottomRight));
+            game.TileAt(3, 0).SetRoadAt(Side.BottomRight, Road.NoRoad);
+            game.TileAt(4, 1).SetRoadAt(Side.TopLeft, Road.NoRoad);
+
+            game.TileAt(3, 1).SetRoadAt(Side.BottomLeft, Road.Road);
+            game.TileAt(4, 1).SetRoadAt(Side.TopRight, Road.Road);
+            game.TileAt(3, 1).SetPlayerAtSide(Side.BottomLeft, player);
+            game.TileAt(4, 1).SetPlayerAtSide(Side.TopRight, player);
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 4, 1, Vertex.Top));
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 3, 1, Vertex.BottomLeft));
+            Assert.IsTrue(game.CanBuildBuildingAt(player, 3, 0, Vertex.BottomRight));
+            game.TileAt(3, 1).SetRoadAt(Side.BottomLeft, Road.NoRoad);
+            game.TileAt(4, 1).SetRoadAt(Side.TopRight, Road.NoRoad);
+        }
+
+        [TestMethod]
+        public void CanBuildFalseTypeOneWrongPlayer()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+            Player playerTwo = new Player(1);
+
+            // type 1 
+            game.TileAt(1, 1).SetBuildingAt(Vertex.TopRight, Building.Settlement);
+            game.TileAt(1, 1).SetBuildingAt(Vertex.BottomRight, Building.Settlement);
+            game.TileAt(1, 1).SetBuildingAt(Vertex.Bottom, Building.Settlement);
+
+            game.TileAt(1, 0).SetBuildingAt(Vertex.TopLeft, Building.Settlement);
+            game.TileAt(1, 0).SetBuildingAt(Vertex.BottomLeft, Building.Settlement);
+            game.TileAt(1, 0).SetBuildingAt(Vertex.Bottom, Building.Settlement);
+
+            game.TileAt(0, 1).SetBuildingAt(Vertex.TopLeft, Building.Settlement);
+            game.TileAt(0, 1).SetBuildingAt(Vertex.TopRight, Building.Settlement);
+            game.TileAt(0, 1).SetBuildingAt(Vertex.Top, Building.Settlement);
+
+            game.TileAt(1, 1).SetRoadAt(Side.TopLeft, Road.Road);
+            game.TileAt(0, 1).SetRoadAt(Side.BottomRight, Road.Road);
+            game.TileAt(1, 1).SetPlayerAtSide(Side.TopLeft, player);
+            game.TileAt(0, 1).SetPlayerAtSide(Side.BottomRight, player);
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 1, 1, Vertex.TopLeft));
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 1, 0, Vertex.TopRight));
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 0, 1, Vertex.Bottom));
+            game.TileAt(1, 1).SetRoadAt(Side.TopLeft, Road.NoRoad);
+            game.TileAt(0, 1).SetRoadAt(Side.BottomRight, Road.NoRoad);
+
+            game.TileAt(1, 1).SetRoadAt(Side.Left, Road.Road);
+            game.TileAt(1, 0).SetRoadAt(Side.Right, Road.Road);
+            game.TileAt(1, 1).SetPlayerAtSide(Side.Left, player);
+            game.TileAt(1, 0).SetPlayerAtSide(Side.Right, player);
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 1, 1, Vertex.TopLeft));
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 1, 0, Vertex.TopRight));
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 0, 1, Vertex.Bottom));
+            game.TileAt(1, 1).SetRoadAt(Side.Left, Road.NoRoad);
+            game.TileAt(1, 0).SetRoadAt(Side.Right, Road.NoRoad);
+
+            game.TileAt(0, 1).SetRoadAt(Side.BottomLeft, Road.Road);
+            game.TileAt(1, 0).SetRoadAt(Side.TopRight, Road.Road);
+            game.TileAt(0, 1).SetPlayerAtSide(Side.BottomLeft, player);
+            game.TileAt(1, 0).SetPlayerAtSide(Side.TopRight, player);
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 1, 1, Vertex.TopLeft));
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 1, 0, Vertex.TopRight));
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 0, 1, Vertex.Bottom));
+            game.TileAt(0, 1).SetRoadAt(Side.BottomLeft, Road.NoRoad);
+            game.TileAt(1, 0).SetRoadAt(Side.TopRight, Road.NoRoad);
+        }
+
+        [TestMethod]
+        public void CanBuildFalseTypeTwoWrongPlayer()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+            Player playerTwo = new Player(1);
+
+            // type 2
+            game.TileAt(3, 1).SetBuildingAt(Vertex.Top, Building.Settlement);
+            game.TileAt(3, 1).SetBuildingAt(Vertex.TopRight, Building.Settlement);
+            game.TileAt(3, 1).SetBuildingAt(Vertex.BottomRight, Building.Settlement);
+
+            game.TileAt(3, 0).SetBuildingAt(Vertex.Top, Building.Settlement);
+            game.TileAt(3, 0).SetBuildingAt(Vertex.TopLeft, Building.Settlement);
+            game.TileAt(3, 0).SetBuildingAt(Vertex.BottomLeft, Building.Settlement);
+
+            game.TileAt(4, 1).SetBuildingAt(Vertex.BottomLeft, Building.Settlement);
+            game.TileAt(4, 1).SetBuildingAt(Vertex.BottomRight, Building.Settlement);
+            game.TileAt(4, 1).SetBuildingAt(Vertex.Bottom, Building.Settlement);
+
+            game.TileAt(3, 0).SetRoadAt(Side.Right, Road.Road);
+            game.TileAt(3, 1).SetRoadAt(Side.Left, Road.Road);
+            game.TileAt(3, 0).SetPlayerAtSide(Side.Right, player);
+            game.TileAt(3, 1).SetPlayerAtSide(Side.Left, player);
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 4, 1, Vertex.Top));
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 3, 1, Vertex.BottomLeft));
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 3, 0, Vertex.BottomRight));
+            game.TileAt(3, 0).SetRoadAt(Side.Right, Road.NoRoad);
+            game.TileAt(3, 1).SetRoadAt(Side.Left, Road.NoRoad);
+
+            game.TileAt(3, 0).SetRoadAt(Side.BottomRight, Road.Road);
+            game.TileAt(4, 1).SetRoadAt(Side.TopLeft, Road.Road);
+            game.TileAt(3, 0).SetPlayerAtSide(Side.BottomRight, player);
+            game.TileAt(4, 1).SetPlayerAtSide(Side.TopLeft, player);
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 4, 1, Vertex.Top));
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 3, 1, Vertex.BottomLeft));
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 3, 0, Vertex.BottomRight));
+            game.TileAt(3, 0).SetRoadAt(Side.BottomRight, Road.NoRoad);
+            game.TileAt(4, 1).SetRoadAt(Side.TopLeft, Road.NoRoad);
+
+            game.TileAt(3, 1).SetRoadAt(Side.BottomLeft, Road.Road);
+            game.TileAt(4, 1).SetRoadAt(Side.TopRight, Road.Road);
+            game.TileAt(3, 1).SetPlayerAtSide(Side.BottomLeft, player);
+            game.TileAt(4, 1).SetPlayerAtSide(Side.TopRight, player);
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 4, 1, Vertex.Top));
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 3, 1, Vertex.BottomLeft));
+            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 3, 0, Vertex.BottomRight));
+            game.TileAt(3, 1).SetRoadAt(Side.BottomLeft, Road.NoRoad);
+            game.TileAt(4, 1).SetRoadAt(Side.TopRight, Road.NoRoad);
+        }
+
+        [TestMethod]  
+        public void CanBuildFalseNull()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 0, 0, Vertex.TopLeft));
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 4, 4, Vertex.BottomRight));
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 4, Vertex.TopRight));
+        }
+
+        [TestMethod]
+        public void CanBuildFalseHasBuilding()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+            game.TileAt(1, 1).SetBuildingAt(Vertex.TopLeft, Building.Settlement);
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 1, Vertex.TopLeft));
+        }
+
+        [TestMethod]
+        public void CanBuildTypeOneCaseOneFalse()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            // case 1
+            game.TileAt(0, 2).SetRoadAt(Side.BottomLeft, Road.Road);
+            game.TileAt(1, 1).SetRoadAt(Side.TopRight, Road.Road);
+            game.TileAt(0, 2).SetPlayerAtSide(Side.BottomLeft, player);
+            game.TileAt(1, 1).SetPlayerAtSide(Side.TopRight, player);
+            game.TileAt(0, 2).SetBuildingAt(Vertex.BottomLeft, Building.Settlement);
+            game.TileAt(0, 1).SetBuildingAt(Vertex.BottomRight, Building.Settlement);
+            game.TileAt(1, 1).SetBuildingAt(Vertex.Top, Building.Settlement);
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 1, Vertex.TopRight));
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 2, Vertex.TopLeft));
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 0, 2, Vertex.Bottom));
+
+        }
+
+        [TestMethod]
+        public void CanBuildTypeOneCaseTwoFalse()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            // case 2
+            game.TileAt(0, 2).SetRoadAt(Side.BottomRight, Road.Road);
+            game.TileAt(1, 2).SetRoadAt(Side.TopLeft, Road.Road);
+            game.TileAt(0, 2).SetPlayerAtSide(Side.BottomRight, player);
+            game.TileAt(1, 2).SetPlayerAtSide(Side.TopLeft, player);
+            game.TileAt(0, 2).SetBuildingAt(Vertex.BottomRight, Building.Settlement);
+            game.TileAt(1, 2).SetBuildingAt(Vertex.Top, Building.Settlement);
+            game.TileAt(0, 3).SetBuildingAt(Vertex.BottomLeft, Building.Settlement);
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 1, Vertex.TopRight));
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 2, Vertex.TopLeft));
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 0, 2, Vertex.Bottom));
+        }
+
+        [TestMethod]
+        public void CanBuildTypeOneCaseThreeFalse()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            // case 3
+            game.TileAt(1, 1).SetRoadAt(Side.Right, Road.Road);
+            game.TileAt(1, 2).SetRoadAt(Side.Left, Road.Road);
+            game.TileAt(1, 1).SetPlayerAtSide(Side.Right, player);
+            game.TileAt(1, 2).SetPlayerAtSide(Side.Left, player);
+            game.TileAt(1, 2).SetBuildingAt(Vertex.BottomLeft, Building.Settlement);
+            game.TileAt(1, 1).SetBuildingAt(Vertex.BottomRight, Building.Settlement);
+            game.TileAt(2, 2).SetBuildingAt(Vertex.Top, Building.Settlement);
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 1, Vertex.TopRight));
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 2, Vertex.TopLeft));
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 0, 2, Vertex.Bottom));
+        }
+
+        [TestMethod]
+        public void CanBuildTypeTwoCaseOneFalse()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            // case 1
+            game.TileAt(1, 0).SetRoadAt(Side.Right, Road.Road);
+            game.TileAt(1, 1).SetRoadAt(Side.Left, Road.Road);
+            game.TileAt(1, 0).SetPlayerAtSide(Side.Right, player);
+            game.TileAt(1, 1).SetPlayerAtSide(Side.Left, player);
+            game.TileAt(1, 0).SetBuildingAt(Vertex.TopRight, Building.Settlement);
+            game.TileAt(1, 1).SetBuildingAt(Vertex.TopLeft, Building.Settlement);
+            game.TileAt(0, 1).SetBuildingAt(Vertex.Bottom, Building.Settlement);
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 0, Vertex.BottomRight));
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 1, Vertex.BottomLeft));
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 2, 1, Vertex.Top));
+        }
+
+        [TestMethod]
+        public void CanBuildTypeTwoCaseTwoFalse()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            // case 2
+            game.TileAt(1, 0).SetRoadAt(Side.BottomRight, Road.Road);
+            game.TileAt(2, 1).SetRoadAt(Side.TopLeft, Road.Road);
+            game.TileAt(1, 0).SetPlayerAtSide(Side.BottomRight, player);
+            game.TileAt(2, 1).SetPlayerAtSide(Side.TopLeft, player);
+            game.TileAt(1, 1).SetBuildingAt(Vertex.Bottom, Building.Settlement);
+            game.TileAt(2, 1).SetBuildingAt(Vertex.TopRight, Building.Settlement);
+            game.TileAt(2, 2).SetBuildingAt(Vertex.TopLeft, Building.Settlement);
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 0, Vertex.BottomRight));
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 1, Vertex.BottomLeft));
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 2, 1, Vertex.Top));
+        }
+
+        [TestMethod]
+        public void CanBuildTypeTwoCaseThreeFalse()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            // case 3
+            game.TileAt(1, 1).SetRoadAt(Side.BottomLeft, Road.Road);
+            game.TileAt(2, 1).SetRoadAt(Side.TopRight, Road.Road);
+            game.TileAt(1, 1).SetPlayerAtSide(Side.BottomLeft, player);
+            game.TileAt(2, 1).SetPlayerAtSide(Side.TopRight, player);
+            game.TileAt(1, 0).SetBuildingAt(Vertex.Bottom, Building.Settlement);
+            game.TileAt(2, 0).SetBuildingAt(Vertex.TopRight, Building.Settlement);
+            game.TileAt(2, 1).SetBuildingAt(Vertex.TopLeft, Building.Settlement);
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 0, Vertex.BottomRight));
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 1, Vertex.BottomLeft));
+            Assert.IsFalse(game.CanBuildBuildingAt(player, 2, 1, Vertex.Top));
         }
     }
 }

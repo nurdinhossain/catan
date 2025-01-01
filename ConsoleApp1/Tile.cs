@@ -68,7 +68,10 @@
         private Building[] _buildings;
 
         // players controlling each building
-        private Player[] _players; 
+        private Player[] _vertexPlayers;
+
+        // players controlling each road
+        private Player[] _sidePlayers; 
 
         // ports on vertices
         private Port[] _ports;
@@ -83,7 +86,8 @@
             _number = number;
 
             _buildings = new Building[Enum.GetNames(typeof(Vertex)).Length];
-            _players = new Player[Enum.GetNames(typeof(Vertex)).Length];
+            _vertexPlayers = new Player[Enum.GetNames(typeof(Vertex)).Length];
+            _sidePlayers = new Player[Enum.GetNames(typeof(Side)).Length];
             _ports = new Port[Enum.GetNames(typeof(Vertex)).Length];
             _roads = new Road[Enum.GetNames(typeof(Side)).Length];
         }
@@ -99,9 +103,14 @@
             return _ports[(int)vertex];
         }
 
-        public Player PlayerAt(Vertex vertex)
+        public Player PlayerAtVertex(Vertex vertex)
         {
-            return _players[(int)vertex];
+            return _vertexPlayers[(int)vertex];
+        }
+
+        public Player PlayerAtSide(Side side)
+        {
+            return _sidePlayers[(int)side];
         }
 
         public Road RoadAt(Side side)
@@ -120,14 +129,19 @@
             _ports[(int)vertex] = port;
         }
 
-        public void SetPlayerAt(Vertex vertex, Player player)
+        public void SetPlayerAtVertex(Vertex vertex, Player player)
         {
-            _players[(int)vertex] = player;
+            _vertexPlayers[(int)vertex] = player;
         }
 
-        public void SetRoadAt(Vertex vertex, Road road)
+        public void SetPlayerAtSide(Side side, Player player)
         {
-            _roads[(int)vertex] = road;
+            _sidePlayers[(int)side] = player;
+        }
+
+        public void SetRoadAt(Side side, Road road)
+        {
+            _roads[(int)side] = road;
         }
 
         // method for harvesting from dice roll
@@ -139,18 +153,18 @@
         // method for harvesting resources
         public void Harvest()
         {
-            for (int i = 0; i < _players.Length; i++)
+            for (int i = 0; i < _vertexPlayers.Length; i++)
             {
                 // harvest 1 resource if settlement
                 if (_buildings[i] == Building.Settlement)
                 {
-                    _players[i].AddResource(_resource, 1);
+                    _vertexPlayers[i].AddResource(_resource, 1);
                 }
 
                 // harvest 2 resources if city
                 else if (_buildings[i] == Building.City)
                 {
-                    _players[i].AddResource(_resource, 2);
+                    _vertexPlayers[i].AddResource(_resource, 2);
                 }
             }
         }

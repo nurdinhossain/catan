@@ -232,6 +232,7 @@ namespace CatanTest
             // create settlement
             Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft, bank));
             Assert.AreEqual(Building.Settlement, tile.BuildingAt(Vertex.TopLeft));
+            Assert.AreEqual(one, tile.PlayerAtVertex(Vertex.TopLeft));
             Assert.AreEqual(4, one.Settlements);
             Assert.AreEqual(1, one.VictoryPoints);
 
@@ -240,7 +241,7 @@ namespace CatanTest
             Assert.AreEqual(3, one.ResourceCount(Resource.Lumber));
             Assert.AreEqual(3, one.ResourceCount(Resource.Grain));
             Assert.AreEqual(3, one.ResourceCount(Resource.Wool));
-            Assert.AreEqual(one, tile.PlayerAt(Vertex.TopLeft));
+            Assert.AreEqual(one, tile.PlayerAtVertex(Vertex.TopLeft));
 
             Assert.AreEqual(20, bank.ResourceCount(Resource.Brick));
             Assert.AreEqual(20, bank.ResourceCount(Resource.Lumber));
@@ -318,7 +319,8 @@ namespace CatanTest
             Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft, bank));
 
             // create city
-            Assert.AreEqual(true, one.BuildCity(tile, Vertex.TopLeft, bank)); 
+            Assert.AreEqual(true, one.BuildCity(tile, Vertex.TopLeft, bank));
+            Assert.AreEqual(one, tile.PlayerAtVertex(Vertex.TopLeft));
             Assert.AreEqual(Building.City, tile.BuildingAt(Vertex.TopLeft));
             Assert.AreEqual(5, one.Settlements);
             Assert.AreEqual(3, one.Cities);
@@ -330,7 +332,7 @@ namespace CatanTest
             Assert.AreEqual(0, one.ResourceCount(Resource.Grain));
             Assert.AreEqual(1, one.ResourceCount(Resource.Ore));
             Assert.AreEqual(3, one.ResourceCount(Resource.Wool));
-            Assert.AreEqual(one, tile.PlayerAt(Vertex.TopLeft));
+            Assert.AreEqual(one, tile.PlayerAtVertex(Vertex.TopLeft));
 
             Assert.AreEqual(20, bank.ResourceCount(Resource.Brick));
             Assert.AreEqual(20, bank.ResourceCount(Resource.Lumber));
@@ -496,6 +498,7 @@ namespace CatanTest
 
             // make exchange
             Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 8, 0, 0, 0, 0 }, new int[] { 0, 0, 2, 0, 0, 0 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 0, 2, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0 }));
             Assert.AreEqual(2, one.HandSize());
             Assert.AreEqual(0, one.ResourceCount(Resource.Brick));
             Assert.AreEqual(2, one.ResourceCount(Resource.Lumber));
