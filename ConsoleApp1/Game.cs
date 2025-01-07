@@ -70,6 +70,180 @@
         }
 
         // special methods for building 
+        private bool RoadsMeetAtVertex(Player player, int row, int col, Vertex vertex)
+        {
+            // get tile (assumed not null)
+            Tile? tile = _tiles[row, col];
+
+            // check proximity to other structures
+            bool hasRoad;
+            Tile? topLeftNeighbor = GetNeighbor(row, col, Side.TopLeft);
+            Tile? topRightNeighbor = GetNeighbor(row, col, Side.TopRight);
+            Tile? rightNeighbor = GetNeighbor(row, col, Side.Right);
+            Tile? bottomRightNeighbor = GetNeighbor(row, col, Side.BottomRight);
+            Tile? bottomLeftNeighbor = GetNeighbor(row, col, Side.BottomLeft);
+            Tile? leftNeighbor = GetNeighbor(row, col, Side.Left);
+
+            switch (vertex)
+            {
+                case Vertex.Top:
+                    hasRoad = (tile.RoadAt(Side.TopLeft) == Road.Road && tile.PlayerAtSide(Side.TopLeft) == player) || (tile.RoadAt(Side.TopRight) == Road.Road && tile.PlayerAtSide(Side.TopRight) == player);
+                    if (topLeftNeighbor != null)
+                    {
+                        hasRoad = hasRoad || (topLeftNeighbor.RoadAt(Side.Right) == Road.Road && topLeftNeighbor.PlayerAtSide(Side.Right) == player);
+                    }
+                    if (topRightNeighbor != null)
+                    {
+                        hasRoad = hasRoad || (topRightNeighbor.RoadAt(Side.Left) == Road.Road && topRightNeighbor.PlayerAtSide(Side.Left) == player);
+                    }
+                    break;
+                case Vertex.TopRight:
+                    hasRoad = (tile.RoadAt(Side.TopRight) == Road.Road && tile.PlayerAtSide(Side.TopRight) == player) || (tile.RoadAt(Side.Right) == Road.Road && tile.PlayerAtSide(Side.Right) == player);
+                    if (topRightNeighbor != null)
+                    {
+                        hasRoad = hasRoad || (topRightNeighbor.RoadAt(Side.BottomRight) == Road.Road && topRightNeighbor.PlayerAtSide(Side.BottomRight) == player);
+                    }
+                    if (rightNeighbor != null)
+                    {
+                        hasRoad = hasRoad || (rightNeighbor.RoadAt(Side.TopLeft) == Road.Road && rightNeighbor.PlayerAtSide(Side.TopLeft) == player);
+                    }
+                    break;
+                case Vertex.BottomRight:
+                    hasRoad = (tile.RoadAt(Side.Right) == Road.Road && tile.PlayerAtSide(Side.Right) == player) || (tile.RoadAt(Side.BottomRight) == Road.Road && tile.PlayerAtSide(Side.BottomRight) == player);
+                    if (rightNeighbor != null)
+                    {
+                        hasRoad = hasRoad || (rightNeighbor.RoadAt(Side.BottomLeft) == Road.Road && rightNeighbor.PlayerAtSide(Side.BottomLeft) == player);
+                    }
+                    if (bottomRightNeighbor != null)
+                    {
+                        hasRoad = hasRoad || (bottomRightNeighbor.RoadAt(Side.TopRight) == Road.Road && bottomRightNeighbor.PlayerAtSide(Side.TopRight) == player);
+                    }
+                    break;
+                case Vertex.Bottom:
+                    hasRoad = (tile.RoadAt(Side.BottomLeft) == Road.Road && tile.PlayerAtSide(Side.BottomLeft) == player) || (tile.RoadAt(Side.BottomRight) == Road.Road && tile.PlayerAtSide(Side.BottomRight) == player);
+                    if (bottomRightNeighbor != null)
+                    {
+                        hasRoad = hasRoad || (bottomRightNeighbor.RoadAt(Side.Left) == Road.Road && bottomRightNeighbor.PlayerAtSide(Side.Left) == player);
+                    }
+                    if (bottomLeftNeighbor != null)
+                    {
+                        hasRoad = hasRoad || (bottomLeftNeighbor.RoadAt(Side.Right) == Road.Road && bottomLeftNeighbor.PlayerAtSide(Side.Right) == player);
+                    }
+                    break;
+                case Vertex.BottomLeft:
+                    hasRoad = (tile.RoadAt(Side.Left) == Road.Road && tile.PlayerAtSide(Side.Left) == player) || (tile.RoadAt(Side.BottomLeft) == Road.Road && tile.PlayerAtSide(Side.BottomLeft) == player);
+                    if (bottomLeftNeighbor != null)
+                    {
+                        hasRoad = hasRoad || (bottomLeftNeighbor.RoadAt(Side.TopLeft) == Road.Road && bottomLeftNeighbor.PlayerAtSide(Side.TopLeft) == player);
+                    }
+                    if (leftNeighbor != null)
+                    {
+                        hasRoad = hasRoad || (leftNeighbor.RoadAt(Side.BottomRight) == Road.Road && leftNeighbor.PlayerAtSide(Side.BottomRight) == player);
+                    }
+                    break;
+                default:
+                    hasRoad = (tile.RoadAt(Side.Left) == Road.Road && tile.PlayerAtSide(Side.Left) == player) || (tile.RoadAt(Side.TopLeft) == Road.Road && tile.PlayerAtSide(Side.TopLeft) == player);
+                    if (leftNeighbor != null)
+                    {
+                        hasRoad = hasRoad || (leftNeighbor.RoadAt(Side.TopRight) == Road.Road && leftNeighbor.PlayerAtSide(Side.TopRight) == player);
+                    }
+                    if (topLeftNeighbor != null)
+                    {
+                        hasRoad = hasRoad || (topLeftNeighbor.RoadAt(Side.BottomLeft) == Road.Road && topLeftNeighbor.PlayerAtSide(Side.BottomLeft) == player);
+                    }
+                    break;
+            }
+
+            return hasRoad;
+        }
+
+        private bool BuildingProximityValid(Player player, int row, int col, Vertex vertex)
+        {
+            // get tile (assumed not null)
+            Tile? tile = _tiles[row, col];
+
+            // check proximity to other structures
+            bool valid;
+            Tile? topLeftNeighbor = GetNeighbor(row, col, Side.TopLeft);
+            Tile? topRightNeighbor = GetNeighbor(row, col, Side.TopRight);
+            Tile? rightNeighbor = GetNeighbor(row, col, Side.Right);
+            Tile? bottomRightNeighbor = GetNeighbor(row, col, Side.BottomRight);
+            Tile? bottomLeftNeighbor = GetNeighbor(row, col, Side.BottomLeft);
+            Tile? leftNeighbor = GetNeighbor(row, col, Side.Left);
+
+            switch (vertex)
+            {
+                case Vertex.Top:
+                    valid = tile.BuildingAt(Vertex.TopLeft) == Building.NoBuilding && tile.BuildingAt(Vertex.TopRight) == Building.NoBuilding;
+                    if (topLeftNeighbor != null)
+                    {
+                        valid = valid && topLeftNeighbor.BuildingAt(Vertex.TopRight) == Building.NoBuilding;
+                    }
+                    if (topRightNeighbor != null)
+                    {
+                        valid = valid && topRightNeighbor.BuildingAt(Vertex.TopLeft) == Building.NoBuilding;
+                    }
+                    break;
+                case Vertex.TopRight:
+                    valid = tile.BuildingAt(Vertex.Top) == Building.NoBuilding && tile.BuildingAt(Vertex.BottomRight) == Building.NoBuilding;
+                    if (topRightNeighbor != null)
+                    {
+                        valid = valid && topRightNeighbor.BuildingAt(Vertex.BottomRight) == Building.NoBuilding;
+                    }
+                    if (rightNeighbor != null)
+                    {
+                        valid = valid && rightNeighbor.BuildingAt(Vertex.Top) == Building.NoBuilding;
+                    }
+                    break;
+                case Vertex.BottomRight:
+                    valid = tile.BuildingAt(Vertex.TopRight) == Building.NoBuilding && tile.BuildingAt(Vertex.Bottom) == Building.NoBuilding;
+                    if (rightNeighbor != null)
+                    {
+                        valid = valid && rightNeighbor.BuildingAt(Vertex.Bottom) == Building.NoBuilding;
+                    }
+                    if (bottomRightNeighbor != null)
+                    {
+                        valid = valid && bottomRightNeighbor.BuildingAt(Vertex.TopRight) == Building.NoBuilding;
+                    }
+                    break;
+                case Vertex.Bottom:
+                    valid = tile.BuildingAt(Vertex.BottomRight) == Building.NoBuilding && tile.BuildingAt(Vertex.BottomLeft) == Building.NoBuilding;
+                    if (bottomRightNeighbor != null)
+                    {
+                        valid = valid && bottomRightNeighbor.BuildingAt(Vertex.BottomLeft) == Building.NoBuilding;
+                    }
+                    if (bottomLeftNeighbor != null)
+                    {
+                        valid = valid && bottomLeftNeighbor.BuildingAt(Vertex.BottomRight) == Building.NoBuilding;
+                    }
+                    break;
+                case Vertex.BottomLeft:
+                    valid = tile.BuildingAt(Vertex.TopLeft) == Building.NoBuilding && tile.BuildingAt(Vertex.Bottom) == Building.NoBuilding;
+                    if (bottomLeftNeighbor != null)
+                    {
+                        valid = valid && bottomLeftNeighbor.BuildingAt(Vertex.TopLeft) == Building.NoBuilding;
+                    }
+                    if (leftNeighbor != null)
+                    {
+                        valid = valid && leftNeighbor.BuildingAt(Vertex.Bottom) == Building.NoBuilding;
+                    }
+                    break;
+                default:
+                    valid = tile.BuildingAt(Vertex.BottomLeft) == Building.NoBuilding && tile.BuildingAt(Vertex.Top) == Building.NoBuilding;
+                    if (leftNeighbor != null) 
+                    {
+                        valid = valid && leftNeighbor.BuildingAt(Vertex.Top) == Building.NoBuilding;
+                    }
+                    if (topLeftNeighbor != null)
+                    {
+                        valid = valid && topLeftNeighbor.BuildingAt(Vertex.BottomLeft) == Building.NoBuilding;
+                    }
+                    break;
+            }
+
+            return valid;
+        }
+
         public bool CanBuildBuildingAt(Player player, int row, int col, Vertex vertex)
         {
             // get tile
@@ -81,74 +255,8 @@
             // if vertex has settlement/city, its unbuildable
             if (tile.BuildingAt(vertex) != Building.NoBuilding) return false;
 
-            // check proximity to other structures
-            bool valid;
-            bool hasRoad;
-            switch (vertex)
-            {
-                case Vertex.Top:
-                    valid = tile.BuildingAt(Vertex.TopLeft) == Building.NoBuilding && tile.BuildingAt(Vertex.TopRight) == Building.NoBuilding;
-                    hasRoad = (tile.RoadAt(Side.TopLeft) == Road.Road && tile.PlayerAtSide(Side.TopLeft) == player) || (tile.RoadAt(Side.TopRight) == Road.Road && tile.PlayerAtSide(Side.TopRight) == player);
-                    Tile? topLeftNeighbor = GetNeighbor(row, col, Side.TopLeft);
-                    if (topLeftNeighbor != null)
-                    {
-                        valid = valid && topLeftNeighbor.BuildingAt(Vertex.TopRight) == Building.NoBuilding;
-                        hasRoad = hasRoad || (topLeftNeighbor.RoadAt(Side.Right) == Road.Road && topLeftNeighbor.PlayerAtSide(Side.Right) == player);
-                    }
-                    break;
-                case Vertex.TopRight:
-                    valid = tile.BuildingAt(Vertex.Top) == Building.NoBuilding && tile.BuildingAt(Vertex.BottomRight) == Building.NoBuilding;
-                    hasRoad = (tile.RoadAt(Side.TopRight) == Road.Road && tile.PlayerAtSide(Side.TopRight) == player) || (tile.RoadAt(Side.Right) == Road.Road && tile.PlayerAtSide(Side.Right) == player);
-                    Tile? topRightNeighbor = GetNeighbor(row, col, Side.TopRight);
-                    if (topRightNeighbor != null)
-                    {
-                        valid = valid && topRightNeighbor.BuildingAt(Vertex.BottomRight) == Building.NoBuilding;
-                        hasRoad = hasRoad || (topRightNeighbor.RoadAt(Side.BottomRight) == Road.Road && topRightNeighbor.PlayerAtSide(Side.BottomRight) == player);
-                    }
-                    break;
-                case Vertex.BottomRight:
-                    valid = tile.BuildingAt(Vertex.TopRight) == Building.NoBuilding && tile.BuildingAt(Vertex.Bottom) == Building.NoBuilding;
-                    hasRoad = (tile.RoadAt(Side.Right) == Road.Road && tile.PlayerAtSide(Side.Right) == player) || (tile.RoadAt(Side.BottomRight) == Road.Road && tile.PlayerAtSide(Side.BottomRight) == player);
-                    Tile? rightNeighbor = GetNeighbor(row, col, Side.Right);
-                    if (rightNeighbor != null)
-                    {
-                        valid = valid && rightNeighbor.BuildingAt(Vertex.Bottom) == Building.NoBuilding;
-                        hasRoad = hasRoad || (rightNeighbor.RoadAt(Side.BottomLeft) == Road.Road && rightNeighbor.PlayerAtSide(Side.BottomLeft) == player);
-                    }
-                    break;
-                case Vertex.Bottom:
-                    valid = tile.BuildingAt(Vertex.BottomRight) == Building.NoBuilding && tile.BuildingAt(Vertex.BottomLeft) == Building.NoBuilding;
-                    hasRoad = (tile.RoadAt(Side.BottomLeft) == Road.Road && tile.PlayerAtSide(Side.BottomLeft) == player) || (tile.RoadAt(Side.BottomRight) == Road.Road && tile.PlayerAtSide(Side.BottomRight) == player);
-                    Tile? bottomRightNeighbor = GetNeighbor(row, col, Side.BottomRight);
-                    if (bottomRightNeighbor != null)
-                    {
-                        valid = valid && bottomRightNeighbor.BuildingAt(Vertex.BottomLeft) == Building.NoBuilding;
-                        hasRoad = hasRoad || (bottomRightNeighbor.RoadAt(Side.Left) == Road.Road && bottomRightNeighbor.PlayerAtSide(Side.Left) == player);
-                    }
-                    break;
-                case Vertex.BottomLeft:
-                    valid = tile.BuildingAt(Vertex.TopLeft) == Building.NoBuilding && tile.BuildingAt(Vertex.Bottom) == Building.NoBuilding;
-                    hasRoad = (tile.RoadAt(Side.Left) == Road.Road && tile.PlayerAtSide(Side.Left) == player) || (tile.RoadAt(Side.BottomLeft) == Road.Road && tile.PlayerAtSide(Side.BottomLeft) == player);
-                    Tile? bottomLeftNeighbor = GetNeighbor(row, col, Side.BottomLeft);
-                    if (bottomLeftNeighbor != null)
-                    {
-                        valid = valid && bottomLeftNeighbor.BuildingAt(Vertex.TopLeft) == Building.NoBuilding;
-                        hasRoad = hasRoad || (bottomLeftNeighbor.RoadAt(Side.TopLeft) == Road.Road && bottomLeftNeighbor.PlayerAtSide(Side.TopLeft) == player);
-                    }
-                    break;
-                default:
-                    valid = tile.BuildingAt(Vertex.BottomLeft) == Building.NoBuilding && tile.BuildingAt(Vertex.Top) == Building.NoBuilding;
-                    hasRoad = (tile.RoadAt(Side.Left) == Road.Road && tile.PlayerAtSide(Side.Left) == player) || (tile.RoadAt(Side.TopLeft) == Road.Road && tile.PlayerAtSide(Side.TopLeft) == player);
-                    Tile? leftNeighbor = GetNeighbor(row, col, Side.Left);
-                    if (leftNeighbor != null) 
-                    {
-                        valid = valid && leftNeighbor.BuildingAt(Vertex.Top) == Building.NoBuilding;
-                        hasRoad = hasRoad || (leftNeighbor.RoadAt(Side.TopRight) == Road.Road && leftNeighbor.PlayerAtSide(Side.TopRight) == player);
-                    }
-                    break;
-            }
-
-            return valid && hasRoad;
+            // check if both building and road conditions are met
+            return BuildingProximityValid(player, row, col, vertex) && RoadsMeetAtVertex(player, row, col, vertex);
         }
 
         public bool CanBuildRoadAt(Player player, int row, int col, Side side)
@@ -156,15 +264,98 @@
             // get tile
             Tile? tile = _tiles[row, col];
 
-            // if tile is null, road is unbuildable 
+            // if tile is null, road is unbuildable     
             if (tile == null) return false;
 
             // if side has road already, new road is unbuildable
             if (tile.RoadAt(side) != Road.NoRoad) return false;
 
-            // now check case-by-case
+            // boolean helpers
+            bool topHasBuilding = tile.BuildingAt(Vertex.Top) != Building.NoBuilding;
+            bool topBuildingIsFriendly = tile.PlayerAtVertex(Vertex.Top) == player;
+            bool topRightHasBuilding = tile.BuildingAt(Vertex.TopRight) != Building.NoBuilding;
+            bool topRightBuildingIsFriendly = tile.PlayerAtVertex(Vertex.TopRight) == player;
+            bool bottomRightHasBuilding = tile.BuildingAt(Vertex.BottomRight) != Building.NoBuilding;
+            bool bottomRightBuildingIsFriendly = tile.PlayerAtVertex(Vertex.BottomRight) == player;
+            bool bottomHasBuilding = tile.BuildingAt(Vertex.Bottom) != Building.NoBuilding;
+            bool bottomBuildingIsFriendly = tile.PlayerAtVertex(Vertex.Bottom) == player;
+            bool bottomLeftHasBuilding = tile.BuildingAt(Vertex.BottomLeft) != Building.NoBuilding;
+            bool bottomLeftBuildingIsFriendly = tile.PlayerAtVertex(Vertex.BottomLeft) == player;
+            bool topLeftHasBuilding = tile.BuildingAt(Vertex.TopLeft) != Building.NoBuilding;
+            bool topLeftBuildingIsFriendly = tile.PlayerAtVertex(Vertex.TopLeft) == player;
 
-            return true;
+            // now check case-by-case
+            switch (side)
+            {
+                case Side.TopRight:
+                    // check for ally buildings first
+                    if ( (topHasBuilding && topBuildingIsFriendly) || (topRightHasBuilding && topRightBuildingIsFriendly) )
+                    {
+                        return true;
+                    }
+
+                    // check for roads and blockers
+                    if (RoadsMeetAtVertex(player, row, col, Vertex.Top) && !topHasBuilding) return true;
+                    if (RoadsMeetAtVertex(player, row, col, Vertex.TopRight) && !topRightHasBuilding) return true;
+                    break;
+                case Side.Right:
+                    // check for ally buildings first
+                    if ((topRightHasBuilding && topRightBuildingIsFriendly) || (bottomRightHasBuilding && bottomRightBuildingIsFriendly))
+                    {
+                        return true;
+                    }
+
+                    // check for roads and blockers
+                    if (RoadsMeetAtVertex(player, row, col, Vertex.TopRight) && !topRightHasBuilding) return true;
+                    if (RoadsMeetAtVertex(player, row, col, Vertex.BottomRight) && !bottomRightHasBuilding) return true;
+                    break;
+                case Side.BottomRight:
+                    // check for ally buildings first
+                    if ((bottomRightHasBuilding && bottomRightBuildingIsFriendly) || (bottomHasBuilding && bottomBuildingIsFriendly))
+                    {
+                        return true;
+                    }
+
+                    // check for roads and blockers
+                    if (RoadsMeetAtVertex(player, row, col, Vertex.BottomRight) && !bottomRightHasBuilding) return true;
+                    if (RoadsMeetAtVertex(player, row, col, Vertex.Bottom) && !bottomHasBuilding) return true;
+                    break;
+                case Side.BottomLeft:
+                    // check for ally buildings first
+                    if ((bottomHasBuilding && bottomBuildingIsFriendly) || (bottomLeftHasBuilding && bottomLeftBuildingIsFriendly))
+                    {
+                        return true;
+                    }
+
+                    // check for roads and blockers
+                    if (RoadsMeetAtVertex(player, row, col, Vertex.Bottom) && !bottomHasBuilding) return true;
+                    if (RoadsMeetAtVertex(player, row, col, Vertex.BottomLeft) && !bottomLeftHasBuilding) return true;
+                    break;
+                case Side.Left:
+                    // check for ally buildings first
+                    if ((bottomLeftHasBuilding && bottomLeftBuildingIsFriendly) || (topLeftHasBuilding && topLeftBuildingIsFriendly))
+                    {
+                        return true;
+                    }
+
+                    // check for roads and blockers
+                    if (RoadsMeetAtVertex(player, row, col, Vertex.BottomLeft) && !bottomLeftHasBuilding) return true;
+                    if (RoadsMeetAtVertex(player, row, col, Vertex.TopLeft) && !topLeftHasBuilding) return true;
+                    break;
+                default:
+                    // check for ally buildings first
+                    if ((topLeftHasBuilding && topLeftBuildingIsFriendly) || (topHasBuilding && topBuildingIsFriendly))
+                    {
+                        return true;
+                    }
+
+                    // check for roads and blockers
+                    if (RoadsMeetAtVertex(player, row, col, Vertex.TopLeft) && !topLeftHasBuilding) return true;
+                    if (RoadsMeetAtVertex(player, row, col, Vertex.Top) && !topHasBuilding) return true;
+                    break;
+            }
+
+            return false;
         }
 
         public void LoadMap(string fileName)
