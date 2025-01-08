@@ -222,6 +222,27 @@
             return true; 
         }
 
+        public bool BuildRoad(Game game, int row, int col, Side side, Bank bank)
+        {
+            // ensure we have at least one road we can build
+            if (Roads < 1) return false;
+
+            // ensure we have sufficient resources to build road
+            if (ResourceCount(Resource.Lumber) < 1 || ResourceCount(Resource.Brick) < 1) return false;
+
+            // ensure road can be built
+            if (!game.CanBuildRoadAt(this, row, col, side)) return false;
+
+            // add resources to bank
+            bank.Deposit(this, Resource.Lumber, 1);
+            bank.Deposit(this, Resource.Brick, 1);
+
+            Roads--;
+            game.BuildRoad(this, row, col, side);
+
+            return true; 
+        }
+
         // draw dev card from deck
         public bool DrawDevCard(DevDeck deck, Bank bank)
         {

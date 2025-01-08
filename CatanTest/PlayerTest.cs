@@ -406,6 +406,22 @@ namespace CatanTest
         }
 
         [TestMethod]
+        public void BuildRoadSuccess()
+        {
+            Player one = new Player(0);
+            Game game = new Game("standard_map.txt");
+            Bank bank = new Bank();
+
+            one.AddResource(Resource.Brick, 1);
+            one.AddResource(Resource.Lumber, 1);
+
+            game.BuildRoad(one, 1, 1, Side.TopLeft);
+            Assert.IsTrue(one.BuildRoad(game, 1, 1, Side.TopRight, bank));
+            Assert.AreEqual(0, one.ResourceCount(Resource.Brick));
+            Assert.AreEqual(0, one.ResourceCount(Resource.Lumber));
+        }
+
+        [TestMethod]
         public void DrawDevCardSuccess()
         {
             Player one = new Player(0);
