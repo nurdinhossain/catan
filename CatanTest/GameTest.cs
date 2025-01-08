@@ -1354,5 +1354,143 @@ namespace CatanTest
             game.TileAt(1, 0).SetRoadAt(Side.TopRight, Road.Road);
             Assert.IsFalse(game.CanBuildRoadAt(player, 1, 0, Side.TopRight));
         }
+
+        [TestMethod]
+        public void BuildBuildingTop()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            game.BuildBuilding(player, Building.Settlement, 1, 1, Vertex.Top);
+            Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.Top));
+            Assert.AreEqual(Building.Settlement, game.TileAt(0, 1).BuildingAt(Vertex.BottomRight));
+            Assert.AreEqual(Building.Settlement, game.TileAt(0, 2).BuildingAt(Vertex.BottomLeft));
+        }
+
+        [TestMethod]
+        public void BuildBuildingTopRight()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            game.BuildBuilding(player, Building.Settlement, 1, 1, Vertex.TopRight);
+            Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.TopRight));
+            Assert.AreEqual(Building.Settlement, game.TileAt(0, 2).BuildingAt(Vertex.Bottom));
+            Assert.AreEqual(Building.Settlement, game.TileAt(1, 2).BuildingAt(Vertex.TopLeft));
+        }
+
+        [TestMethod]
+        public void BuildBuildingBottomRight()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            game.BuildBuilding(player, Building.Settlement, 1, 1, Vertex.BottomRight);
+            Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.BottomRight));
+            Assert.AreEqual(Building.Settlement, game.TileAt(1, 2).BuildingAt(Vertex.BottomLeft));
+            Assert.AreEqual(Building.Settlement, game.TileAt(2, 2).BuildingAt(Vertex.Top));
+        }
+
+        [TestMethod]
+        public void BuildBuildingBottom()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            game.BuildBuilding(player, Building.Settlement, 1, 1, Vertex.Bottom);
+            Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.Bottom));
+            Assert.AreEqual(Building.Settlement, game.TileAt(2, 2).BuildingAt(Vertex.TopLeft));
+            Assert.AreEqual(Building.Settlement, game.TileAt(2, 1).BuildingAt(Vertex.TopRight));
+        }
+
+        [TestMethod]
+        public void BuildBuildingBottomLeft()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            game.BuildBuilding(player, Building.Settlement, 1, 1, Vertex.BottomLeft);
+            Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.BottomLeft));
+            Assert.AreEqual(Building.Settlement, game.TileAt(2, 1).BuildingAt(Vertex.Top));
+            Assert.AreEqual(Building.Settlement, game.TileAt(1, 0).BuildingAt(Vertex.BottomRight));
+        }
+
+        [TestMethod]
+        public void BuildBuildingTopLeft()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            game.BuildBuilding(player, Building.Settlement, 1, 1, Vertex.TopLeft);
+            Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.TopLeft));
+            Assert.AreEqual(Building.Settlement, game.TileAt(1, 0).BuildingAt(Vertex.TopRight));
+            Assert.AreEqual(Building.Settlement, game.TileAt(0, 1).BuildingAt(Vertex.Bottom));
+        }
+
+        [TestMethod]
+        public void BuildRoadTopRight()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            game.BuildRoad(player, 1, 1, Side.TopRight);
+            Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.TopRight));
+            Assert.AreEqual(Road.Road, game.TileAt(0, 2).RoadAt(Side.BottomLeft));
+        }
+
+        [TestMethod]
+        public void BuildRoadRight()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            game.BuildRoad(player, 1, 1, Side.Right);
+            Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.Right));
+            Assert.AreEqual(Road.Road, game.TileAt(1, 2).RoadAt(Side.Left));
+        }
+
+        [TestMethod]
+        public void BuildRoadBottomRight()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            game.BuildRoad(player, 1, 1, Side.BottomRight);
+            Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.BottomRight));
+            Assert.AreEqual(Road.Road, game.TileAt(2, 2).RoadAt(Side.TopLeft));
+        }
+
+        [TestMethod]
+        public void BuildRoadBottomLeft()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            game.BuildRoad(player, 1, 1, Side.BottomLeft);
+            Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.BottomLeft));
+            Assert.AreEqual(Road.Road, game.TileAt(2, 1).RoadAt(Side.TopRight));
+        }
+
+        [TestMethod]
+        public void BuildRoadLeft()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            game.BuildRoad(player, 1, 1, Side.Left);
+            Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.Left));
+            Assert.AreEqual(Road.Road, game.TileAt(1, 0).RoadAt(Side.Right));
+        }
+
+        [TestMethod]
+        public void BuildRoadTopLeft()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(0);
+
+            game.BuildRoad(player, 1, 1, Side.TopLeft);
+            Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.TopLeft));
+            Assert.AreEqual(Road.Road, game.TileAt(0, 1).RoadAt(Side.BottomRight));
+        }
     }
 }

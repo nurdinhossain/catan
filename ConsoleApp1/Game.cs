@@ -157,7 +157,7 @@
             return hasRoad;
         }
 
-        private bool BuildingProximityValid(Player player, int row, int col, Vertex vertex)
+        private bool BuildingProximityValid(int row, int col, Vertex vertex)
         {
             // get tile (assumed not null)
             Tile? tile = _tiles[row, col];
@@ -256,7 +256,7 @@
             if (tile.BuildingAt(vertex) != Building.NoBuilding) return false;
 
             // check if both building and road conditions are met
-            return BuildingProximityValid(player, row, col, vertex) && RoadsMeetAtVertex(player, row, col, vertex);
+            return BuildingProximityValid(row, col, vertex) && RoadsMeetAtVertex(player, row, col, vertex);
         }
 
         public bool CanBuildRoadAt(Player player, int row, int col, Side side)
@@ -356,6 +356,164 @@
             }
 
             return false;
+        }
+
+        public void BuildBuilding(Player player, Building building, int row, int col, Vertex vertex)
+        {
+            // assume tile is not null
+            Tile? tile = _tiles[row, col];
+
+            // build building on main vertex
+            tile.SetBuildingAt(vertex, building);
+            tile.SetPlayerAtVertex(vertex, player);
+
+            // neighboring tiles
+            Tile? topLeftNeighbor = GetNeighbor(row, col, Side.TopLeft);
+            Tile? topRightNeighbor = GetNeighbor(row, col, Side.TopRight);
+            Tile? rightNeighbor = GetNeighbor(row, col, Side.Right);
+            Tile? bottomRightNeighbor = GetNeighbor(row, col, Side.BottomRight);
+            Tile? bottomLeftNeighbor = GetNeighbor(row, col, Side.BottomLeft);
+            Tile? leftNeighbor = GetNeighbor(row, col, Side.Left);
+
+            // build building on neighboring tiles
+            switch (vertex)
+            {
+                case Vertex.Top:
+                    if (topLeftNeighbor != null)
+                    {
+                        topLeftNeighbor.SetBuildingAt(Vertex.BottomRight, building);
+                        topLeftNeighbor.SetPlayerAtVertex(Vertex.BottomRight, player);
+                    }
+                    if (topRightNeighbor != null)
+                    {
+                        topRightNeighbor.SetBuildingAt(Vertex.BottomLeft, building);
+                        topRightNeighbor.SetPlayerAtVertex(Vertex.BottomLeft, player);
+                    }
+                    break;
+                case Vertex.TopRight:
+                    if (topRightNeighbor != null)
+                    {
+                        topRightNeighbor.SetBuildingAt(Vertex.Bottom, building);
+                        topRightNeighbor.SetPlayerAtVertex(Vertex.Bottom, player);
+                    }
+                    if (rightNeighbor != null)
+                    {
+                        rightNeighbor.SetBuildingAt(Vertex.TopLeft, building);
+                        rightNeighbor.SetPlayerAtVertex(Vertex.TopLeft, player);
+                    }
+                    break;
+                case Vertex.BottomRight:
+                    if (rightNeighbor != null)
+                    {
+                        rightNeighbor.SetBuildingAt(Vertex.BottomLeft, building);
+                        rightNeighbor.SetPlayerAtVertex(Vertex.BottomLeft, player);
+                    }
+                    if (bottomRightNeighbor != null)
+                    {
+                        bottomRightNeighbor.SetBuildingAt(Vertex.Top, building);
+                        bottomRightNeighbor.SetPlayerAtVertex(Vertex.Top, player);
+                    }
+                    break;
+                case Vertex.Bottom:
+                    if (bottomRightNeighbor != null)
+                    {
+                        bottomRightNeighbor.SetBuildingAt(Vertex.TopLeft, building);
+                        bottomRightNeighbor.SetPlayerAtVertex(Vertex.TopLeft, player);
+                    }
+                    if (bottomLeftNeighbor != null)
+                    {
+                        bottomLeftNeighbor.SetBuildingAt(Vertex.TopRight, building);
+                        bottomLeftNeighbor.SetPlayerAtVertex(Vertex.TopRight, player);
+                    }
+                    break;
+                case Vertex.BottomLeft:
+                    if (bottomLeftNeighbor != null)
+                    {
+                        bottomLeftNeighbor.SetBuildingAt(Vertex.Top, building);
+                        bottomLeftNeighbor.SetPlayerAtVertex(Vertex.Top, player);
+                    }
+                    if (leftNeighbor != null)
+                    {
+                        leftNeighbor.SetBuildingAt(Vertex.BottomRight, building);
+                        leftNeighbor.SetPlayerAtVertex(Vertex.BottomRight, player);
+                    }
+                    break;
+                default:
+                    if (leftNeighbor != null)
+                    {
+                        leftNeighbor.SetBuildingAt(Vertex.TopRight, building);
+                        leftNeighbor.SetPlayerAtVertex(Vertex.TopRight, player);
+                    }
+                    if (topLeftNeighbor != null)
+                    {
+                        topLeftNeighbor.SetBuildingAt(Vertex.Bottom, building);
+                        topLeftNeighbor.SetPlayerAtVertex(Vertex.Bottom, player);
+                    }
+                    break;
+            }
+        }
+
+        public void BuildRoad(Player player, int row, int col, Side side)
+        {
+            // assume tile is not null
+            Tile? tile = _tiles[row, col];
+
+            // build road on main side
+            tile.SetRoadAt(side, Road.Road);
+            tile.SetPlayerAtSide(side, player);
+
+            // build road on neighboring tiles
+            switch (side)
+            {
+                case Side.TopRight:
+                    Tile? topRightNeighbor = GetNeighbor(row, col, Side.TopRight);
+                    if (topRightNeighbor != null)
+                    {
+                        topRightNeighbor.SetRoadAt(Side.BottomLeft, Road.Road);
+                        topRightNeighbor.SetPlayerAtSide(Side.BottomLeft, player);
+                    }
+                    break;
+                case Side.Right:
+                    Tile? rightNeighbor = GetNeighbor(row, col, Side.Right);
+                    if (rightNeighbor != null)
+                    {
+                        rightNeighbor.SetRoadAt(Side.Left, Road.Road);
+                        rightNeighbor.SetPlayerAtSide(Side.Left, player);
+                    }
+                    break;
+                case Side.BottomRight:
+                    Tile? bottomRightNeighbor = GetNeighbor(row, col, Side.BottomRight);
+                    if (bottomRightNeighbor != null)
+                    {
+                        bottomRightNeighbor.SetRoadAt(Side.TopLeft, Road.Road);
+                        bottomRightNeighbor.SetPlayerAtSide(Side.TopLeft, player);
+                    }
+                    break;
+                case Side.BottomLeft:
+                    Tile? bottomLeftNeighbor = GetNeighbor(row, col, Side.BottomLeft);
+                    if (bottomLeftNeighbor != null)
+                    {
+                        bottomLeftNeighbor.SetRoadAt(Side.TopRight, Road.Road);
+                        bottomLeftNeighbor.SetPlayerAtSide(Side.TopRight, player);
+                    }
+                    break;
+                case Side.Left:
+                    Tile? leftNeighbor = GetNeighbor(row, col, Side.Left);
+                    if (leftNeighbor != null)
+                    {
+                        leftNeighbor.SetRoadAt(Side.Right, Road.Road);
+                        leftNeighbor.SetPlayerAtSide(Side.Right, player);
+                    }
+                    break;
+                default:
+                    Tile? topLeftNeighbor = GetNeighbor(row, col, Side.TopLeft);
+                    if (topLeftNeighbor != null)
+                    {
+                        topLeftNeighbor.SetRoadAt(Side.BottomRight, Road.Road);
+                        topLeftNeighbor.SetPlayerAtSide(Side.BottomRight, player);
+                    }
+                    break;
+            }
         }
 
         public void LoadMap(string fileName)
