@@ -301,18 +301,22 @@
         }
 
         // trade cards with the bank
-        public bool ExchangeWithBank(int[] toGive, int[] toGet)
+        public bool ExchangeWithBank(int[] toGive, int[] toGet, Bank bank)
         {
             // arrays must be correct length
             if (toGive.Length != Enum.GetNames(typeof(Resource)).Length || toGet.Length != Enum.GetNames(typeof(Resource)).Length) return false;
 
+            // first element of both arrays must be 0
+            if (toGive[0] != 0 || toGet[0] != 0) return false;
+
             // cannot trade nothing
             if (toGive.Sum() == 0 || toGet.Sum() == 0) return false; 
 
-            // ensure we have sufficient resources
+            // ensure we/bank have sufficient resources
             for (int i = 0; i < toGive.Length; i++)
             {
                 if (toGive[i] > ResourceCount((Resource)i)) return false;
+                if (toGet[i] > bank.ResourceCount((Resource)i)) return false;
             }
 
             int totalRequested = toGet.Sum();
@@ -363,8 +367,8 @@
             // make requested exchanges
             for (int i = 0; i < toGive.Length; i++)
             {
-                RemoveResource((Resource)i, toGive[i]);
-                AddResource((Resource)i, toGet[i]);
+                bank.Deposit(this, (Resource)i, toGive[i]);
+                bank.Withdraw(this, (Resource)i, toGet[i]);
             }
 
             return true;

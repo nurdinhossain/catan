@@ -520,22 +520,26 @@ namespace CatanTest
         public void ExchangeBankSuccessNoPorts()
         {
             Player one = new Player(0);
+            Bank bank = new Bank();
 
             // make player one hand
             one.AddResource(Resource.Brick, 8);
 
             // make exchange
-            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 8, 0, 0, 0, 0 }, new int[] { 0, 0, 2, 0, 0, 0 }));
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 0, 2, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0 }));
+            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 8, 0, 0, 0, 0 }, new int[] { 0, 0, 2, 0, 0, 0 }, bank));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 0, 2, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0, 0 }, bank));
             Assert.AreEqual(2, one.HandSize());
             Assert.AreEqual(0, one.ResourceCount(Resource.Brick));
             Assert.AreEqual(2, one.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(27, bank.ResourceCount(Resource.Brick));
+            Assert.AreEqual(17, bank.ResourceCount(Resource.Lumber));
         }
 
         [TestMethod]
         public void ExchangeBankSuccessTwoToOne()
         {
             Player one = new Player(0);
+            Bank bank = new Bank();
             one.AddPort(Port.LumberPort);
 
             // make player one hand
@@ -543,19 +547,25 @@ namespace CatanTest
             one.AddResource(Resource.Lumber, 10);
 
             // make exchange
-            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 8, 10, 0, 0, 0 }, new int[] { 0, 1, 1, 2, 1, 2 }));
+            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 8, 10, 0, 0, 0 }, new int[] { 0, 1, 1, 2, 1, 2 }, bank));
             Assert.AreEqual(7, one.HandSize());
             Assert.AreEqual(1, one.ResourceCount(Resource.Brick));
             Assert.AreEqual(1, one.ResourceCount(Resource.Lumber));
             Assert.AreEqual(2, one.ResourceCount(Resource.Ore));
             Assert.AreEqual(1, one.ResourceCount(Resource.Grain));
             Assert.AreEqual(2, one.ResourceCount(Resource.Wool));
+            Assert.AreEqual(26, bank.ResourceCount(Resource.Brick));
+            Assert.AreEqual(28, bank.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(17, bank.ResourceCount(Resource.Ore));
+            Assert.AreEqual(18, bank.ResourceCount(Resource.Grain));
+            Assert.AreEqual(17, bank.ResourceCount(Resource.Wool));
         }
 
         [TestMethod]
         public void ExchangeBankSuccessThreeToOne()
         {
             Player one = new Player(0);
+            Bank bank = new Bank();
             one.AddPort(Port.AnyPort);
 
             // make player one hand
@@ -563,7 +573,7 @@ namespace CatanTest
             one.AddResource(Resource.Lumber, 10);
 
             // make exchange
-            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 8, 10, 0, 0, 0 }, new int[] { 0, 0, 1, 2, 0, 2 }));
+            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 8, 10, 0, 0, 0 }, new int[] { 0, 0, 1, 2, 0, 2 }, bank));
             Assert.AreEqual(5, one.HandSize());
             Assert.AreEqual(0, one.ResourceCount(Resource.Brick));
             Assert.AreEqual(1, one.ResourceCount(Resource.Lumber));
@@ -576,6 +586,7 @@ namespace CatanTest
         public void ExchangeBankSuccessMixedOne()
         {
             Player one = new Player(0);
+            Bank bank = new Bank();
             one.AddPort(Port.AnyPort);
             one.AddPort(Port.BrickPort);
 
@@ -585,7 +596,7 @@ namespace CatanTest
             one.AddResource(Resource.Wool, 9);
 
             // make exchange
-            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 11, 10, 0, 0, 9 }, new int[] { 0, 3, 1, 2, 3, 2 }));
+            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 11, 10, 0, 0, 9 }, new int[] { 0, 3, 1, 2, 3, 2 }, bank));
             Assert.AreEqual(11, one.HandSize());
             Assert.AreEqual(3, one.ResourceCount(Resource.Brick));
             Assert.AreEqual(1, one.ResourceCount(Resource.Lumber));
@@ -598,6 +609,7 @@ namespace CatanTest
         public void ExchangeBankSuccessMixedTwo()
         {
             Player one = new Player(0);
+            Bank bank = new Bank();
             one.AddPort(Port.AnyPort);
             one.AddPort(Port.BrickPort);
             one.AddPort(Port.LumberPort);
@@ -608,7 +620,7 @@ namespace CatanTest
             one.AddResource(Resource.Wool, 4);
 
             // make exchange
-            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 2, 3, 0, 0, 4 }, new int[] { 0, 3, 0, 0, 0, 0 }));
+            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 2, 3, 0, 0, 4 }, new int[] { 0, 3, 0, 0, 0, 0 }, bank));
             Assert.AreEqual(3, one.HandSize());
             Assert.AreEqual(3, one.ResourceCount(Resource.Brick));
             Assert.AreEqual(0, one.ResourceCount(Resource.Lumber));
@@ -621,6 +633,7 @@ namespace CatanTest
         public void ExchangeBankSuccessMixedThree()
         {
             Player one = new Player(0);
+            Bank bank = new Bank();
             one.AddPort(Port.AnyPort);
             one.AddPort(Port.WoolPort);
 
@@ -630,7 +643,7 @@ namespace CatanTest
             one.AddResource(Resource.Wool, 5);
 
             // make exchange
-            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 17, 3, 0, 0, 5 }, new int[] { 0, 4, 4, 0, 0, 0 }));
+            Assert.AreEqual(true, one.ExchangeWithBank(new int[] { 0, 17, 3, 0, 0, 5 }, new int[] { 0, 4, 4, 0, 0, 0 }, bank));
             Assert.AreEqual(8, one.HandSize());
             Assert.AreEqual(4, one.ResourceCount(Resource.Brick));
             Assert.AreEqual(4, one.ResourceCount(Resource.Lumber));
@@ -643,61 +656,66 @@ namespace CatanTest
         public void ExchangeBankWrongArraySize()
         {
             Player one = new Player(0);
+            Bank bank = new Bank();
 
             // make player one hand
             one.AddResource(Resource.Brick, 17);
             one.AddResource(Resource.Lumber, 3);
             one.AddResource(Resource.Wool, 5);
 
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 16, 0, 0, 0 }, new int[] { 0, 4, 0, 0, 0, 0 }));
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 16, 0, 0, 0, 0 }, new int[] { 0, 4, 0, 0, 0 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 16, 0, 0, 0 }, new int[] { 0, 4, 0, 0, 0, 0 }, bank));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 16, 0, 0, 0, 0 }, new int[] { 0, 4, 0, 0, 0 }, bank));
         }
 
         [TestMethod]
         public void ExchangeBankInsufficientResources()
         {
             Player one = new Player(0);
+            Bank bank = new Bank();
 
             // make player one hand
             one.AddResource(Resource.Brick, 17);
             one.AddResource(Resource.Lumber, 3);
             one.AddResource(Resource.Wool, 5);
 
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 20, 0, 0, 0, 0 }, new int[] { 0, 5, 0, 0, 0, 0 }));
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 0, 4, 0, 0, 0 }, new int[] { 0, 0, 0, 1, 0, 0 }));
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 0, 0, 8, 0, 0 }, new int[] { 0, 0, 0, 0, 2, 0 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 20, 0, 0, 0, 0 }, new int[] { 0, 5, 0, 0, 0, 0 }, bank));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 0, 4, 0, 0, 0 }, new int[] { 0, 0, 0, 1, 0, 0 }, bank));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 0, 0, 8, 0, 0 }, new int[] { 0, 0, 0, 0, 2, 0 }, bank));
         }
 
         [TestMethod]
         public void ExchangeBankWrongQuantityOne()
         {
             Player one = new Player(0);
+            Bank bank = new Bank();
 
             // make player one hand
             one.AddResource(Resource.Brick, 6);
             one.AddResource(Resource.Lumber, 8);
             one.AddResource(Resource.Wool, 4);
 
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 1, 8, 0, 0, 4 }, new int[] { 0, 4, 0, 0, 0, 0 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 1, 8, 0, 0, 4 }, new int[] { 0, 4, 0, 0, 0, 0 }, bank));
         }
 
         [TestMethod]
         public void ExchangeBankWrongQuantityTwo()
         {
             Player one = new Player(0);
+            Bank bank = new Bank();
 
             // make player one hand
             one.AddResource(Resource.Brick, 9);
             one.AddResource(Resource.Lumber, 8);
             one.AddResource(Resource.Wool, 4);
 
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 9, 8, 0, 0, 4 }, new int[] { 0, 4, 0, 3, 0, 0 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 9, 8, 0, 0, 4 }, new int[] { 0, 4, 0, 3, 0, 0 }, bank));
         }
 
         [TestMethod]
         public void ExchangeBankWrongQuantityThree()
         {
             Player one = new Player(0);
+            Bank bank = new Bank();
             one.AddPort(Port.AnyPort);
 
             // make player one hand
@@ -705,13 +723,14 @@ namespace CatanTest
             one.AddResource(Resource.Lumber, 5);
             one.AddResource(Resource.Wool, 4);
 
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 9, 5, 0, 0, 4 }, new int[] { 0, 1, 0, 4, 0, 0 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 9, 5, 0, 0, 4 }, new int[] { 0, 1, 0, 4, 0, 0 }, bank));
         }
 
         [TestMethod]
         public void ExchangeBankWrongRequestedOne()
         {
             Player one = new Player(0);
+            Bank bank = new Bank();
             one.AddPort(Port.AnyPort);
 
             // make player one hand
@@ -719,13 +738,14 @@ namespace CatanTest
             one.AddResource(Resource.Lumber, 11);
             one.AddResource(Resource.Wool, 4);
 
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 9, 11, 0, 0, 4 }, new int[] { 0, 1, 0, 4, 0, 4 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 9, 11, 0, 0, 4 }, new int[] { 0, 1, 0, 4, 0, 4 }, bank));
         }
 
         [TestMethod]
         public void ExchangeBankWrongRequestedTwo()
         {
             Player one = new Player(0);
+            Bank bank = new Bank();
             one.AddPort(Port.AnyPort);
             one.AddPort(Port.BrickPort);
 
@@ -734,7 +754,7 @@ namespace CatanTest
             one.AddResource(Resource.Lumber, 11);
             one.AddResource(Resource.Wool, 4);
 
-            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 13, 11, 0, 0, 4 }, new int[] { 0, 1, 0, 4, 0, 4 }));
+            Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 13, 11, 0, 0, 4 }, new int[] { 0, 1, 0, 4, 0, 4 }, bank));
         }
     }
 }
