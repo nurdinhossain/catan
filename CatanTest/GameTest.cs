@@ -415,9 +415,9 @@ namespace CatanTest
             game.TileAt(0, 1).SetRoadAt(Side.BottomRight, Road.Road);
             game.TileAt(1, 1).SetPlayerAtSide(Side.TopLeft, player);
             game.TileAt(0, 1).SetPlayerAtSide(Side.BottomRight, player);
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 1, 1, Vertex.TopLeft));
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 1, 0, Vertex.TopRight));
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 0, 1, Vertex.Bottom));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 1, 1, Vertex.TopLeft));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 1, 0, Vertex.TopRight));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 0, 1, Vertex.Bottom));
             game.TileAt(1, 1).SetRoadAt(Side.TopLeft, Road.NoRoad);
             game.TileAt(0, 1).SetRoadAt(Side.BottomRight, Road.NoRoad);
 
@@ -425,9 +425,9 @@ namespace CatanTest
             game.TileAt(1, 0).SetRoadAt(Side.Right, Road.Road);
             game.TileAt(1, 1).SetPlayerAtSide(Side.Left, player);
             game.TileAt(1, 0).SetPlayerAtSide(Side.Right, player);
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 1, 1, Vertex.TopLeft));
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 1, 0, Vertex.TopRight));
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 0, 1, Vertex.Bottom));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 1, 1, Vertex.TopLeft));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 1, 0, Vertex.TopRight));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 0, 1, Vertex.Bottom));
             game.TileAt(1, 1).SetRoadAt(Side.Left, Road.NoRoad);
             game.TileAt(1, 0).SetRoadAt(Side.Right, Road.NoRoad);
 
@@ -435,9 +435,9 @@ namespace CatanTest
             game.TileAt(1, 0).SetRoadAt(Side.TopRight, Road.Road);
             game.TileAt(0, 1).SetPlayerAtSide(Side.BottomLeft, player);
             game.TileAt(1, 0).SetPlayerAtSide(Side.TopRight, player);
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 1, 1, Vertex.TopLeft));
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 1, 0, Vertex.TopRight));
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 0, 1, Vertex.Bottom));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 1, 1, Vertex.TopLeft));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 1, 0, Vertex.TopRight));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 0, 1, Vertex.Bottom));
             game.TileAt(0, 1).SetRoadAt(Side.BottomLeft, Road.NoRoad);
             game.TileAt(1, 0).SetRoadAt(Side.TopRight, Road.NoRoad);
         }
@@ -465,9 +465,9 @@ namespace CatanTest
             game.TileAt(3, 1).SetRoadAt(Side.Left, Road.Road);
             game.TileAt(3, 0).SetPlayerAtSide(Side.Right, player);
             game.TileAt(3, 1).SetPlayerAtSide(Side.Left, player);
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 4, 1, Vertex.Top));
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 3, 1, Vertex.BottomLeft));
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 3, 0, Vertex.BottomRight));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 4, 1, Vertex.Top));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 3, 1, Vertex.BottomLeft));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 3, 0, Vertex.BottomRight));
             game.TileAt(3, 0).SetRoadAt(Side.Right, Road.NoRoad);
             game.TileAt(3, 1).SetRoadAt(Side.Left, Road.NoRoad);
 
@@ -475,9 +475,9 @@ namespace CatanTest
             game.TileAt(4, 1).SetRoadAt(Side.TopLeft, Road.Road);
             game.TileAt(3, 0).SetPlayerAtSide(Side.BottomRight, player);
             game.TileAt(4, 1).SetPlayerAtSide(Side.TopLeft, player);
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 4, 1, Vertex.Top));
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 3, 1, Vertex.BottomLeft));
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 3, 0, Vertex.BottomRight));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 4, 1, Vertex.Top));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 3, 1, Vertex.BottomLeft));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 3, 0, Vertex.BottomRight));
             game.TileAt(3, 0).SetRoadAt(Side.BottomRight, Road.NoRoad);
             game.TileAt(4, 1).SetRoadAt(Side.TopLeft, Road.NoRoad);
 
@@ -485,9 +485,9 @@ namespace CatanTest
             game.TileAt(4, 1).SetRoadAt(Side.TopRight, Road.Road);
             game.TileAt(3, 1).SetPlayerAtSide(Side.BottomLeft, player);
             game.TileAt(4, 1).SetPlayerAtSide(Side.TopRight, player);
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 4, 1, Vertex.Top));
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 3, 1, Vertex.BottomLeft));
-            Assert.IsTrue(game.CanBuildBuildingAt(player, 3, 0, Vertex.BottomRight));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 4, 1, Vertex.Top));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 3, 1, Vertex.BottomLeft));
+            Assert.IsTrue(game.CanBuildSettlementAt(player, 3, 0, Vertex.BottomRight));
             game.TileAt(3, 1).SetRoadAt(Side.BottomLeft, Road.NoRoad);
             game.TileAt(4, 1).SetRoadAt(Side.TopRight, Road.NoRoad);
         }
@@ -516,9 +516,9 @@ namespace CatanTest
             game.TileAt(0, 1).SetRoadAt(Side.BottomRight, Road.Road);
             game.TileAt(1, 1).SetPlayerAtSide(Side.TopLeft, player);
             game.TileAt(0, 1).SetPlayerAtSide(Side.BottomRight, player);
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 1, 1, Vertex.TopLeft));
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 1, 0, Vertex.TopRight));
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 0, 1, Vertex.Bottom));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 1, 1, Vertex.TopLeft));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 1, 0, Vertex.TopRight));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 0, 1, Vertex.Bottom));
             game.TileAt(1, 1).SetRoadAt(Side.TopLeft, Road.NoRoad);
             game.TileAt(0, 1).SetRoadAt(Side.BottomRight, Road.NoRoad);
 
@@ -526,9 +526,9 @@ namespace CatanTest
             game.TileAt(1, 0).SetRoadAt(Side.Right, Road.Road);
             game.TileAt(1, 1).SetPlayerAtSide(Side.Left, player);
             game.TileAt(1, 0).SetPlayerAtSide(Side.Right, player);
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 1, 1, Vertex.TopLeft));
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 1, 0, Vertex.TopRight));
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 0, 1, Vertex.Bottom));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 1, 1, Vertex.TopLeft));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 1, 0, Vertex.TopRight));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 0, 1, Vertex.Bottom));
             game.TileAt(1, 1).SetRoadAt(Side.Left, Road.NoRoad);
             game.TileAt(1, 0).SetRoadAt(Side.Right, Road.NoRoad);
 
@@ -536,9 +536,9 @@ namespace CatanTest
             game.TileAt(1, 0).SetRoadAt(Side.TopRight, Road.Road);
             game.TileAt(0, 1).SetPlayerAtSide(Side.BottomLeft, player);
             game.TileAt(1, 0).SetPlayerAtSide(Side.TopRight, player);
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 1, 1, Vertex.TopLeft));
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 1, 0, Vertex.TopRight));
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 0, 1, Vertex.Bottom));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 1, 1, Vertex.TopLeft));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 1, 0, Vertex.TopRight));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 0, 1, Vertex.Bottom));
             game.TileAt(0, 1).SetRoadAt(Side.BottomLeft, Road.NoRoad);
             game.TileAt(1, 0).SetRoadAt(Side.TopRight, Road.NoRoad);
         }
@@ -567,9 +567,9 @@ namespace CatanTest
             game.TileAt(3, 1).SetRoadAt(Side.Left, Road.Road);
             game.TileAt(3, 0).SetPlayerAtSide(Side.Right, player);
             game.TileAt(3, 1).SetPlayerAtSide(Side.Left, player);
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 4, 1, Vertex.Top));
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 3, 1, Vertex.BottomLeft));
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 3, 0, Vertex.BottomRight));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 4, 1, Vertex.Top));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 3, 1, Vertex.BottomLeft));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 3, 0, Vertex.BottomRight));
             game.TileAt(3, 0).SetRoadAt(Side.Right, Road.NoRoad);
             game.TileAt(3, 1).SetRoadAt(Side.Left, Road.NoRoad);
 
@@ -577,9 +577,9 @@ namespace CatanTest
             game.TileAt(4, 1).SetRoadAt(Side.TopLeft, Road.Road);
             game.TileAt(3, 0).SetPlayerAtSide(Side.BottomRight, player);
             game.TileAt(4, 1).SetPlayerAtSide(Side.TopLeft, player);
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 4, 1, Vertex.Top));
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 3, 1, Vertex.BottomLeft));
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 3, 0, Vertex.BottomRight));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 4, 1, Vertex.Top));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 3, 1, Vertex.BottomLeft));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 3, 0, Vertex.BottomRight));
             game.TileAt(3, 0).SetRoadAt(Side.BottomRight, Road.NoRoad);
             game.TileAt(4, 1).SetRoadAt(Side.TopLeft, Road.NoRoad);
 
@@ -587,9 +587,9 @@ namespace CatanTest
             game.TileAt(4, 1).SetRoadAt(Side.TopRight, Road.Road);
             game.TileAt(3, 1).SetPlayerAtSide(Side.BottomLeft, player);
             game.TileAt(4, 1).SetPlayerAtSide(Side.TopRight, player);
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 4, 1, Vertex.Top));
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 3, 1, Vertex.BottomLeft));
-            Assert.IsFalse(game.CanBuildBuildingAt(playerTwo, 3, 0, Vertex.BottomRight));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 4, 1, Vertex.Top));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 3, 1, Vertex.BottomLeft));
+            Assert.IsFalse(game.CanBuildSettlementAt(playerTwo, 3, 0, Vertex.BottomRight));
             game.TileAt(3, 1).SetRoadAt(Side.BottomLeft, Road.NoRoad);
             game.TileAt(4, 1).SetRoadAt(Side.TopRight, Road.NoRoad);
         }
@@ -599,9 +599,9 @@ namespace CatanTest
         {
             Game game = new Game("standard_map.txt");
             Player player = new Player(0);
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 0, 0, Vertex.TopLeft));
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 4, 4, Vertex.BottomRight));
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 4, Vertex.TopRight));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 0, 0, Vertex.TopLeft));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 4, 4, Vertex.BottomRight));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 4, Vertex.TopRight));
         }
 
         [TestMethod]
@@ -610,7 +610,7 @@ namespace CatanTest
             Game game = new Game("standard_map.txt");
             Player player = new Player(0);
             game.TileAt(1, 1).SetBuildingAt(Vertex.TopLeft, Building.Settlement);
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 1, Vertex.TopLeft));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 1, Vertex.TopLeft));
         }
 
         [TestMethod]
@@ -627,9 +627,9 @@ namespace CatanTest
             game.TileAt(0, 2).SetBuildingAt(Vertex.BottomLeft, Building.Settlement);
             game.TileAt(0, 1).SetBuildingAt(Vertex.BottomRight, Building.Settlement);
             game.TileAt(1, 1).SetBuildingAt(Vertex.Top, Building.Settlement);
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 1, Vertex.TopRight));
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 2, Vertex.TopLeft));
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 0, 2, Vertex.Bottom));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 1, Vertex.TopRight));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 2, Vertex.TopLeft));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 0, 2, Vertex.Bottom));
 
         }
 
@@ -647,9 +647,9 @@ namespace CatanTest
             game.TileAt(0, 2).SetBuildingAt(Vertex.BottomRight, Building.Settlement);
             game.TileAt(1, 2).SetBuildingAt(Vertex.Top, Building.Settlement);
             game.TileAt(0, 3).SetBuildingAt(Vertex.BottomLeft, Building.Settlement);
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 1, Vertex.TopRight));
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 2, Vertex.TopLeft));
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 0, 2, Vertex.Bottom));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 1, Vertex.TopRight));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 2, Vertex.TopLeft));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 0, 2, Vertex.Bottom));
         }
 
         [TestMethod]
@@ -666,9 +666,9 @@ namespace CatanTest
             game.TileAt(1, 2).SetBuildingAt(Vertex.BottomLeft, Building.Settlement);
             game.TileAt(1, 1).SetBuildingAt(Vertex.BottomRight, Building.Settlement);
             game.TileAt(2, 2).SetBuildingAt(Vertex.Top, Building.Settlement);
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 1, Vertex.TopRight));
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 2, Vertex.TopLeft));
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 0, 2, Vertex.Bottom));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 1, Vertex.TopRight));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 2, Vertex.TopLeft));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 0, 2, Vertex.Bottom));
         }
 
         [TestMethod]
@@ -685,9 +685,9 @@ namespace CatanTest
             game.TileAt(1, 0).SetBuildingAt(Vertex.TopRight, Building.Settlement);
             game.TileAt(1, 1).SetBuildingAt(Vertex.TopLeft, Building.Settlement);
             game.TileAt(0, 1).SetBuildingAt(Vertex.Bottom, Building.Settlement);
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 0, Vertex.BottomRight));
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 1, Vertex.BottomLeft));
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 2, 1, Vertex.Top));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 0, Vertex.BottomRight));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 1, Vertex.BottomLeft));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 2, 1, Vertex.Top));
         }
 
         [TestMethod]
@@ -704,9 +704,9 @@ namespace CatanTest
             game.TileAt(1, 1).SetBuildingAt(Vertex.Bottom, Building.Settlement);
             game.TileAt(2, 1).SetBuildingAt(Vertex.TopRight, Building.Settlement);
             game.TileAt(2, 2).SetBuildingAt(Vertex.TopLeft, Building.Settlement);
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 0, Vertex.BottomRight));
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 1, Vertex.BottomLeft));
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 2, 1, Vertex.Top));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 0, Vertex.BottomRight));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 1, Vertex.BottomLeft));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 2, 1, Vertex.Top));
         }
 
         [TestMethod]
@@ -723,9 +723,9 @@ namespace CatanTest
             game.TileAt(1, 0).SetBuildingAt(Vertex.Bottom, Building.Settlement);
             game.TileAt(2, 0).SetBuildingAt(Vertex.TopRight, Building.Settlement);
             game.TileAt(2, 1).SetBuildingAt(Vertex.TopLeft, Building.Settlement);
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 0, Vertex.BottomRight));
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 1, 1, Vertex.BottomLeft));
-            Assert.IsFalse(game.CanBuildBuildingAt(player, 2, 1, Vertex.Top));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 0, Vertex.BottomRight));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 1, Vertex.BottomLeft));
+            Assert.IsFalse(game.CanBuildSettlementAt(player, 2, 1, Vertex.Top));
         }
 
         [TestMethod]
@@ -1365,6 +1365,9 @@ namespace CatanTest
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.Top));
             Assert.AreEqual(Building.Settlement, game.TileAt(0, 1).BuildingAt(Vertex.BottomRight));
             Assert.AreEqual(Building.Settlement, game.TileAt(0, 2).BuildingAt(Vertex.BottomLeft));
+            Assert.AreEqual(player, game.TileAt(1, 1).PlayerAtVertex(Vertex.Top));
+            Assert.AreEqual(player, game.TileAt(0, 1).PlayerAtVertex(Vertex.BottomRight));
+            Assert.AreEqual(player, game.TileAt(0, 2).PlayerAtVertex(Vertex.BottomLeft));
         }
 
         [TestMethod]
@@ -1377,6 +1380,9 @@ namespace CatanTest
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.TopRight));
             Assert.AreEqual(Building.Settlement, game.TileAt(0, 2).BuildingAt(Vertex.Bottom));
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 2).BuildingAt(Vertex.TopLeft));
+            Assert.AreEqual(player, game.TileAt(1, 1).PlayerAtVertex(Vertex.TopRight));
+            Assert.AreEqual(player, game.TileAt(0, 2).PlayerAtVertex(Vertex.Bottom));
+            Assert.AreEqual(player, game.TileAt(1, 2).PlayerAtVertex(Vertex.TopLeft));
         }
 
         [TestMethod]
@@ -1389,6 +1395,9 @@ namespace CatanTest
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.BottomRight));
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 2).BuildingAt(Vertex.BottomLeft));
             Assert.AreEqual(Building.Settlement, game.TileAt(2, 2).BuildingAt(Vertex.Top));
+            Assert.AreEqual(player, game.TileAt(1, 1).PlayerAtVertex(Vertex.BottomRight));
+            Assert.AreEqual(player, game.TileAt(1, 2).PlayerAtVertex(Vertex.BottomLeft));
+            Assert.AreEqual(player, game.TileAt(2, 2).PlayerAtVertex(Vertex.Top));
         }
 
         [TestMethod]
@@ -1401,6 +1410,9 @@ namespace CatanTest
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.Bottom));
             Assert.AreEqual(Building.Settlement, game.TileAt(2, 2).BuildingAt(Vertex.TopLeft));
             Assert.AreEqual(Building.Settlement, game.TileAt(2, 1).BuildingAt(Vertex.TopRight));
+            Assert.AreEqual(player, game.TileAt(1, 1).PlayerAtVertex(Vertex.Bottom));
+            Assert.AreEqual(player, game.TileAt(2, 2).PlayerAtVertex(Vertex.TopLeft));
+            Assert.AreEqual(player, game.TileAt(2, 1).PlayerAtVertex(Vertex.TopRight));
         }
 
         [TestMethod]
@@ -1413,6 +1425,9 @@ namespace CatanTest
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.BottomLeft));
             Assert.AreEqual(Building.Settlement, game.TileAt(2, 1).BuildingAt(Vertex.Top));
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 0).BuildingAt(Vertex.BottomRight));
+            Assert.AreEqual(player, game.TileAt(1, 1).PlayerAtVertex(Vertex.BottomLeft));
+            Assert.AreEqual(player, game.TileAt(2, 1).PlayerAtVertex(Vertex.Top));
+            Assert.AreEqual(player, game.TileAt(1, 0).PlayerAtVertex(Vertex.BottomRight));
         }
 
         [TestMethod]
@@ -1425,6 +1440,9 @@ namespace CatanTest
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.TopLeft));
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 0).BuildingAt(Vertex.TopRight));
             Assert.AreEqual(Building.Settlement, game.TileAt(0, 1).BuildingAt(Vertex.Bottom));
+            Assert.AreEqual(player, game.TileAt(1, 1).PlayerAtVertex(Vertex.TopLeft));
+            Assert.AreEqual(player, game.TileAt(1, 0).PlayerAtVertex(Vertex.TopRight));
+            Assert.AreEqual(player, game.TileAt(0, 1).PlayerAtVertex(Vertex.Bottom));
         }
 
         [TestMethod]
@@ -1436,6 +1454,8 @@ namespace CatanTest
             game.BuildRoad(player, 1, 1, Side.TopRight);
             Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.TopRight));
             Assert.AreEqual(Road.Road, game.TileAt(0, 2).RoadAt(Side.BottomLeft));
+            Assert.AreEqual(player, game.TileAt(1, 1).PlayerAtSide(Side.TopRight));
+            Assert.AreEqual(player, game.TileAt(0, 2).PlayerAtSide(Side.BottomLeft));
         }
 
         [TestMethod]
@@ -1447,6 +1467,8 @@ namespace CatanTest
             game.BuildRoad(player, 1, 1, Side.Right);
             Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.Right));
             Assert.AreEqual(Road.Road, game.TileAt(1, 2).RoadAt(Side.Left));
+            Assert.AreEqual(player, game.TileAt(1, 1).PlayerAtSide(Side.Right));
+            Assert.AreEqual(player, game.TileAt(1, 2).PlayerAtSide(Side.Left));
         }
 
         [TestMethod]
@@ -1458,6 +1480,8 @@ namespace CatanTest
             game.BuildRoad(player, 1, 1, Side.BottomRight);
             Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.BottomRight));
             Assert.AreEqual(Road.Road, game.TileAt(2, 2).RoadAt(Side.TopLeft));
+            Assert.AreEqual(player, game.TileAt(1, 1).PlayerAtSide(Side.BottomRight));
+            Assert.AreEqual(player, game.TileAt(2, 2).PlayerAtSide(Side.TopLeft));
         }
 
         [TestMethod]
@@ -1469,6 +1493,8 @@ namespace CatanTest
             game.BuildRoad(player, 1, 1, Side.BottomLeft);
             Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.BottomLeft));
             Assert.AreEqual(Road.Road, game.TileAt(2, 1).RoadAt(Side.TopRight));
+            Assert.AreEqual(player, game.TileAt(1, 1).PlayerAtSide(Side.BottomLeft));
+            Assert.AreEqual(player, game.TileAt(2, 1).PlayerAtSide(Side.TopRight));
         }
 
         [TestMethod]
@@ -1480,6 +1506,8 @@ namespace CatanTest
             game.BuildRoad(player, 1, 1, Side.Left);
             Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.Left));
             Assert.AreEqual(Road.Road, game.TileAt(1, 0).RoadAt(Side.Right));
+            Assert.AreEqual(player, game.TileAt(1, 1).PlayerAtSide(Side.Left));
+            Assert.AreEqual(player, game.TileAt(1, 0).PlayerAtSide(Side.Right));
         }
 
         [TestMethod]
@@ -1491,6 +1519,8 @@ namespace CatanTest
             game.BuildRoad(player, 1, 1, Side.TopLeft);
             Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.TopLeft));
             Assert.AreEqual(Road.Road, game.TileAt(0, 1).RoadAt(Side.BottomRight));
+            Assert.AreEqual(player, game.TileAt(1, 1).PlayerAtSide(Side.TopLeft));
+            Assert.AreEqual(player, game.TileAt(0, 1).PlayerAtSide(Side.BottomRight));
         }
     }
 }

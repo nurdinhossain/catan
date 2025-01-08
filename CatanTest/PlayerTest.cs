@@ -220,8 +220,9 @@ namespace CatanTest
         public void BuildSettlementSuccess()
         {
             Player one = new Player(0);
-            Tile tile = new Tile(Resource.Lumber, 10);
             Bank bank = new Bank();
+            Game game = new Game("standard_map.txt");
+            Tile tile = game.TileAt(1, 1);
 
             // make player one hand
             one.AddResource(Resource.Brick, 4);
@@ -230,7 +231,8 @@ namespace CatanTest
             one.AddResource(Resource.Wool, 4);
 
             // create settlement
-            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft, bank));
+            game.BuildRoad(one, 1, 1, Side.TopLeft);
+            Assert.AreEqual(true, one.BuildSettlement(game, 1, 1, Vertex.TopLeft, bank));
             Assert.AreEqual(Building.Settlement, tile.BuildingAt(Vertex.TopLeft));
             Assert.AreEqual(one, tile.PlayerAtVertex(Vertex.TopLeft));
             Assert.AreEqual(4, one.Settlements);
@@ -253,8 +255,8 @@ namespace CatanTest
         public void BuildSettlementNoneLeft()
         {
             Player one = new Player(0);
-            Tile tile = new Tile(Resource.Lumber, 10);
             Bank bank = new Bank();
+            Game game = new Game("standard_map.txt");
 
             // make player one hand
             one.AddResource(Resource.Brick, 4);
@@ -263,7 +265,8 @@ namespace CatanTest
             one.AddResource(Resource.Wool, 4);
 
             one.Settlements = 0;
-            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft, bank));
+            game.BuildRoad(one, 1, 1, Side.TopLeft);
+            Assert.AreEqual(false, one.BuildSettlement(game, 1, 1, Vertex.TopLeft, bank));
             Assert.AreEqual(0, one.Settlements);
         }
 
@@ -271,9 +274,10 @@ namespace CatanTest
         public void BuildSettlementOnBuilding()
         {
             Player one = new Player(0);
-            Tile tile = new Tile(Resource.Lumber, 10);
             Bank bank = new Bank();
-            tile.SetBuildingAt(Vertex.TopLeft, Building.Settlement);
+            Game game = new Game("standard_map.txt");
+            game.BuildBuilding(one, Building.Settlement, 1, 1, Vertex.TopLeft);
+            game.BuildRoad(one, 1, 1, Side.TopLeft);
 
             // make player one hand
             one.AddResource(Resource.Brick, 4);
@@ -281,9 +285,9 @@ namespace CatanTest
             one.AddResource(Resource.Grain, 4);
             one.AddResource(Resource.Wool, 4);
 
-            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft, bank));
-            tile.SetBuildingAt(Vertex.TopLeft, Building.City);
-            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft, bank));
+            Assert.AreEqual(false, one.BuildSettlement(game, 1, 1, Vertex.TopLeft, bank));
+            game.BuildBuilding(one, Building.City, 1, 1, Vertex.TopLeft);
+            Assert.AreEqual(false, one.BuildSettlement(game, 1, 1, Vertex.TopLeft, bank));
             Assert.AreEqual(5, one.Settlements);
         }
 
@@ -291,7 +295,7 @@ namespace CatanTest
         public void BuildSettlementInsufficientResources()
         {
             Player one = new Player(0);
-            Tile tile = new Tile(Resource.Lumber, 10);
+            Game game = new Game("standard_map.txt");
             Bank bank = new Bank();
 
             // make player one hand
@@ -299,7 +303,8 @@ namespace CatanTest
             one.AddResource(Resource.Lumber, 4);
             one.AddResource(Resource.Grain, 4);
 
-            Assert.AreEqual(false, one.BuildSettlement(tile, Vertex.TopLeft, bank));
+            game.BuildRoad(one, 1, 1, Side.TopLeft);
+            Assert.AreEqual(false, one.BuildSettlement(game, 1, 1, Vertex.TopLeft, bank));
             Assert.AreEqual(5, one.Settlements);
         }
 
@@ -307,7 +312,8 @@ namespace CatanTest
         public void BuildCitySuccess()
         {
             Player one = new Player(0);
-            Tile tile = new Tile(Resource.Lumber, 10);
+            Game game = new Game("standard_map.txt");
+            Tile tile = game.TileAt(1, 1);
             Bank bank = new Bank();
 
             // make player one hand
@@ -316,10 +322,11 @@ namespace CatanTest
             one.AddResource(Resource.Grain, 3);
             one.AddResource(Resource.Ore, 4);
             one.AddResource(Resource.Wool, 4);
-            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft, bank));
+            game.BuildRoad(one, 1, 1, Side.TopLeft);
+            Assert.AreEqual(true, one.BuildSettlement(game, 1, 1, Vertex.TopLeft, bank));
 
             // create city
-            Assert.AreEqual(true, one.BuildCity(tile, Vertex.TopLeft, bank));
+            Assert.AreEqual(true, one.BuildCity(game, 1, 1, Vertex.TopLeft, bank));
             Assert.AreEqual(one, tile.PlayerAtVertex(Vertex.TopLeft));
             Assert.AreEqual(Building.City, tile.BuildingAt(Vertex.TopLeft));
             Assert.AreEqual(5, one.Settlements);
@@ -345,7 +352,7 @@ namespace CatanTest
         public void BuildCityNoneLeft()
         {
             Player one = new Player(0);
-            Tile tile = new Tile(Resource.Lumber, 10);
+            Game game = new Game("standard_map.txt");
             Bank bank = new Bank();
             one.Cities = 0;
 
@@ -355,15 +362,16 @@ namespace CatanTest
             one.AddResource(Resource.Grain, 3);
             one.AddResource(Resource.Ore, 4);
             one.AddResource(Resource.Wool, 4);
-            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft, bank));
-            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft, bank));
+            game.BuildRoad(one, 1, 1, Side.TopLeft);
+            Assert.AreEqual(true, one.BuildSettlement(game, 1, 1, Vertex.TopLeft, bank));
+            Assert.AreEqual(false, one.BuildCity(game, 1, 1, Vertex.TopLeft, bank));
         }
 
         [TestMethod]
         public void BuiltCityOnWrongBuilding()
         {
             Player one = new Player(0);
-            Tile tile = new Tile(Resource.Lumber, 10);
+            Game game = new Game("standard_map.txt");
             Bank bank = new Bank();
 
             // make player one hand
@@ -372,17 +380,18 @@ namespace CatanTest
             one.AddResource(Resource.Grain, 8);
             one.AddResource(Resource.Ore, 8);
             one.AddResource(Resource.Wool, 8);
-            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft, bank));
-            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft, bank));
-            Assert.AreEqual(true, one.BuildCity(tile, Vertex.TopLeft, bank));
-            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft, bank));
+            game.BuildRoad(one, 1, 1, Side.TopLeft);
+            Assert.AreEqual(false, one.BuildCity(game, 1, 1, Vertex.TopLeft, bank));
+            Assert.AreEqual(true, one.BuildSettlement(game, 1, 1, Vertex.TopLeft, bank));
+            Assert.AreEqual(true, one.BuildCity(game, 1, 1, Vertex.TopLeft, bank));
+            Assert.AreEqual(false, one.BuildCity(game, 1, 1, Vertex.TopLeft, bank));
         }
 
         [TestMethod]
         public void BuiltCityInsufficientResources()
         {
             Player one = new Player(0);
-            Tile tile = new Tile(Resource.Lumber, 10);
+            Game game = new Game("standard_map.txt");
             Bank bank = new Bank();
 
             // make player one hand
@@ -391,8 +400,9 @@ namespace CatanTest
             one.AddResource(Resource.Grain, 2);
             one.AddResource(Resource.Ore, 3);
             one.AddResource(Resource.Wool, 1);
-            Assert.AreEqual(true, one.BuildSettlement(tile, Vertex.TopLeft, bank));
-            Assert.AreEqual(false, one.BuildCity(tile, Vertex.TopLeft, bank));
+            game.BuildRoad(one, 1, 1, Side.TopLeft);
+            Assert.AreEqual(true, one.BuildSettlement(game, 1, 1, Vertex.TopLeft, bank));
+            Assert.AreEqual(false, one.BuildCity(game, 1, 1, Vertex.TopLeft, bank));
         }
 
         [TestMethod]

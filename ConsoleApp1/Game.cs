@@ -244,7 +244,7 @@
             return valid;
         }
 
-        public bool CanBuildBuildingAt(Player player, int row, int col, Vertex vertex)
+        public bool CanBuildSettlementAt(Player player, int row, int col, Vertex vertex)
         {
             // get tile
             Tile? tile = _tiles[row, col];
@@ -257,6 +257,18 @@
 
             // check if both building and road conditions are met
             return BuildingProximityValid(row, col, vertex) && RoadsMeetAtVertex(player, row, col, vertex);
+        }
+
+        public bool CanBuildCityAt(Player player, int row, int col, Vertex vertex)
+        {
+            // get tile
+            Tile? tile = _tiles[row, col];
+
+            // if tile is null, its unbuildable
+            if (tile == null) return false;
+
+            // can only build on top of an ally settlement
+            return tile.BuildingAt(vertex) == Building.Settlement && tile.PlayerAtVertex(vertex) == player;
         }
 
         public bool CanBuildRoadAt(Player player, int row, int col, Side side)

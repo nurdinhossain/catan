@@ -175,16 +175,16 @@
         }
 
         // building
-        public bool BuildSettlement(Tile tile, Vertex vertex, Bank bank)
+        public bool BuildSettlement(Game game, int row, int col, Vertex vertex, Bank bank)
         {
             // ensure we have at least one settlement we can build
             if (Settlements < 1) return false; 
 
-            // ensure coordinate does not have pre-existing building
-            if (tile.BuildingAt(vertex) != Building.NoBuilding) return false;
-
             // ensure we have sufficient resources to build settlement
             if (ResourceCount(Resource.Brick) < 1 || ResourceCount(Resource.Grain) < 1 || ResourceCount(Resource.Wool) < 1 || ResourceCount(Resource.Lumber) < 1) return false;
+
+            // ensure building can be built
+            if (!game.CanBuildSettlementAt(this, row, col, vertex)) return false;
 
             // add resources to bank
             bank.Deposit(this, Resource.Brick, 1);
@@ -193,23 +193,22 @@
             bank.Deposit(this, Resource.Lumber, 1);
 
             Settlements--;
-            tile.SetBuildingAt(vertex, Building.Settlement);
-            tile.SetPlayerAtVertex(vertex, this);
+            game.BuildBuilding(this, Building.Settlement, row, col, vertex);
             VictoryPoints++;
 
             return true; 
         }
 
-        public bool BuildCity(Tile tile, Vertex vertex, Bank bank)
+        public bool BuildCity(Game game, int row, int col, Vertex vertex, Bank bank)
         {
             // ensure we have at least one city we can build
             if (Cities < 1) return false;
 
-            // ensure coordinate has pre-existing settlement
-            if (tile.BuildingAt(vertex) != Building.Settlement) return false;
-
             // ensure we have sufficient resources to build settlement
             if (ResourceCount(Resource.Grain) < 2 || ResourceCount(Resource.Ore) < 3) return false;
+
+            // ensure city can be built
+            if (!game.CanBuildCityAt(this, row, col, vertex)) return false; 
 
             // add resources to bank
             bank.Deposit(this, Resource.Grain, 2);
@@ -217,8 +216,7 @@
 
             Cities--;
             Settlements++;
-            tile.SetBuildingAt(vertex, Building.City);
-            tile.SetPlayerAtVertex(vertex, this);
+            game.BuildBuilding(this, Building.City, row, col, vertex);
             VictoryPoints++;
 
             return true; 
