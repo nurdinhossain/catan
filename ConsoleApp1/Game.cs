@@ -563,6 +563,22 @@
             }
         }
 
+        // method for moving robber
+        public bool MoveRobber(int row, int col)
+        {
+            // if new tile is null, return false
+            Tile? newTile = _tiles[row, col];
+            if (newTile == null) return false;
+
+            // if new tile is equal to old tile, return false
+            if (newTile == _robberTile) return false;
+
+            // otherwise, set new robber tile
+            _robberTile = newTile;
+
+            return true; 
+        }
+
         public void LoadMap(string fileName)
         {
             // split data into lines

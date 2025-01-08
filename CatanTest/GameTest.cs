@@ -1530,5 +1530,29 @@ namespace CatanTest
             Assert.AreEqual(player, game.TileAt(1, 1).PlayerAtSide(Side.TopLeft));
             Assert.AreEqual(player, game.TileAt(0, 1).PlayerAtSide(Side.BottomRight));
         }
+
+        [TestMethod]
+        public void MoveRobberSuccess()
+        {
+            Game game = new Game("standard_map.txt");
+
+            Assert.IsTrue(game.MoveRobber(0, 1));
+        }
+
+        [TestMethod]
+        public void MoveRobberFailNull()
+        {
+            Game game = new Game("standard_map.txt");
+
+            Assert.IsFalse(game.MoveRobber(0, 0));
+        }
+
+        [TestMethod]
+        public void MoveRobberFailSameTile()
+        {
+            Game game = new Game("standard_map.txt");
+
+            Assert.IsFalse(game.MoveRobber(2, 2));
+        }
     }
 }
