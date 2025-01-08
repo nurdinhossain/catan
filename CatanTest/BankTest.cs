@@ -53,15 +53,28 @@ namespace CatanTest
         }
 
         [TestMethod]
+        public void BankWithdrawTrueLeftover()
+        {
+            Bank bank = new Bank();
+            Player player = new Player(0);
+
+            Assert.AreEqual(true, bank.Withdraw(player, Resource.Lumber, 20));
+
+            Assert.AreEqual(0, bank.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(1, bank.NumTransactions());
+        }
+
+        [TestMethod]
         public void BankWithdrawFalse()
         {
             Bank bank = new Bank();
             Player player = new Player(0);
 
-            Assert.AreEqual(false, bank.Withdraw(player, Resource.Lumber, 20));
+            Assert.AreEqual(true, bank.Withdraw(player, Resource.Lumber, 20));
+            Assert.AreEqual(false, bank.Withdraw(player, Resource.Lumber, 1));
 
-            Assert.AreEqual(19, bank.ResourceCount(Resource.Lumber));
-            Assert.AreEqual(0, bank.NumTransactions());
+            Assert.AreEqual(0, bank.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(1, bank.NumTransactions());
         }
     }
 }

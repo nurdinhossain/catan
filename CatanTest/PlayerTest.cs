@@ -419,6 +419,8 @@ namespace CatanTest
             Assert.IsTrue(one.BuildRoad(game, 1, 1, Side.TopRight, bank));
             Assert.AreEqual(0, one.ResourceCount(Resource.Brick));
             Assert.AreEqual(0, one.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(14, one.Roads);
+            Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.TopRight));
         }
 
         [TestMethod]

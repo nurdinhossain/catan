@@ -56,8 +56,15 @@
         // withdraw resources from bank
         public bool Withdraw(Player player, Resource resource, int amount)
         {
-            // if bank does not have sufficient resources, return false
-            if (_resources[(int)resource] < amount) return false;
+            // if bank has no resource left, return false
+            int bankQuantity = _resources[(int)resource];
+            if (bankQuantity == 0) return false;
+
+            // if bank has resources less than amount requested, validate the request but only withdraw whatever's left
+            if (bankQuantity < amount)
+            {
+                return Withdraw(player, resource, bankQuantity);
+            }
 
             // otherwise, withdraw
             _resources[(int)resource] -= amount;
