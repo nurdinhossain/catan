@@ -3,17 +3,52 @@
     public class Game
     {
         // array of Tiles present in game board
-        private Tile?[,] _tiles; 
+        private Tile?[,] _tiles;
+
+        // robber tile
+        private Tile _robberTile;
 
         public Game(string fileName) 
         {
             LoadMap(fileName);
+
+            // if _tiles is null, raise exception
+            if (_tiles == null) throw new Exception("_tiles was not properly initialized.");
+
+            for (int i = 0; i < _tiles.GetLength(0); i++)
+            {
+                bool loopDone = false;
+                for (int j = 0; j < _tiles.GetLength(1); j++)
+                {
+                    Tile? tile = _tiles[i, j];
+                    if (tile != null)
+                    {
+                        if (tile.Resource == Resource.NoResource)
+                        {
+                            _robberTile = tile;
+                            loopDone = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (loopDone) break; 
+            }
+
+            // if robber tile is still null, this game board is invalid
+            if (_robberTile == null) throw new Exception("Game board does not contain desert tile.");
         }
 
         // getters
         public Tile? TileAt(int row, int col)
         {
             return _tiles[row, col];
+        }
+
+        // ** for testing **
+        public Tile GetRobberTile()
+        {
+            return _robberTile;
         }
 
         public Tile? GetNeighbor(int row, int col, Side side)

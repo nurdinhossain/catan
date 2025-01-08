@@ -250,6 +250,14 @@ namespace CatanTest
         }
 
         [TestMethod]
+        public void StandardMapRobberTileInitialized()
+        {
+            Game game = new Game("standard_map.txt");
+
+            Assert.AreEqual(game.TileAt(2, 2), game.GetRobberTile());
+        }
+
+        [TestMethod]
         public void GetNeighborTestEdgeOne()
         {
             Game game = new Game("standard_map.txt");
