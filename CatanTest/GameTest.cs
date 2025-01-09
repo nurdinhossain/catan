@@ -404,7 +404,7 @@ namespace CatanTest
         public void CanBuildTrueTypeOne()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             // type 1 
             game.TileAt(1, 1).SetBuildingAt(Vertex.TopRight, Building.Settlement);
@@ -454,7 +454,7 @@ namespace CatanTest
         public void CanBuildTrueTypeTwo()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             // type 2
             game.TileAt(3, 1).SetBuildingAt(Vertex.Top, Building.Settlement);
@@ -504,8 +504,8 @@ namespace CatanTest
         public void CanBuildFalseTypeOneWrongPlayer()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
-            Player playerTwo = new Player(1);
+            Player player = new Player(game, 0);
+            Player playerTwo = new Player(game, 1);
 
             // type 1 
             game.TileAt(1, 1).SetBuildingAt(Vertex.TopRight, Building.Settlement);
@@ -555,8 +555,8 @@ namespace CatanTest
         public void CanBuildFalseTypeTwoWrongPlayer()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
-            Player playerTwo = new Player(1);
+            Player player = new Player(game, 0);
+            Player playerTwo = new Player(game, 1);
 
             // type 2
             game.TileAt(3, 1).SetBuildingAt(Vertex.Top, Building.Settlement);
@@ -606,7 +606,7 @@ namespace CatanTest
         public void CanBuildFalseNull()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
             Assert.IsFalse(game.CanBuildSettlementAt(player, 0, 0, Vertex.TopLeft));
             Assert.IsFalse(game.CanBuildSettlementAt(player, 4, 4, Vertex.BottomRight));
             Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 4, Vertex.TopRight));
@@ -616,7 +616,7 @@ namespace CatanTest
         public void CanBuildFalseHasBuilding()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
             game.TileAt(1, 1).SetBuildingAt(Vertex.TopLeft, Building.Settlement);
             Assert.IsFalse(game.CanBuildSettlementAt(player, 1, 1, Vertex.TopLeft));
         }
@@ -625,7 +625,7 @@ namespace CatanTest
         public void CanBuildTypeOneCaseOneFalse()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             // case 1
             game.TileAt(0, 2).SetRoadAt(Side.BottomLeft, Road.Road);
@@ -645,7 +645,7 @@ namespace CatanTest
         public void CanBuildTypeOneCaseTwoFalse()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             // case 2
             game.TileAt(0, 2).SetRoadAt(Side.BottomRight, Road.Road);
@@ -664,7 +664,7 @@ namespace CatanTest
         public void CanBuildTypeOneCaseThreeFalse()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             // case 3
             game.TileAt(1, 1).SetRoadAt(Side.Right, Road.Road);
@@ -683,7 +683,7 @@ namespace CatanTest
         public void CanBuildTypeTwoCaseOneFalse()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             // case 1
             game.TileAt(1, 0).SetRoadAt(Side.Right, Road.Road);
@@ -702,7 +702,7 @@ namespace CatanTest
         public void CanBuildTypeTwoCaseTwoFalse()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             // case 2
             game.TileAt(1, 0).SetRoadAt(Side.BottomRight, Road.Road);
@@ -721,7 +721,7 @@ namespace CatanTest
         public void CanBuildTypeTwoCaseThreeFalse()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             // case 3
             game.TileAt(1, 1).SetRoadAt(Side.BottomLeft, Road.Road);
@@ -740,7 +740,7 @@ namespace CatanTest
         public void CanBuildRoadFromBuilding()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             // type 1
             game.TileAt(0, 1).SetBuildingAt(Vertex.Top, Building.Settlement);
@@ -775,7 +775,7 @@ namespace CatanTest
         public void CanBuildRoadTopRight()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.TileAt(0, 1).SetRoadAt(Side.Right, Road.Road);
             game.TileAt(0, 2).SetRoadAt(Side.Left, Road.Road);
@@ -818,7 +818,7 @@ namespace CatanTest
         public void CanBuildRoadRight()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.TileAt(0, 2).SetRoadAt(Side.BottomLeft, Road.Road);
             game.TileAt(1, 1).SetRoadAt(Side.TopRight, Road.Road);
@@ -861,7 +861,7 @@ namespace CatanTest
         public void CanBuildRoadBottomRight()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.TileAt(1, 1).SetRoadAt(Side.Right, Road.Road);
             game.TileAt(1, 2).SetRoadAt(Side.Left, Road.Road);
@@ -904,7 +904,7 @@ namespace CatanTest
         public void CanBuildRoadBottomLeft()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.TileAt(1, 0).SetRoadAt(Side.Right, Road.Road);
             game.TileAt(1, 1).SetRoadAt(Side.Left, Road.Road);
@@ -947,7 +947,7 @@ namespace CatanTest
         public void CanBuildRoadLeft()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.TileAt(0, 1).SetRoadAt(Side.BottomLeft, Road.Road);
             game.TileAt(1, 0).SetRoadAt(Side.TopRight, Road.Road);
@@ -990,7 +990,7 @@ namespace CatanTest
         public void CanBuildRoadTopLeft()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.TileAt(0, 1).SetRoadAt(Side.BottomLeft, Road.Road);
             game.TileAt(1, 0).SetRoadAt(Side.TopRight, Road.Road);
@@ -1033,8 +1033,8 @@ namespace CatanTest
         public void CanBuildRoadTopRightWrongPlayer()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
-            Player playerTwo = new Player(1);
+            Player player = new Player(game, 0);
+            Player playerTwo = new Player(game, 1);
 
             game.TileAt(0, 1).SetRoadAt(Side.Right, Road.Road);
             game.TileAt(0, 2).SetRoadAt(Side.Left, Road.Road);
@@ -1077,8 +1077,8 @@ namespace CatanTest
         public void CanBuildRoadRightWrongPlayer()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
-            Player playerTwo = new Player(1);
+            Player player = new Player(game, 0);
+            Player playerTwo = new Player(game, 1);
 
             game.TileAt(0, 2).SetRoadAt(Side.BottomLeft, Road.Road);
             game.TileAt(1, 1).SetRoadAt(Side.TopRight, Road.Road);
@@ -1121,8 +1121,8 @@ namespace CatanTest
         public void CanBuildRoadBottomRightWrongPlayer()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
-            Player playerTwo = new Player(1);
+            Player player = new Player(game, 0);
+            Player playerTwo = new Player(game, 1);
 
             game.TileAt(1, 1).SetRoadAt(Side.Right, Road.Road);
             game.TileAt(1, 2).SetRoadAt(Side.Left, Road.Road);
@@ -1165,8 +1165,8 @@ namespace CatanTest
         public void CanBuildRoadBottomLeftWrongPlayer()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
-            Player playerTwo = new Player(1);
+            Player player = new Player(game, 0);
+            Player playerTwo = new Player(game, 1);
 
             game.TileAt(1, 0).SetRoadAt(Side.Right, Road.Road);
             game.TileAt(1, 1).SetRoadAt(Side.Left, Road.Road);
@@ -1209,8 +1209,8 @@ namespace CatanTest
         public void CanBuildRoadLeftWrongPlayer()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
-            Player playerTwo = new Player(1);
+            Player player = new Player(game, 0);
+            Player playerTwo = new Player(game, 1);
 
             game.TileAt(0, 1).SetRoadAt(Side.BottomLeft, Road.Road);
             game.TileAt(1, 0).SetRoadAt(Side.TopRight, Road.Road);
@@ -1253,8 +1253,8 @@ namespace CatanTest
         public void CanBuildRoadTopLeftWrongPlayer()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
-            Player playerTwo = new Player(1);
+            Player player = new Player(game, 0);
+            Player playerTwo = new Player(game, 1);
 
             game.TileAt(0, 1).SetRoadAt(Side.BottomLeft, Road.Road);
             game.TileAt(1, 0).SetRoadAt(Side.TopRight, Road.Road);
@@ -1297,8 +1297,8 @@ namespace CatanTest
         public void CanBuildRoadFromBuildingWrongPlayer()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
-            Player playerTwo = new Player(1);
+            Player player = new Player(game, 0);
+            Player playerTwo = new Player(game, 1);
 
             // type 1
             game.TileAt(0, 1).SetBuildingAt(Vertex.Top, Building.Settlement);
@@ -1334,8 +1334,8 @@ namespace CatanTest
         public void CanBuildRoadEnemyBuildingBlock()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
-            Player playerTwo = new Player(1);
+            Player player = new Player(game, 0);
+            Player playerTwo = new Player(game, 1);
 
             game.TileAt(1, 1).SetRoadAt(Side.TopLeft, Road.Road);
             game.TileAt(1, 1).SetPlayerAtSide(Side.TopLeft, player);
@@ -1348,7 +1348,7 @@ namespace CatanTest
         public void CanBuildRoadNull()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             Assert.IsFalse(game.CanBuildRoadAt(player, 0, 0, Side.TopRight));
         }
@@ -1357,7 +1357,7 @@ namespace CatanTest
         public void CanBuildRoadExistingRoad()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.TileAt(1, 0).SetRoadAt(Side.TopRight, Road.Road);
             Assert.IsFalse(game.CanBuildRoadAt(player, 1, 0, Side.TopRight));
@@ -1367,7 +1367,7 @@ namespace CatanTest
         public void BuildBuildingTop()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.BuildBuilding(player, Building.Settlement, 1, 1, Vertex.Top);
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.Top));
@@ -1382,7 +1382,7 @@ namespace CatanTest
         public void BuildBuildingTopRight()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.BuildBuilding(player, Building.Settlement, 1, 1, Vertex.TopRight);
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.TopRight));
@@ -1397,7 +1397,7 @@ namespace CatanTest
         public void BuildBuildingBottomRight()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.BuildBuilding(player, Building.Settlement, 1, 1, Vertex.BottomRight);
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.BottomRight));
@@ -1412,7 +1412,7 @@ namespace CatanTest
         public void BuildBuildingBottom()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.BuildBuilding(player, Building.Settlement, 1, 1, Vertex.Bottom);
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.Bottom));
@@ -1427,7 +1427,7 @@ namespace CatanTest
         public void BuildBuildingBottomLeft()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.BuildBuilding(player, Building.Settlement, 1, 1, Vertex.BottomLeft);
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.BottomLeft));
@@ -1442,7 +1442,7 @@ namespace CatanTest
         public void BuildBuildingTopLeft()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.BuildBuilding(player, Building.Settlement, 1, 1, Vertex.TopLeft);
             Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.TopLeft));
@@ -1457,7 +1457,7 @@ namespace CatanTest
         public void BuildRoadTopRight()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.BuildRoad(player, 1, 1, Side.TopRight);
             Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.TopRight));
@@ -1470,7 +1470,7 @@ namespace CatanTest
         public void BuildRoadRight()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.BuildRoad(player, 1, 1, Side.Right);
             Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.Right));
@@ -1483,7 +1483,7 @@ namespace CatanTest
         public void BuildRoadBottomRight()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.BuildRoad(player, 1, 1, Side.BottomRight);
             Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.BottomRight));
@@ -1496,7 +1496,7 @@ namespace CatanTest
         public void BuildRoadBottomLeft()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.BuildRoad(player, 1, 1, Side.BottomLeft);
             Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.BottomLeft));
@@ -1509,7 +1509,7 @@ namespace CatanTest
         public void BuildRoadLeft()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.BuildRoad(player, 1, 1, Side.Left);
             Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.Left));
@@ -1522,7 +1522,7 @@ namespace CatanTest
         public void BuildRoadTopLeft()
         {
             Game game = new Game("standard_map.txt");
-            Player player = new Player(0);
+            Player player = new Player(game, 0);
 
             game.BuildRoad(player, 1, 1, Side.TopLeft);
             Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.TopLeft));

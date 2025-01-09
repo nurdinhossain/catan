@@ -2,6 +2,9 @@
 {
     public class Player
     {
+        // game board played by this player
+        private Game _game;
+
         // resource cards held by each player
         private int[] _resources;
 
@@ -49,8 +52,12 @@
         public int VictoryPoints { get; set; }
 
         // basic constructor
-        public Player(int id)
+        public Player(Game game, int id)
         {
+            // add game
+            _game = game;
+            _game.AddPlayer(this);
+
             ID = id;
             _resources = new int[Enum.GetNames(typeof(Resource)).Length];
             _devCards = new int[Enum.GetNames(typeof(DevelopmentCard)).Length];
@@ -113,6 +120,12 @@
         public void RemoveResource(Resource resource, int count)
         {
             _resources[(int)resource] -= count;
+        }
+
+        // add a dev card to temp stack
+        public void AddDevCard(DevelopmentCard card)
+        {
+            _devCardsTemp.Add(card);
         }
 
         // ** adding a port is permanent, so no need for a remove method **
@@ -200,7 +213,7 @@
         }
 
         // building
-        public bool BuildSettlement(Game game, int row, int col, Vertex vertex, Bank bank)
+        public bool BuildSettlement(int row, int col, Vertex vertex)
         {
             // ensure we have at least one settlement we can build
             if (Settlements < 1) return false; 
@@ -209,22 +222,16 @@
             if (ResourceCount(Resource.Brick) < 1 || ResourceCount(Resource.Grain) < 1 || ResourceCount(Resource.Wool) < 1 || ResourceCount(Resource.Lumber) < 1) return false;
 
             // ensure building can be built
-            if (!game.CanBuildSettlementAt(this, row, col, vertex)) return false;
-
-            // add resources to bank
-            bank.Deposit(this, Resource.Brick, 1);
-            bank.Deposit(this, Resource.Grain, 1);
-            bank.Deposit(this, Resource.Wool, 1);
-            bank.Deposit(this, Resource.Lumber, 1);
+            if (!_game.CanBuildSettlementAt(this, row, col, vertex)) return false;
 
             Settlements--;
-            game.BuildBuilding(this, Building.Settlement, row, col, vertex);
+            _game.BuildBuilding(this, Building.Settlement, row, col, vertex);
             VictoryPoints++;
 
             return true; 
         }
 
-        public bool BuildCity(Game game, int row, int col, Vertex vertex, Bank bank)
+        public bool BuildCity(int row, int col, Vertex vertex)
         {
             // ensure we have at least one city we can build
             if (Cities < 1) return false;
@@ -233,21 +240,17 @@
             if (ResourceCount(Resource.Grain) < 2 || ResourceCount(Resource.Ore) < 3) return false;
 
             // ensure city can be built
-            if (!game.CanBuildCityAt(this, row, col, vertex)) return false; 
-
-            // add resources to bank
-            bank.Deposit(this, Resource.Grain, 2);
-            bank.Deposit(this, Resource.Ore, 3);
+            if (!_game.CanBuildCityAt(this, row, col, vertex)) return false; 
 
             Cities--;
             Settlements++;
-            game.BuildBuilding(this, Building.City, row, col, vertex);
+            _game.BuildBuilding(this, Building.City, row, col, vertex);
             VictoryPoints++;
 
             return true; 
         }
 
-        public bool BuildRoad(Game game, int row, int col, Side side, Bank bank)
+        public bool BuildRoad(int row, int col, Side side)
         {
             // ensure we have at least one road we can build
             if (Roads < 1) return false;
@@ -256,46 +259,37 @@
             if (ResourceCount(Resource.Lumber) < 1 || ResourceCount(Resource.Brick) < 1) return false;
 
             // ensure road can be built
-            if (!game.CanBuildRoadAt(this, row, col, side)) return false;
-
-            // add resources to bank
-            bank.Deposit(this, Resource.Lumber, 1);
-            bank.Deposit(this, Resource.Brick, 1);
+            if (!_game.CanBuildRoadAt(this, row, col, side)) return false;
 
             Roads--;
-            game.BuildRoad(this, row, col, side);
+            _game.BuildRoad(this, row, col, side);
 
             return true; 
         }
 
         // draw dev card from deck
-        public bool DrawDevCard(DevDeck deck, Bank bank)
+        public bool DrawDevCard()
         {
-            // ensure we aren't drawing from an empty deck 
-            if (deck.CardsRemaining() == 0) return false;
-
-            // ensure we have sufficient resources
-            if (ResourceCount(Resource.Wool) < 1 || ResourceCount(Resource.Grain) < 1 || ResourceCount(Resource.Ore) < 1) return false;
-
-            // add resources to bank
-            bank.Deposit(this, Resource.Wool, 1);
-            bank.Deposit(this, Resource.Grain, 1);
-            bank.Deposit(this, Resource.Ore, 1);
-
-            // draw from deck
-            DevelopmentCard card = deck.Draw();
-
-            // if card is a VP, add it to VPs
-            if (card == DevelopmentCard.VictoryPoint) VictoryPoints++;
-
-            // add to temp storage since it is unusable at the moment 
-            _devCardsTemp.Add(card);
-            return true;
+            return _game.DrawDevCard(this);
         }
 
         // methods for playing dev cards
-        public void PlayDevCard(DevelopmentCard card)
+        public bool PlayDevCard(DevelopmentCard card)
         {
+            // if dev card has already been drawn this turn, we cannot play another one
+            if (_devCardDrawn) return false;
+
+            // if we do not have any of this card, it is unplayable
+            if (_devCards[(int)card] == 0) return false;
+
+            // if dev card is a VP, it is unplayable
+            if (card == DevelopmentCard.VictoryPoint) return false;
+
+            // if 7 was rolled and robber has not been moved, we cannot play dev card
+            if (_robberActivatedFromDice && !_robberHasBeenMoved) return false; 
+
+            return true;
+
             if (!_devCardDrawn)
             {
                 _devCardDrawn = true;
@@ -326,8 +320,11 @@
         }
 
         // trade cards with the bank
-        public bool ExchangeWithBank(int[] toGive, int[] toGet, Bank bank)
+        public bool ExchangeWithBank(int[] toGive, int[] toGet)
         {
+            // get bank from game 
+            Bank bank = _game.GetBank();
+
             // arrays must be correct length
             if (toGive.Length != Enum.GetNames(typeof(Resource)).Length || toGet.Length != Enum.GetNames(typeof(Resource)).Length) return false;
 

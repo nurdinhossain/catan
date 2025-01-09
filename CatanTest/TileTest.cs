@@ -22,7 +22,8 @@ namespace CatanTest
         [TestMethod]
         public void TestHarvest()
         {
-            Player p = new Player(0);
+            Game game = new Game("standard_map.txt");
+            Player p = new Player(game, 0);
             Tile tile = new Tile(Resource.Grain, 6);
             tile.SetBuildingAt(Vertex.TopLeft, Building.Settlement);
             tile.SetPlayerAtVertex(Vertex.TopLeft, p);

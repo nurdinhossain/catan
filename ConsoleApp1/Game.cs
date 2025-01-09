@@ -8,9 +8,24 @@
         // robber tile
         private Tile _robberTile;
 
+        // list of players playing this game
+        private List<Player> _players;
+
+        // bank and deck of development cards
+        private readonly Bank _bank;
+        private readonly DevDeck _devDeck;
+
         public Game(string fileName) 
         {
+            // load map
             LoadMap(fileName);
+
+            // initialize players list
+            _players = new List<Player>();
+
+            // initialize bank and dev card deck
+            _bank = new Bank();
+            _devDeck = new DevDeck();
 
             // if _tiles is null, raise exception
             if (_tiles == null) throw new Exception("_tiles was not properly initialized.");
@@ -45,10 +60,30 @@
             return _tiles[row, col];
         }
 
+        // add player to game
+        public bool AddPlayer(Player player)
+        {
+            if (_players.Contains(player)) return false;
+
+            _players.Add(player);
+
+            return true;
+        }
+
         // ** for testing **
         public Tile GetRobberTile()
         {
             return _robberTile;
+        }
+
+        public Bank GetBank()
+        {
+            return _bank;
+        }
+
+        public DevDeck GetDevDeck()
+        {
+            return _devDeck;
         }
 
         public Tile? GetNeighbor(int row, int col, Side side)
@@ -501,6 +536,20 @@
 
             // add port
             player.AddPort(tile.PortAt(vertex));
+
+            // add resources to bank
+            if (building == Building.Settlement)
+            {
+                _bank.Deposit(player, Resource.Brick, 1);
+                _bank.Deposit(player, Resource.Grain, 1);
+                _bank.Deposit(player, Resource.Wool, 1);
+                _bank.Deposit(player, Resource.Lumber, 1);
+            }
+            else if (building == Building.City)
+            {
+                _bank.Deposit(player, Resource.Grain, 2);
+                _bank.Deposit(player, Resource.Ore, 3);
+            }
         }
 
         public void BuildRoad(Player player, int row, int col, Side side)
@@ -564,6 +613,10 @@
                     }
                     break;
             }
+
+            // add resources to bank
+            _bank.Deposit(player, Resource.Lumber, 1);
+            _bank.Deposit(player, Resource.Brick, 1);
         }
 
         // method for moving robber
@@ -580,6 +633,31 @@
             _robberTile = newTile;
 
             return true; 
+        }
+
+        // draw dev card from deck
+        public bool DrawDevCard(Player player)
+        {
+            // ensure we aren't drawing from an empty deck 
+            if (_devDeck.CardsRemaining() == 0) return false;
+
+            // ensure we have sufficient resources
+            if (player.ResourceCount(Resource.Wool) < 1 || player.ResourceCount(Resource.Grain) < 1 || player.ResourceCount(Resource.Ore) < 1) return false;
+
+            // add resources to bank
+            _bank.Deposit(player, Resource.Wool, 1);
+            _bank.Deposit(player, Resource.Grain, 1);
+            _bank.Deposit(player, Resource.Ore, 1);
+
+            // draw from deck
+            DevelopmentCard card = _devDeck.Draw();
+
+            // if card is a VP, add it to VPs
+            if (card == DevelopmentCard.VictoryPoint) player.VictoryPoints++;
+
+            // add to temp storage since it is unusable at the moment 
+            player.AddDevCard(card);
+            return true;
         }
 
         public void LoadMap(string fileName)

@@ -20,8 +20,9 @@ namespace CatanTest
         [TestMethod]
         public void BankDeposit()
         {
-            Bank bank = new Bank();
-            Player player = new Player(0);
+            Game game = new Game("standard_map.txt");
+            Bank bank = game.GetBank();
+            Player player = new Player(game, 0);
 
             player.AddResource(Resource.Grain, 20);
             player.AddResource(Resource.Brick, 30);
@@ -39,8 +40,9 @@ namespace CatanTest
         [TestMethod]
         public void BankWithdrawTrue()
         {
-            Bank bank = new Bank();
-            Player player = new Player(0);
+            Game game = new Game("standard_map.txt");
+            Bank bank = game.GetBank();
+            Player player = new Player(game, 0);
 
             Assert.AreEqual(true, bank.Withdraw(player, Resource.Ore, 10));
             Assert.AreEqual(true, bank.Withdraw(player, Resource.Wool, 19));
@@ -55,8 +57,9 @@ namespace CatanTest
         [TestMethod]
         public void BankWithdrawTrueLeftover()
         {
-            Bank bank = new Bank();
-            Player player = new Player(0);
+            Game game = new Game("standard_map.txt");
+            Bank bank = game.GetBank();
+            Player player = new Player(game, 0);
 
             Assert.AreEqual(true, bank.Withdraw(player, Resource.Lumber, 20));
 
@@ -67,8 +70,9 @@ namespace CatanTest
         [TestMethod]
         public void BankWithdrawFalse()
         {
-            Bank bank = new Bank();
-            Player player = new Player(0);
+            Game game = new Game("standard_map.txt");
+            Bank bank = game.GetBank();
+            Player player = new Player(game, 0);
 
             Assert.AreEqual(true, bank.Withdraw(player, Resource.Lumber, 20));
             Assert.AreEqual(false, bank.Withdraw(player, Resource.Lumber, 1));
