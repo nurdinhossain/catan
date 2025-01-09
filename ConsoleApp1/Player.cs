@@ -11,7 +11,7 @@ namespace Catan
         private int[] _resources;
 
         // development cards held by each player
-        private bool _devCardDrawn; // ** field ensuring we can only use 1 dev card per turn **
+        private bool _devCardPlayed; // ** field ensuring we can only use 1 dev card per turn **
         private List<DevelopmentCard> _devCardsTemp; // ** where dev cards go on current turn **
         private int[] _devCards; // ** where dev cards are transferred on subsequent turns **
 
@@ -22,19 +22,20 @@ namespace Catan
         private static Random _rand = new Random();
 
         // general flags preventing us from taking further actions
-        private bool _diceRolled;
-        private bool _robberActivatedFromDice;
-        private bool _robberHasBeenMoved;
-        private bool _mustDiscardExcessResources;
+        private bool _diceRolled = true; // ** default value set to true for testing **
+        private bool _robberActivatedFromDice = false;
+        private bool _robberHasBeenMoved = false;
+        private bool _mustDiscardExcessResources = false;
 
         // dev card flags 
-        private bool _roadBuildingPlayed;
-        private bool _yearOfPlentyPlayed;
-        private bool _monopolyPlayed;
+        private bool _knightPlayed = false;
+        private bool _roadBuildingPlayed = false;
+        private bool _yearOfPlentyPlayed = false;
+        private bool _monopolyPlayed = false;
 
         // dev card values
-        private int _devRoadsAvailable;
-        private int _plentyResourcesAvailable; 
+        private int _devRoadsAvailable = 0;
+        private int _plentyResourcesAvailable = 0;
 
         // unique identifier for each player
         public int ID { get; set; }
@@ -66,20 +67,6 @@ namespace Catan
             _devCardsTemp = new List<DevelopmentCard>();
             _ports = new bool[Enum.GetNames(typeof(Port)).Length];
 
-            // set all flags to false
-            _diceRolled = false;
-            _robberActivatedFromDice = false;
-            _robberHasBeenMoved = false;
-            _mustDiscardExcessResources = false;
-
-            _roadBuildingPlayed = false;
-            _yearOfPlentyPlayed = false;
-            _monopolyPlayed = false;
-
-            // set dev values to 0
-            _devRoadsAvailable = 0;
-            _plentyResourcesAvailable = 0;
-
             // default quantities for structures
             Settlements = 5;
             Cities = 4;
@@ -90,6 +77,25 @@ namespace Catan
 
             VictoryPoints = 0;
         }
+
+        public void ResetFlags()
+        {
+            // set all flags to false
+            _diceRolled = false;
+            _robberActivatedFromDice = false;
+            _robberHasBeenMoved = false;
+            _mustDiscardExcessResources = false;
+
+            _knightPlayed = false;
+            _roadBuildingPlayed = false;
+            _yearOfPlentyPlayed = false;
+            _monopolyPlayed = false;
+
+            // set dev values to 0
+            _devRoadsAvailable = 0;
+            _plentyResourcesAvailable = 0;
+        }
+
         // some info methods
         public int HandSize()
         {
@@ -136,9 +142,25 @@ namespace Catan
             return _ports[(int)port];
         }
 
+        public bool MustDiscard()
+        {
+            return _mustDiscardExcessResources;
+        }
+
+        public bool NormalActionsStalled()
+        {
+            bool diceNotRolled = !_diceRolled;
+            bool mustDiscard = _game.PlayersMustDiscard();
+            bool robberActivatedNotMoved = _robberActivatedFromDice && !_robberHasBeenMoved;
+            bool devCardStall = _knightPlayed || _roadBuildingPlayed || _yearOfPlentyPlayed || _monopolyPlayed;
+            return diceNotRolled || mustDiscard || robberActivatedNotMoved || devCardStall;
+        }
+
         // player interaction
         public bool TradeWithPlayer(Player other, int[] toGive, int[] toGet)
         {
+            if (NormalActionsStalled()) return false;
+
             // cannot trade empty hands
             if (toGive.Sum() == 0 || toGet.Sum() == 0) return false;
 
@@ -211,6 +233,8 @@ namespace Catan
         // building
         public bool BuildSettlement(int row, int col, Vertex vertex)
         {
+            if (NormalActionsStalled()) return false;
+
             // ensure we have at least one settlement we can build
             if (Settlements < 1) return false; 
 
@@ -237,6 +261,8 @@ namespace Catan
 
         public bool BuildCity(int row, int col, Vertex vertex)
         {
+            if (NormalActionsStalled()) return false;
+
             // ensure we have at least one city we can build
             if (Cities < 1) return false;
 
@@ -262,6 +288,8 @@ namespace Catan
 
         public bool BuildRoad(int row, int col, Side side)
         {
+            if (NormalActionsStalled()) return false;
+
             // ensure we have at least one road we can build
             if (Roads < 1) return false;
 
@@ -286,6 +314,8 @@ namespace Catan
         // draw dev card from deck
         public bool DrawDevCard()
         {
+            if (NormalActionsStalled()) return false;
+
             // get bank and dev deck
             Bank bank = _game.GetBank();
             DevDeck devDeck = _game.GetDevDeck();
@@ -315,8 +345,14 @@ namespace Catan
         // methods for playing dev cards
         public bool PlayDevCard(DevelopmentCard card)
         {
+            // if players need to discard, we cannot play dev card just yet
+            if (_game.PlayersMustDiscard()) return false;
+
+            // if we've rolled a 7 and haven't moved the knight yet, we cannot play the dev card
+            if (_robberActivatedFromDice && !_robberHasBeenMoved) return false;
+
             // if dev card has already been drawn this turn, we cannot play another one
-            if (_devCardDrawn) return false;
+            if (_devCardPlayed) return false;
 
             // if we do not have any of this card, it is unplayable
             if (_devCards[(int)card] == 0) return false;
@@ -325,19 +361,28 @@ namespace Catan
             if (card == DevelopmentCard.VictoryPoint) return false;
 
             // if 7 was rolled and robber has not been moved, we cannot play dev card
-            if (_robberActivatedFromDice && !_robberHasBeenMoved) return false; 
+            if (_robberActivatedFromDice && !_robberHasBeenMoved) return false;
+
+            // play dev card
+            _devCardPlayed = true;
+            _devCards[(int)card]--;
+            switch (card)
+            {
+                case DevelopmentCard.Knight:
+                    _knightPlayed = true;
+                    Army++;
+                    break;
+            }
 
             return true;
-
-            if (!_devCardDrawn)
-            {
-                _devCardDrawn = true;
-            }
         }
 
         // Change state upon ending turn given there are no prohibiting statuses activated
-        public void EndTurn()
+        public bool EndTurn()
         {
+            // cannot end turn if any stalling events remain
+            if (NormalActionsStalled()) return false; 
+
             // move temp cards into permanent storage
             while (_devCardsTemp.Count() > 0)
             {
@@ -346,8 +391,10 @@ namespace Catan
                 _devCardsTemp.RemoveAt(_devCardsTemp.Count() - 1);
             }
 
-            // reset dev card lock
-            _devCardDrawn = false;
+            // reset all flags
+            ResetFlags();
+
+            return true;
         }
 
         // roll dice
@@ -361,6 +408,8 @@ namespace Catan
         // trade cards with the bank
         public bool ExchangeWithBank(int[] toGive, int[] toGet)
         {
+            if (NormalActionsStalled()) return false; 
+
             // get bank from game 
             Bank bank = _game.GetBank();
 

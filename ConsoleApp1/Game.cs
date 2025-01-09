@@ -139,6 +139,17 @@
             return null;
         }
 
+        // check if any player must discard resources
+        public bool PlayersMustDiscard()
+        {
+            foreach (Player player in _players)
+            {
+                if (player.MustDiscard()) return true; 
+            }
+
+            return false;
+        }
+
         // special methods for building 
         private bool RoadsMeetAtVertex(Player player, int row, int col, Vertex vertex)
         {
