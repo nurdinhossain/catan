@@ -16,6 +16,21 @@
         // random variable for rolling dice
         private static Random _rand = new Random();
 
+        // general flags preventing us from taking further actions
+        private bool _diceRolled;
+        private bool _robberActivatedFromDice;
+        private bool _robberHasBeenMoved;
+        private bool _mustDiscardExcessResources;
+
+        // dev card flags 
+        private bool _roadBuildingPlayed;
+        private bool _yearOfPlentyPlayed;
+        private bool _monopolyPlayed;
+
+        // dev card values
+        private int _devRoadsAvailable;
+        private int _plentyResourcesAvailable; 
+
         // unique identifier for each player
         public int ID { get; set; }
 
@@ -41,6 +56,20 @@
             _devCards = new int[Enum.GetNames(typeof(DevelopmentCard)).Length];
             _devCardsTemp = new List<DevelopmentCard>();
             _ports = new bool[Enum.GetNames(typeof(Port)).Length];
+
+            // set all flags to false
+            _diceRolled = false;
+            _robberActivatedFromDice = false;
+            _robberHasBeenMoved = false;
+            _mustDiscardExcessResources = false;
+
+            _roadBuildingPlayed = false;
+            _yearOfPlentyPlayed = false;
+            _monopolyPlayed = false;
+
+            // set dev values to 0
+            _devRoadsAvailable = 0;
+            _plentyResourcesAvailable = 0;
 
             // default quantities for structures
             Settlements = 5;
@@ -86,20 +115,16 @@
             _resources[(int)resource] -= count;
         }
 
-        public void AddDevelopmentCard(DevelopmentCard dev)
-        {
-            _devCards[(int)dev]++;
-        }
-
-        public void RemoveDevelopmentCard(DevelopmentCard dev)
-        {
-            _devCards[(int)dev]--;
-        }
-
         // ** adding a port is permanent, so no need for a remove method **
         public void AddPort(Port port)
         {
             _ports[(int)port] = true;
+        }
+
+        // ** for testing purposes **
+        public bool GetPort(Port port)
+        {
+            return _ports[(int)port];
         }
 
         // player interaction
@@ -277,8 +302,8 @@
             }
         }
 
-        // change state upon new turn (like transferring temp dev cards to main hand and resetting dev card lock to play a dev card)
-        public void NewTurn()
+        // Change state upon ending turn given there are no prohibiting statuses activated
+        public void EndTurn()
         {
             // move temp cards into permanent storage
             while (_devCardsTemp.Count() > 0)

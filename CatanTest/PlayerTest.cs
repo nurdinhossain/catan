@@ -223,6 +223,7 @@ namespace CatanTest
             Bank bank = new Bank();
             Game game = new Game("standard_map.txt");
             Tile tile = game.TileAt(1, 1);
+            tile.SetPortAt(Vertex.TopLeft, Port.AnyPort);
 
             // make player one hand
             one.AddResource(Resource.Brick, 4);
@@ -237,6 +238,7 @@ namespace CatanTest
             Assert.AreEqual(one, tile.PlayerAtVertex(Vertex.TopLeft));
             Assert.AreEqual(4, one.Settlements);
             Assert.AreEqual(1, one.VictoryPoints);
+            Assert.AreEqual(true, one.GetPort(Port.AnyPort));
 
             Assert.AreEqual(12, one.HandSize());
             Assert.AreEqual(3, one.ResourceCount(Resource.Brick));

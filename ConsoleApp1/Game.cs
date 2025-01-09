@@ -498,6 +498,9 @@
                     }
                     break;
             }
+
+            // add port
+            player.AddPort(tile.PortAt(vertex));
         }
 
         public void BuildRoad(Player player, int row, int col, Side side)
