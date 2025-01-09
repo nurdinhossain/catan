@@ -487,39 +487,6 @@ namespace CatanTest
         }
 
         [TestMethod]
-        public void DiceRollValid()
-        {
-            Game game = new Game("standard_map.txt");
-            Player one = new Player(game, 0);
-            int[] rolls = new int[13];
-            
-            for (int i = 0; i < 100000; i++)
-            {
-                int roll = one.RollDice();
-                Assert.IsTrue(roll >= 2);
-                Assert.IsTrue(roll <= 12);
-                rolls[roll]++;
-            }
-
-            // verify distribution of rolls
-            int total = rolls.Sum();
-            Assert.AreEqual(0, rolls[0]);
-            Assert.AreEqual(0, rolls[1]);
-            Assert.AreEqual(0.03, (double)rolls[2] / total, 0.02);
-            Assert.AreEqual(0.06, (double)rolls[3] / total, 0.02);
-            Assert.AreEqual(0.08, (double)rolls[4] / total, 0.02);
-            Assert.AreEqual(0.11, (double)rolls[5] / total, 0.02);
-            Assert.AreEqual(0.14, (double)rolls[6] / total, 0.02);
-            Assert.AreEqual(0.17, (double)rolls[7] / total, 0.02);
-            Assert.AreEqual(0.14, (double)rolls[8] / total, 0.02);
-            Assert.AreEqual(0.11, (double)rolls[9] / total, 0.02);
-            Assert.AreEqual(0.08, (double)rolls[10] / total, 0.02);
-            Assert.AreEqual(0.06, (double)rolls[11] / total, 0.02);
-            Assert.AreEqual(0.03, (double)rolls[12] / total, 0.02);
-
-        }
-
-        [TestMethod]
         public void ExchangeBankSuccessNoPorts()
         {
             Game game = new Game("standard_map.txt");

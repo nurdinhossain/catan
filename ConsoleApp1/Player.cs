@@ -398,11 +398,22 @@ namespace Catan
         }
 
         // roll dice
-        public int RollDice()
+        public bool RollDice()
         {
+            // if dice has already been rolled, we cannot roll it again
+            if (_diceRolled) return false;
+
+            // if dev card has been played, we cannot roll until the action has been fulfilled
+            if (_knightPlayed || _roadBuildingPlayed || _yearOfPlentyPlayed || _monopolyPlayed) return false; 
+
             int diceOne = _rand.Next(1, 7);
             int diceTwo = _rand.Next(1, 7);
-            return diceOne + diceTwo;
+            int sum = diceOne + diceTwo;
+
+            // set _diceRolled to true
+            _diceRolled = true;
+
+            return true; 
         }
 
         // trade cards with the bank
