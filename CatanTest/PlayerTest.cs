@@ -247,15 +247,15 @@ namespace CatanTest
             Assert.AreEqual(1, one.VictoryPoints);
             Assert.AreEqual(true, one.GetPort(Port.AnyPort));
 
-            Assert.AreEqual(10, one.HandSize());
-            Assert.AreEqual(2, one.ResourceCount(Resource.Brick));
-            Assert.AreEqual(2, one.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(12, one.HandSize());
+            Assert.AreEqual(3, one.ResourceCount(Resource.Brick));
+            Assert.AreEqual(3, one.ResourceCount(Resource.Lumber));
             Assert.AreEqual(3, one.ResourceCount(Resource.Grain));
             Assert.AreEqual(3, one.ResourceCount(Resource.Wool));
             Assert.AreEqual(one, tile.PlayerAtVertex(Vertex.TopLeft));
 
-            Assert.AreEqual(21, bank.ResourceCount(Resource.Brick));
-            Assert.AreEqual(21, bank.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(20, bank.ResourceCount(Resource.Brick));
+            Assert.AreEqual(20, bank.ResourceCount(Resource.Lumber));
             Assert.AreEqual(20, bank.ResourceCount(Resource.Grain));
             Assert.AreEqual(20, bank.ResourceCount(Resource.Wool));
         }
@@ -329,9 +329,9 @@ namespace CatanTest
             one.AddResource(Resource.Ore, 4);
             one.AddResource(Resource.Wool, 4);
             game.BuildRoad(one, 1, 1, Side.TopLeft);
-            Assert.AreEqual(17, one.HandSize());
+            Assert.AreEqual(19, one.HandSize());
             Assert.AreEqual(true, one.BuildSettlement(1, 1, Vertex.TopLeft));
-            Assert.AreEqual(13, one.HandSize());
+            Assert.AreEqual(15, one.HandSize());
 
             // create city
             Assert.AreEqual(true, one.BuildCity(1, 1, Vertex.TopLeft));
@@ -341,16 +341,16 @@ namespace CatanTest
             Assert.AreEqual(3, one.Cities);
             Assert.AreEqual(2, one.VictoryPoints);
 
-            Assert.AreEqual(8, one.HandSize());
-            Assert.AreEqual(2, one.ResourceCount(Resource.Brick));
-            Assert.AreEqual(2, one.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(10, one.HandSize());
+            Assert.AreEqual(3, one.ResourceCount(Resource.Brick));
+            Assert.AreEqual(3, one.ResourceCount(Resource.Lumber));
             Assert.AreEqual(0, one.ResourceCount(Resource.Grain));
             Assert.AreEqual(1, one.ResourceCount(Resource.Ore));
             Assert.AreEqual(3, one.ResourceCount(Resource.Wool));
             Assert.AreEqual(one, tile.PlayerAtVertex(Vertex.TopLeft));
 
-            Assert.AreEqual(21, bank.ResourceCount(Resource.Brick));
-            Assert.AreEqual(21, bank.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(20, bank.ResourceCount(Resource.Brick));
+            Assert.AreEqual(20, bank.ResourceCount(Resource.Lumber));
             Assert.AreEqual(20, bank.ResourceCount(Resource.Wool));
             Assert.AreEqual(22, bank.ResourceCount(Resource.Grain));
             Assert.AreEqual(22, bank.ResourceCount(Resource.Ore));
@@ -421,8 +421,8 @@ namespace CatanTest
 
             game.BuildRoad(one, 1, 1, Side.TopLeft);
             Assert.IsTrue(one.BuildRoad(1, 1, Side.TopRight));
-            Assert.AreEqual(0, one.ResourceCount(Resource.Brick));
-            Assert.AreEqual(0, one.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(1, one.ResourceCount(Resource.Brick));
+            Assert.AreEqual(1, one.ResourceCount(Resource.Lumber));
             Assert.AreEqual(14, one.Roads);
             Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.TopRight));
         }

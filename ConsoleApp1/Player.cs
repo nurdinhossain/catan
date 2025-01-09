@@ -1,4 +1,6 @@
-﻿namespace Catan
+﻿using System.Numerics;
+
+namespace Catan
 {
     public class Player
     {
@@ -224,6 +226,14 @@
             // ensure building can be built
             if (!_game.CanBuildSettlementAt(this, row, col, vertex)) return false;
 
+            // drain resources
+            Bank bank = _game.GetBank();
+            bank.Deposit(this, Resource.Brick, 1);
+            bank.Deposit(this, Resource.Grain, 1);
+            bank.Deposit(this, Resource.Wool, 1);
+            bank.Deposit(this, Resource.Lumber, 1);
+
+            // build
             Settlements--;
             _game.BuildBuilding(this, Building.Settlement, row, col, vertex);
             VictoryPoints++;
@@ -240,8 +250,14 @@
             if (ResourceCount(Resource.Grain) < 2 || ResourceCount(Resource.Ore) < 3) return false;
 
             // ensure city can be built
-            if (!_game.CanBuildCityAt(this, row, col, vertex)) return false; 
+            if (!_game.CanBuildCityAt(this, row, col, vertex)) return false;
 
+            // drain resources
+            Bank bank = _game.GetBank();
+            bank.Deposit(this, Resource.Grain, 2);
+            bank.Deposit(this, Resource.Ore, 3);
+
+            // build
             Cities--;
             Settlements++;
             _game.BuildBuilding(this, Building.City, row, col, vertex);
@@ -261,6 +277,12 @@
             // ensure road can be built
             if (!_game.CanBuildRoadAt(this, row, col, side)) return false;
 
+            // drain resources
+            Bank bank = _game.GetBank();
+            bank.Deposit(this, Resource.Lumber, 1);
+            bank.Deposit(this, Resource.Brick, 1);
+
+            // build
             Roads--;
             _game.BuildRoad(this, row, col, side);
 

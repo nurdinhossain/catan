@@ -536,20 +536,6 @@
 
             // add port
             player.AddPort(tile.PortAt(vertex));
-
-            // add resources to bank
-            if (building == Building.Settlement)
-            {
-                _bank.Deposit(player, Resource.Brick, 1);
-                _bank.Deposit(player, Resource.Grain, 1);
-                _bank.Deposit(player, Resource.Wool, 1);
-                _bank.Deposit(player, Resource.Lumber, 1);
-            }
-            else if (building == Building.City)
-            {
-                _bank.Deposit(player, Resource.Grain, 2);
-                _bank.Deposit(player, Resource.Ore, 3);
-            }
         }
 
         public void BuildRoad(Player player, int row, int col, Side side)
@@ -613,10 +599,6 @@
                     }
                     break;
             }
-
-            // add resources to bank
-            _bank.Deposit(player, Resource.Lumber, 1);
-            _bank.Deposit(player, Resource.Brick, 1);
         }
 
         // method for moving robber
