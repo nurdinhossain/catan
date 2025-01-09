@@ -617,31 +617,6 @@
             return true; 
         }
 
-        // draw dev card from deck
-        public bool DrawDevCard(Player player)
-        {
-            // ensure we aren't drawing from an empty deck 
-            if (_devDeck.CardsRemaining() == 0) return false;
-
-            // ensure we have sufficient resources
-            if (player.ResourceCount(Resource.Wool) < 1 || player.ResourceCount(Resource.Grain) < 1 || player.ResourceCount(Resource.Ore) < 1) return false;
-
-            // add resources to bank
-            _bank.Deposit(player, Resource.Wool, 1);
-            _bank.Deposit(player, Resource.Grain, 1);
-            _bank.Deposit(player, Resource.Ore, 1);
-
-            // draw from deck
-            DevelopmentCard card = _devDeck.Draw();
-
-            // if card is a VP, add it to VPs
-            if (card == DevelopmentCard.VictoryPoint) player.VictoryPoints++;
-
-            // add to temp storage since it is unusable at the moment 
-            player.AddDevCard(card);
-            return true;
-        }
-
         public void LoadMap(string fileName)
         {
             // split data into lines

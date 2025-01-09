@@ -124,12 +124,6 @@ namespace Catan
             _resources[(int)resource] -= count;
         }
 
-        // add a dev card to temp stack
-        public void AddDevCard(DevelopmentCard card)
-        {
-            _devCardsTemp.Add(card);
-        }
-
         // ** adding a port is permanent, so no need for a remove method **
         public void AddPort(Port port)
         {
@@ -292,7 +286,30 @@ namespace Catan
         // draw dev card from deck
         public bool DrawDevCard()
         {
-            return _game.DrawDevCard(this);
+            // get bank and dev deck
+            Bank bank = _game.GetBank();
+            DevDeck devDeck = _game.GetDevDeck();
+
+            // ensure we aren't drawing from an empty deck 
+            if (devDeck.CardsRemaining() == 0) return false;
+
+            // ensure we have sufficient resources
+            if (ResourceCount(Resource.Wool) < 1 || ResourceCount(Resource.Grain) < 1 || ResourceCount(Resource.Ore) < 1) return false;
+
+            // add resources to bank
+            bank.Deposit(this, Resource.Wool, 1);
+            bank.Deposit(this, Resource.Grain, 1);
+            bank.Deposit(this, Resource.Ore, 1);
+
+            // draw from deck
+            DevelopmentCard card = devDeck.Draw();
+
+            // if card is a VP, add it to VPs
+            if (card == DevelopmentCard.VictoryPoint) VictoryPoints++;
+
+            // add to temp storage since it is unusable at the moment 
+            _devCardsTemp.Add(card);
+            return true;
         }
 
         // methods for playing dev cards
