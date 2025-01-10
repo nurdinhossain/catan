@@ -444,6 +444,22 @@ namespace Catan
             return true;
         }
 
+        public bool TakeFreeResource(Resource resource)
+        {
+            // if we have no year of plenty resources to take, return false
+            if (_plentyResourcesAvailable == 0) return false;
+
+            // if bank does not have requested resource, return false
+            Bank bank = _game.GetBank();
+            if (bank.ResourceCount(resource) == 0) return false;
+
+            // otherwise, take resource
+            bank.Withdraw(this, resource, 1);
+            _plentyResourcesAvailable--;
+
+            return true;
+        }
+
         // Change state upon ending turn given there are no prohibiting statuses activated
         public bool EndTurn()
         {
