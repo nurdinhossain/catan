@@ -2,6 +2,9 @@
 {
     public class Game
     {
+        // constants
+        private const int MaxHandSize = 7; 
+
         // array of Tiles present in game board
         private Tile?[,] _tiles;
 
@@ -673,6 +676,9 @@
 
             return true; 
         }
+
+        // game activity
+        public 
 
         public void LoadMap(string fileName)
         {

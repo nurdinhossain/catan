@@ -399,6 +399,12 @@ namespace Catan
 
         public bool MoveRobber(int row, int col)
         {
+            // if robber hasn't been activated, we can't move it
+            if (!_robberActivated) return false;
+
+            // if players must discard first, we can't move robber
+            if (_game.PlayersMustDiscard()) return false;
+
             bool result = _game.MoveRobber(row, col);
 
             if (result)

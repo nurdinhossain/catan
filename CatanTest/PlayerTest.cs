@@ -972,5 +972,14 @@ namespace CatanTest
             Assert.AreEqual(0, three.HandSize());
             Assert.IsFalse(one.NormalActionsStalled());
         }
+
+        [TestMethod]
+        public void EndTurnTwice()
+        {
+            Game game = new Game("standard_map.txt");
+            Player one = new Player(game, 0);
+            Assert.IsTrue(one.EndTurn());
+            Assert.IsFalse(one.EndTurn());
+        }
     }
 }
