@@ -887,5 +887,67 @@ namespace CatanTest
             // no roads to build
             Assert.IsFalse(one.NormalActionsStalled());
         }
+
+        [TestMethod]
+        public void TakeTwoResources()
+        {
+            Game game = new Game("standard_map.txt");
+            Player one = new Player(game, 0);
+            one.AddPermanentDevCard(DevelopmentCard.YearOfPlenty);
+            one.PlayDevCard(DevelopmentCard.YearOfPlenty);
+
+            Assert.IsTrue(one.TakeFreeResource(Resource.Brick));
+            Assert.IsTrue(one.TakeFreeResource(Resource.Lumber));
+            Assert.IsFalse(one.TakeFreeResource(Resource.Lumber));
+            Assert.IsFalse(one.NormalActionsStalled());
+        }
+
+        [TestMethod]
+        public void TakeOneResource()
+        {
+            Game game = new Game("standard_map.txt");
+            Player one = new Player(game, 0);
+            one.AddPermanentDevCard(DevelopmentCard.YearOfPlenty);
+            game.GetBank().Withdraw(one, Resource.Lumber, 19);
+            game.GetBank().Withdraw(one, Resource.Brick, 19);
+            game.GetBank().Withdraw(one, Resource.Ore, 19);
+            game.GetBank().Withdraw(one, Resource.Grain, 19);
+            game.GetBank().Withdraw(one, Resource.Wool, 18);
+            one.PlayDevCard(DevelopmentCard.YearOfPlenty);
+
+            Assert.IsTrue(one.TakeFreeResource(Resource.Wool));
+            Assert.IsFalse(one.TakeFreeResource(Resource.Lumber));
+            Assert.IsFalse(one.NormalActionsStalled());
+        }
+
+        [TestMethod]
+        public void TakeOneResourceNotAvailable()
+        {
+            Game game = new Game("standard_map.txt");
+            Player one = new Player(game, 0);
+            one.AddPermanentDevCard(DevelopmentCard.YearOfPlenty);
+            game.GetBank().Withdraw(one, Resource.Lumber, 19);
+            one.PlayDevCard(DevelopmentCard.YearOfPlenty);
+
+            Assert.IsFalse(one.TakeFreeResource(Resource.Lumber));
+            Assert.IsTrue(one.TakeFreeResource(Resource.Wool));
+            Assert.IsTrue(one.NormalActionsStalled());
+        }
+
+        [TestMethod]
+        public void TakeResourceBankEmpty()
+        {
+            Game game = new Game("standard_map.txt");
+            Player one = new Player(game, 0);
+            one.AddPermanentDevCard(DevelopmentCard.YearOfPlenty);
+            game.GetBank().Withdraw(one, Resource.Lumber, 19);
+            game.GetBank().Withdraw(one, Resource.Brick, 19);
+            game.GetBank().Withdraw(one, Resource.Ore, 19);
+            game.GetBank().Withdraw(one, Resource.Grain, 19);
+            game.GetBank().Withdraw(one, Resource.Wool, 19);
+            one.PlayDevCard(DevelopmentCard.YearOfPlenty);
+
+            Assert.IsFalse(one.NormalActionsStalled());
+        }
     }
 }
