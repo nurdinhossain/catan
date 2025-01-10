@@ -686,7 +686,7 @@
                 // set discard flags for greedy players 
                 foreach (Player p in _players)
                 {
-                    if (p.HandSize() > 7)
+                    if (p.HandSize() > MaxHandSize)
                     {
                         p.SetDiscard(true);
                     }

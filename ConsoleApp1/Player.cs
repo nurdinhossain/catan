@@ -512,6 +512,36 @@ namespace Catan
             return true;
         }
 
+        // discard excess cards if needed
+        public bool Discard(int[] toDiscard)
+        {
+            // if the discard flag is not set, we are not allowed to discard anything
+            if (!_mustDiscardExcessResources) return false;
+
+            // if length of toDiscard is wrong, return false
+            if (toDiscard.Length != Enum.GetNames(typeof(Resource)).Length) return false;
+
+            // if NoResource != 0, return false
+            if (toDiscard[0] != 0) return false;
+
+            // if sum of discarded cards is not equal to half of hand size rounded down, return false
+            if (toDiscard.Sum() != (HandSize() / 2)) return false;
+
+            // if any discarded resources exceed resources we have, return false
+            for (int i = 1; i < toDiscard.Length; i++)
+            {
+                if (toDiscard[i] > ResourceCount((Resource)i)) return false;
+            }
+
+            // otherwise, discard resources
+            for (int i = 1; i < toDiscard.Length; i++)
+            {
+                _game.GetBank().Deposit(this, (Resource)i, toDiscard[i]);
+            }
+
+            return true; 
+        }
+
         // Change state upon ending turn given there are no prohibiting statuses activated
         public bool EndTurn()
         {
