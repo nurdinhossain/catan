@@ -608,7 +608,7 @@ namespace Catan
             if (toGive.Sum() == 0 || toGet.Sum() == 0) return false; 
 
             // ensure we/bank have sufficient resources
-            for (int i = 0; i < toGive.Length; i++)
+            for (int i = 1; i < toGive.Length; i++)
             {
                 if (toGive[i] > ResourceCount((Resource)i)) return false;
                 if (toGet[i] > bank.ResourceCount((Resource)i)) return false;
@@ -616,7 +616,7 @@ namespace Catan
 
             int totalRequested = toGet.Sum();
             int totalAvailable = 0;
-            for (int i = 0; i < toGive.Length; i++)
+            for (int i = 1; i < toGive.Length; i++)
             {
                 // if we have 0 of this resource, continue
                 if (toGive[i] == 0) continue;
@@ -660,7 +660,7 @@ namespace Catan
             if (totalAvailable != totalRequested) return false; 
 
             // make requested exchanges
-            for (int i = 0; i < toGive.Length; i++)
+            for (int i = 1; i < toGive.Length; i++)
             {
                 bank.Deposit(this, (Resource)i, toGive[i]);
                 bank.Withdraw(this, (Resource)i, toGet[i]);
