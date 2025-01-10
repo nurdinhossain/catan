@@ -1586,5 +1586,30 @@ namespace CatanTest
             game.BuildBuilding(player, Building.Settlement, 1, 0, Vertex.BottomLeft);
             Assert.AreEqual(11, game.EligibleRoadSpots(player));
         }
+
+        [TestMethod]
+        public void TestRollNotSeven()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+            game.BuildBuilding(player, Building.Settlement, 1, 1, Vertex.TopRight);
+            game.BuildBuilding(player, Building.City, 4, 2, Vertex.Top);
+            game.BuildBuilding(player, Building.City, 2, 2, Vertex.Bottom);
+            game.RespondToRoll(6);
+            Assert.AreEqual(3, player.HandSize());
+            Assert.AreEqual(1, player.ResourceCount(Resource.Brick));
+            Assert.AreEqual(2, player.ResourceCount(Resource.Grain));
+        }
+
+        [TestMethod]
+        public void TestRollSeven()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+            player.AddResource(Resource.Grain, 6);
+            player.AddResource(Resource.Brick, 3);
+            game.RespondToRoll(7);
+            Assert.IsTrue(game.PlayersMustDiscard());
+        }
     }
 }

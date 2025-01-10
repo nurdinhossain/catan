@@ -539,6 +539,9 @@ namespace Catan
                 _game.GetBank().Deposit(this, (Resource)i, toDiscard[i]);
             }
 
+            // set discard flag to false
+            _mustDiscardExcessResources = false;
+
             return true; 
         }
 
