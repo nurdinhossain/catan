@@ -552,7 +552,7 @@ namespace Catan
             }
 
             // send roll to game
-            _game.RespondToRoll(this, sum);
+            _game.RespondToRoll(sum);
 
             // set _diceRolled to true
             _diceRolled = true;

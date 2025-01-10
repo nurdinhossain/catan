@@ -678,7 +678,7 @@
         }
 
         // game activity
-        public void RespondToRoll(Player player, int roll)
+        public void RespondToRoll(int roll)
         {
             // if roll is a 7, greedy players must discard
             if (roll == 7)
@@ -696,7 +696,19 @@
             // otherwise, harvest resources
             else
             {
-                
+                for (int i = 0; i < _tiles.GetLength(0); i++)
+                {
+                    for (int j = 0; j < _tiles.GetLength(1); j++)
+                    {
+                        Tile? tile = _tiles[i, j];
+
+                        // if tile is not water and is harvestable given this roll, then harvest from it
+                        if (tile != null && tile.CanHarvest(roll))
+                        {
+                            tile.Harvest(_bank);
+                        }
+                    }
+                }
             }
         }
 
