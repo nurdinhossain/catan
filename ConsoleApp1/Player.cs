@@ -23,12 +23,11 @@ namespace Catan
 
         // general flags preventing us from taking further actions
         private bool _diceRolled = true; // ** default value set to true for testing **
-        private bool _robberActivatedFromDice = false;
-        private bool _robberHasBeenMoved = false;
+        private bool _robberActivated = false;
+        private bool _mustRobPlayer = false;
         private bool _mustDiscardExcessResources = false;
 
         // dev card flags 
-        private bool _knightPlayed = false;
         private bool _roadBuildingPlayed = false;
         private bool _yearOfPlentyPlayed = false;
         private bool _monopolyPlayed = false;
@@ -82,11 +81,10 @@ namespace Catan
         {
             // set all flags to false
             _diceRolled = false;
-            _robberActivatedFromDice = false;
-            _robberHasBeenMoved = false;
+            _robberActivated = false;
+            _mustRobPlayer = false;
             _mustDiscardExcessResources = false;
 
-            _knightPlayed = false;
             _roadBuildingPlayed = false;
             _yearOfPlentyPlayed = false;
             _monopolyPlayed = false;
@@ -151,9 +149,9 @@ namespace Catan
         {
             bool diceNotRolled = !_diceRolled;
             bool mustDiscard = _game.PlayersMustDiscard();
-            bool robberActivatedNotMoved = _robberActivatedFromDice && !_robberHasBeenMoved;
-            bool devCardStall = _knightPlayed || _roadBuildingPlayed || _yearOfPlentyPlayed || _monopolyPlayed;
-            return diceNotRolled || mustDiscard || robberActivatedNotMoved || devCardStall;
+            bool robberShenanigans = _robberActivated || _mustRobPlayer;
+            bool devCardStall = _roadBuildingPlayed || _yearOfPlentyPlayed || _monopolyPlayed;
+            return diceNotRolled || mustDiscard || robberShenanigans || devCardStall;
         }
 
         // player interaction
@@ -349,7 +347,10 @@ namespace Catan
             if (_game.PlayersMustDiscard()) return false;
 
             // if we've rolled a 7 and haven't moved the knight yet, we cannot play the dev card
-            if (_robberActivatedFromDice && !_robberHasBeenMoved) return false;
+            if (_robberActivated) return false;
+
+            // if we've moved the knight but haven't robbed anyone, we cannot play the dev card
+            if (_mustRobPlayer) return false; 
 
             // if dev card has already been played this turn, we cannot play another one
             if (_devCardPlayed) return false;
@@ -366,7 +367,7 @@ namespace Catan
             switch (card)
             {
                 case DevelopmentCard.Knight:
-                    _knightPlayed = true;
+                    _robberActivated = true;
                     Army++;
                     break;
                 case DevelopmentCard.RoadBuilding:
@@ -409,6 +410,45 @@ namespace Catan
             return true;
         }
 
+        public bool MoveRobber(int row, int col)
+        {
+            bool result = _game.MoveRobber(row, col);
+
+            if (result)
+            {
+                // no longer need to move robber, but now we need to choose a player to rob
+                _robberActivated = false;
+                _mustRobPlayer = true; 
+            }
+
+            return result;
+        }
+
+        public bool ChoosePlayerToRob(Player player)
+        {
+            // if the player we are trying to rob is ourselves, return false
+            if (player == this) return false;
+
+            // if player is not on this tile, return false
+            bool tileHasPlayer = false;
+            Tile robberTile = _game.GetRobberTile();
+            for (int i = 0; i < Enum.GetNames(typeof(Vertex)).Length; i++)
+            {
+                if (robberTile.PlayerAtVertex((Vertex)i) == player)
+                {
+                    tileHasPlayer = true;
+                    break;
+                }
+            }
+            if (!tileHasPlayer) return false;
+
+            // if all conditions are met, rob player and set _mustRob to false
+            RobPlayer(player);
+            _mustRobPlayer = false;
+
+            return true; 
+        }
+
         // Change state upon ending turn given there are no prohibiting statuses activated
         public bool EndTurn()
         {
@@ -436,7 +476,7 @@ namespace Catan
             if (_diceRolled) return false;
 
             // if dev card has been played, we cannot roll until the action has been fulfilled
-            if (_knightPlayed || _roadBuildingPlayed || _yearOfPlentyPlayed || _monopolyPlayed) return false; 
+            if (_robberActivated || _mustRobPlayer || _roadBuildingPlayed || _yearOfPlentyPlayed || _monopolyPlayed) return false; 
 
             int diceOne = _rand.Next(1, 7);
             int diceTwo = _rand.Next(1, 7);
