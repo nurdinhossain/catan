@@ -728,5 +728,24 @@ namespace CatanTest
 
             Assert.AreEqual(false, one.ExchangeWithBank(new int[] { 0, 13, 11, 0, 0, 4 }, new int[] { 0, 1, 0, 4, 0, 4 }));
         }
+
+        [TestMethod]
+        public void DevCardPlayedOncePerTurn()
+        {
+            Game game = new Game("standard_map.txt");
+            Player one = new Player(game, 0);
+            one.AddPermanentDevCard(DevelopmentCard.Knight);
+            one.AddPermanentDevCard(DevelopmentCard.Knight);
+            Assert.IsTrue(one.PlayDevCard(DevelopmentCard.Knight));
+            Assert.IsFalse(one.PlayDevCard(DevelopmentCard.Knight));
+        }
+
+        [TestMethod]
+        public void DevCardMustHave()
+        {
+            Game game = new Game("standard_map.txt");
+            Player one = new Player(game, 0);
+            Assert.IsFalse(one.PlayDevCard(DevelopmentCard.Knight));
+        }
     }
 }

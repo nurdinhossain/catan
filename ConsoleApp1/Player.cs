@@ -108,6 +108,11 @@ namespace Catan
             return _devCards.Sum();
         }
 
+        public void AddPermanentDevCard(DevelopmentCard card)
+        {
+            _devCards[(int)card]++;
+        }
+
         public int ResourceCount(Resource resource)
         {
             return _resources[(int)resource];
@@ -139,6 +144,11 @@ namespace Catan
         public bool MustDiscard()
         {
             return _mustDiscardExcessResources;
+        }
+
+        public void SetDiscard(bool discard)
+        {
+            _mustDiscardExcessResources = discard;
         }
 
         public bool NormalActionsStalled()
@@ -370,16 +380,14 @@ namespace Catan
                     // players should strive to build 2 roads if possible
                     // if they only have 1 road left, that sets an upper bound
                     // if they only have 1 valid spot to build a road, that sets an upper bound
-                    _devRoadsAvailable = 2;
-                    _devRoadsAvailable = Math.Min(_devRoadsAvailable, _game.EligibleRoadSpots(this));
+                    _devRoadsAvailable = Math.Min(2, _game.EligibleRoadSpots(this));
                     _devRoadsAvailable = Math.Min(_devRoadsAvailable, Roads);
                     break;
                 case DevelopmentCard.YearOfPlenty:
                     // players should strive to harvest 2 resources if possible
                     // the quantity of resources left in the bank sets the upper bound of this card if its less than 2
                     // if the bank has 0 resources, set _yearOfPlentyPlayed to false, ending the effect of this card
-                    _plentyResourcesAvailable = 2;
-                    _plentyResourcesAvailable = Math.Min(_plentyResourcesAvailable, _game.GetBank().TotalResources());
+                    _plentyResourcesAvailable = Math.Min(2, _game.GetBank().TotalResources());
                     break;
                 case DevelopmentCard.Monopoly:
                     _monopolyPlayed = true;
@@ -395,9 +403,20 @@ namespace Catan
 
             if (result)
             {
-                // no longer need to move robber, but now we need to choose a player to rob
+                // no longer need to move robber
                 _robberActivated = false;
-                _mustRobPlayer = true; 
+
+                // only set _mustRobPlayer to true if there is a player to rob that isn't us 
+                Tile robberTile = _game.GetRobberTile();
+                for (int i = 0; i < Enum.GetNames(typeof(Vertex)).Length; i++)
+                {
+                    Player? playerAtVertex = robberTile.PlayerAtVertex((Vertex)i);
+                    if (playerAtVertex != null && playerAtVertex != this)
+                    {
+                        _mustRobPlayer= true;
+                        break;
+                    }
+                }
             }
 
             return result;
@@ -405,6 +424,9 @@ namespace Catan
 
         public bool ChoosePlayerToRob(Player player)
         {
+            // if _mustRobPlayer is false, return false
+            if (!_mustRobPlayer) return false;
+
             // if the player we are trying to rob is ourselves, return false
             if (player == this) return false;
 
