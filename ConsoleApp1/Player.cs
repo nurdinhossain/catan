@@ -28,8 +28,6 @@ namespace Catan
         private bool _mustDiscardExcessResources = false;
 
         // dev card flags 
-        private bool _roadBuildingPlayed = false;
-        private bool _yearOfPlentyPlayed = false;
         private bool _monopolyPlayed = false;
 
         // dev card values
@@ -85,8 +83,6 @@ namespace Catan
             _mustRobPlayer = false;
             _mustDiscardExcessResources = false;
 
-            _roadBuildingPlayed = false;
-            _yearOfPlentyPlayed = false;
             _monopolyPlayed = false;
 
             // set dev values to 0
@@ -150,7 +146,7 @@ namespace Catan
             bool diceNotRolled = !_diceRolled;
             bool mustDiscard = _game.PlayersMustDiscard();
             bool robberShenanigans = _robberActivated || _mustRobPlayer;
-            bool devCardStall = _roadBuildingPlayed || _yearOfPlentyPlayed || _monopolyPlayed;
+            bool devCardStall = _devRoadsAvailable > 0 || _plentyResourcesAvailable > 0 || _monopolyPlayed;
             return diceNotRolled || mustDiscard || robberShenanigans || devCardStall;
         }
 
@@ -371,36 +367,19 @@ namespace Catan
                     Army++;
                     break;
                 case DevelopmentCard.RoadBuilding:
-                    _roadBuildingPlayed = true;
-
                     // players should strive to build 2 roads if possible
                     // if they only have 1 road left, that sets an upper bound
                     // if they only have 1 valid spot to build a road, that sets an upper bound
-                    // if the upper bound becomes 0, immediately set _roadBuildingPlayed to false, ending the effect of this card
                     _devRoadsAvailable = 2;
                     _devRoadsAvailable = Math.Min(_devRoadsAvailable, _game.EligibleRoadSpots(this));
                     _devRoadsAvailable = Math.Min(_devRoadsAvailable, Roads);
-
-                    if (_devRoadsAvailable == 0)
-                    {
-                        _roadBuildingPlayed = false;
-                    }
-
                     break;
                 case DevelopmentCard.YearOfPlenty:
-                    _yearOfPlentyPlayed = true;
-
                     // players should strive to harvest 2 resources if possible
                     // the quantity of resources left in the bank sets the upper bound of this card if its less than 2
                     // if the bank has 0 resources, set _yearOfPlentyPlayed to false, ending the effect of this card
                     _plentyResourcesAvailable = 2;
                     _plentyResourcesAvailable = Math.Min(_plentyResourcesAvailable, _game.GetBank().TotalResources());
-
-                    if (_plentyResourcesAvailable == 0)
-                    {
-                        _yearOfPlentyPlayed = false;
-                    }
-
                     break;
                 case DevelopmentCard.Monopoly:
                     _monopolyPlayed = true;
@@ -449,6 +428,22 @@ namespace Catan
             return true; 
         }
 
+        public bool BuildDevRoad(int row, int col, Side side)
+        {
+            // if we have no dev roads to build, return false
+            if (_devRoadsAvailable == 0) return false;
+
+            // if we can't build a road at the requested location, return false
+            if (!_game.CanBuildRoadAt(this, row, col, side)) return false;
+
+            // otherwise, build the road
+            _game.BuildRoad(this, row, col, side);
+            _devRoadsAvailable--;
+            Roads--;
+
+            return true;
+        }
+
         // Change state upon ending turn given there are no prohibiting statuses activated
         public bool EndTurn()
         {
@@ -476,7 +471,7 @@ namespace Catan
             if (_diceRolled) return false;
 
             // if dev card has been played, we cannot roll until the action has been fulfilled
-            if (_robberActivated || _mustRobPlayer || _roadBuildingPlayed || _yearOfPlentyPlayed || _monopolyPlayed) return false; 
+            if (_robberActivated || _mustRobPlayer || _devRoadsAvailable > 0 || _plentyResourcesAvailable > 0 || _monopolyPlayed) return false; 
 
             int diceOne = _rand.Next(1, 7);
             int diceTwo = _rand.Next(1, 7);
