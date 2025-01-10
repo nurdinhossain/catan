@@ -749,7 +749,49 @@ namespace CatanTest
         }
 
         [TestMethod]
-        public void TestRobSuccess()
+        public void TestRobOne()
+        {
+            Game game = new Game("standard_map.txt");
+            Player one = new Player(game, 0);
+            Player two = new Player(game, 1);
+            Player three = new Player(game, 2);
+            Player four = new Player(game, 3);
+            one.AddPermanentDevCard(DevelopmentCard.Knight);
+            one.PlayDevCard(DevelopmentCard.Knight);
+            game.BuildBuilding(two, Building.Settlement, 1, 1, Vertex.Top);
+            game.BuildBuilding(four, Building.Settlement, 1, 1, Vertex.TopRight);
+            two.AddResource(Resource.Brick, 4);
+            three.AddResource(Resource.Lumber, 4);
+            four.AddResource(Resource.Wool, 4);
+
+            // army size should increase
+            Assert.AreEqual(1, one.Army);
+
+            // cannot choose to rob yet 
+            Assert.IsFalse(one.ChoosePlayerToRob(two));
+
+            // cannot roll dice
+            Assert.IsFalse(one.RollDice());
+
+            // should be able to move robber
+            Assert.IsTrue(one.MoveRobber(1, 1));
+
+            // should not be able to rob ourselves
+            Assert.IsFalse(one.ChoosePlayerToRob(one));
+
+            // should not be able to rob player not on tile
+            Assert.IsFalse(one.ChoosePlayerToRob(three));
+
+            // successfully rob player 
+            Assert.IsTrue(one.ChoosePlayerToRob(two));
+
+            // assert they have been robbed
+            Assert.AreEqual(1, one.HandSize());
+            Assert.AreEqual(3, two.HandSize());
+        }
+
+        [TestMethod]
+        public void TestRobTwo()
         {
             Game game = new Game("standard_map.txt");
             Player one = new Player(game, 0);
@@ -757,12 +799,29 @@ namespace CatanTest
             one.AddPermanentDevCard(DevelopmentCard.Knight);
             one.PlayDevCard(DevelopmentCard.Knight);
             game.BuildBuilding(two, Building.Settlement, 1, 1, Vertex.Top);
+            two.AddResource(Resource.Brick, 4);
 
+            // army size should increase
             Assert.AreEqual(1, one.Army);
-            Assert.IsFalse(one.ChoosePlayerToRob(one));
+
+            // cannot choose to rob yet 
+            Assert.IsFalse(one.ChoosePlayerToRob(two));
+
+            // cannot roll dice
             Assert.IsFalse(one.RollDice());
+
+            // should be able to move robber
             Assert.IsTrue(one.MoveRobber(1, 1));
 
+            // assert two has been robbed
+            Assert.AreEqual(1, one.HandSize());
+            Assert.AreEqual(3, two.HandSize());
+
+            // should not be able to rob anyone
+            Assert.IsFalse(one.ChoosePlayerToRob(one));
+
+            // should not be able to rob anyone 
+            Assert.IsFalse(one.ChoosePlayerToRob(two));
         }
     }
 }
