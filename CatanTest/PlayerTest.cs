@@ -788,6 +788,7 @@ namespace CatanTest
             // assert they have been robbed
             Assert.AreEqual(1, one.HandSize());
             Assert.AreEqual(3, two.HandSize());
+            Assert.IsFalse(one.NormalActionsStalled());
         }
 
         [TestMethod]
@@ -822,6 +823,69 @@ namespace CatanTest
 
             // should not be able to rob anyone 
             Assert.IsFalse(one.ChoosePlayerToRob(two));
+            Assert.IsFalse(one.NormalActionsStalled());
+        }
+
+        [TestMethod]
+        public void TestDevRoadNoValidSpots()
+        {
+            Game game = new Game("standard_map.txt");
+            Player one = new Player(game, 0);
+            one.AddPermanentDevCard(DevelopmentCard.RoadBuilding);
+            one.PlayDevCard(DevelopmentCard.RoadBuilding);
+
+            // no valid spots to build road
+            Assert.IsFalse(one.NormalActionsStalled());
+        }
+
+        [TestMethod]
+        public void TestDevRoadOneValidSpot()
+        {
+            Game game = new Game("standard_map.txt");
+            Player one = new Player(game, 0);
+            Player two = new Player(game, 1);
+            one.AddPermanentDevCard(DevelopmentCard.RoadBuilding);
+            game.BuildRoad(one, 0, 1, Side.TopLeft);
+            game.BuildRoad(two, 0, 1, Side.TopRight);
+            one.PlayDevCard(DevelopmentCard.RoadBuilding);
+
+            // one valid spot to build road
+            Assert.IsTrue(one.NormalActionsStalled());
+
+            Assert.IsFalse(one.BuildDevRoad(0, 1, Side.BottomLeft));
+            Assert.IsTrue(one.BuildDevRoad(0, 1, Side.Left));
+            Assert.IsFalse(one.NormalActionsStalled());
+        }
+
+        [TestMethod]
+        public void TestDevRoadTwoValidSpots()
+        {
+            Game game = new Game("standard_map.txt");
+            Player one = new Player(game, 0);
+            one.AddPermanentDevCard(DevelopmentCard.RoadBuilding);
+            game.BuildRoad(one, 0, 1, Side.TopLeft);
+            one.PlayDevCard(DevelopmentCard.RoadBuilding);
+
+            // one valid spot to build road
+            Assert.IsTrue(one.NormalActionsStalled());
+
+            Assert.IsTrue(one.BuildDevRoad(0, 1, Side.TopRight));
+            Assert.IsTrue(one.BuildDevRoad(0, 1, Side.Left));
+            Assert.IsFalse(one.NormalActionsStalled());
+        }
+
+        [TestMethod]
+        public void TestDevRoadNoRoads()
+        {
+            Game game = new Game("standard_map.txt");
+            Player one = new Player(game, 0);
+            one.Roads = 0;
+            one.AddPermanentDevCard(DevelopmentCard.RoadBuilding);
+            game.BuildRoad(one, 0, 1, Side.TopLeft);
+            one.PlayDevCard(DevelopmentCard.RoadBuilding);
+
+            // no roads to build
+            Assert.IsFalse(one.NormalActionsStalled());
         }
     }
 }
