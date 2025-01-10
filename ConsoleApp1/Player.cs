@@ -406,16 +406,27 @@ namespace Catan
                 // no longer need to move robber
                 _robberActivated = false;
 
-                // only set _mustRobPlayer to true if there is a player to rob that isn't us 
+                // only set _mustRobPlayer to true if there is more than one player to rob that isn't us with a hand size greater than 0
                 Tile robberTile = _game.GetRobberTile();
+                int playersToRob = 0;
+                Player lastPlayer = this; // a little hack to make the compiler happy 
                 for (int i = 0; i < Enum.GetNames(typeof(Vertex)).Length; i++)
                 {
                     Player? playerAtVertex = robberTile.PlayerAtVertex((Vertex)i);
-                    if (playerAtVertex != null && playerAtVertex != this)
+                    if (playerAtVertex != null && playerAtVertex != this && playerAtVertex.HandSize() > 0)
                     {
-                        _mustRobPlayer= true;
-                        break;
+                        playersToRob++;
+                        lastPlayer = playerAtVertex;
                     }
+                }
+
+                // if playrsToRob is greater than 0, set _mustRobPlayer to true because we must choose who to rob
+                if (playersToRob > 0) _mustRobPlayer = true;
+
+                // if playersToRob is equal to 1, rob the last player because they are the only option
+                if (playersToRob == 1)
+                {
+                    ChoosePlayerToRob(lastPlayer);
                 }
             }
 

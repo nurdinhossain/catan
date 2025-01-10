@@ -747,5 +747,22 @@ namespace CatanTest
             Player one = new Player(game, 0);
             Assert.IsFalse(one.PlayDevCard(DevelopmentCard.Knight));
         }
+
+        [TestMethod]
+        public void TestRobSuccess()
+        {
+            Game game = new Game("standard_map.txt");
+            Player one = new Player(game, 0);
+            Player two = new Player(game, 1);
+            one.AddPermanentDevCard(DevelopmentCard.Knight);
+            one.PlayDevCard(DevelopmentCard.Knight);
+            game.BuildBuilding(two, Building.Settlement, 1, 1, Vertex.Top);
+
+            Assert.AreEqual(1, one.Army);
+            Assert.IsFalse(one.ChoosePlayerToRob(one));
+            Assert.IsFalse(one.RollDice());
+            Assert.IsTrue(one.MoveRobber(1, 1));
+
+        }
     }
 }
