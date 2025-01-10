@@ -371,11 +371,35 @@ namespace Catan
                     break;
                 case DevelopmentCard.RoadBuilding:
                     _roadBuildingPlayed = true;
+
+                    // players should strive to build 2 roads if possible
+                    // if they only have 1 road left, that sets an upper bound
+                    // if they only have 1 valid spot to build a road, that sets an upper bound
+                    // if the upper bound becomes 0, immediately set _roadBuildingPlayed to false, ending the effect of this card
                     _devRoadsAvailable = 2;
+                    _devRoadsAvailable = Math.Min(_devRoadsAvailable, _game.EligibleRoadSpots(this));
+                    _devRoadsAvailable = Math.Min(_devRoadsAvailable, Roads);
+
+                    if (_devRoadsAvailable == 0)
+                    {
+                        _roadBuildingPlayed = false;
+                    }
+
                     break;
                 case DevelopmentCard.YearOfPlenty:
                     _yearOfPlentyPlayed = true;
+
+                    // players should strive to harvest 2 resources if possible
+                    // the quantity of resources left in the bank sets the upper bound of this card if its less than 2
+                    // if the bank has 0 resources, set _yearOfPlentyPlayed to false, ending the effect of this card
                     _plentyResourcesAvailable = 2;
+                    _plentyResourcesAvailable = Math.Min(_plentyResourcesAvailable, _game.GetBank().TotalResources());
+
+                    if (_plentyResourcesAvailable == 0)
+                    {
+                        _yearOfPlentyPlayed = false;
+                    }
+
                     break;
                 case DevelopmentCard.Monopoly:
                     _monopolyPlayed = true;

@@ -28,6 +28,11 @@
             return _resources[(int)resource];
         }
 
+        public int TotalResources()
+        {
+            return _resources.Sum();
+        }
+
         // return transaction
         public (Player player, Resource resource, int amount) GetTransactionAt(int index)
         {
