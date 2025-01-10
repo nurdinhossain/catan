@@ -545,6 +545,15 @@ namespace Catan
             int diceTwo = _rand.Next(1, 7);
             int sum = diceOne + diceTwo;
 
+            // if sum is 7, activate robber
+            if (sum == 7)
+            {
+                _robberActivated = true; 
+            }
+
+            // send roll to game
+            _game.RespondToRoll(this, sum);
+
             // set _diceRolled to true
             _diceRolled = true;
 

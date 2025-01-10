@@ -678,7 +678,27 @@
         }
 
         // game activity
-        public 
+        public void RespondToRoll(Player player, int roll)
+        {
+            // if roll is a 7, greedy players must discard
+            if (roll == 7)
+            {
+                // set discard flags for greedy players 
+                foreach (Player p in _players)
+                {
+                    if (p.HandSize() > 7)
+                    {
+                        p.SetDiscard(true);
+                    }
+                }
+            }
+            
+            // otherwise, harvest resources
+            else
+            {
+                
+            }
+        }
 
         public void LoadMap(string fileName)
         {

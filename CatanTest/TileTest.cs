@@ -27,13 +27,13 @@ namespace CatanTest
             Tile tile = new Tile(Resource.Grain, 6);
             tile.SetBuildingAt(Vertex.TopLeft, Building.Settlement);
             tile.SetPlayerAtVertex(Vertex.TopLeft, p);
-            tile.Harvest();
+            tile.Harvest(game.GetBank());
 
             Assert.AreEqual(1, p.ResourceCount(Resource.Grain));
 
             tile.SetBuildingAt(Vertex.TopRight, Building.City);
             tile.SetPlayerAtVertex(Vertex.TopRight, p);
-            tile.Harvest();
+            tile.Harvest(game.GetBank());
 
             Assert.AreEqual(4, p.ResourceCount(Resource.Grain));
         }
