@@ -949,5 +949,28 @@ namespace CatanTest
 
             Assert.IsFalse(one.NormalActionsStalled());
         }
+
+        [TestMethod]
+        public void TestMonopoly()
+        {
+            Game game = new Game("standard_map.txt");
+            Player one = new Player(game, 0);
+            Player two = new Player(game, 1);
+            Player three = new Player(game, 2);
+
+            one.AddResource(Resource.Brick, 4);
+            two.AddResource(Resource.Brick, 3);
+            three.AddResource(Resource.Brick, 7);
+            one.AddPermanentDevCard(DevelopmentCard.Monopoly);
+            one.PlayDevCard(DevelopmentCard.Monopoly);
+            Assert.IsTrue(one.NormalActionsStalled());
+            Assert.IsTrue(one.MonopolizeResource(Resource.Brick));
+
+            Assert.AreEqual(14, one.HandSize());
+            Assert.AreEqual(14, one.ResourceCount(Resource.Brick));
+            Assert.AreEqual(0, two.HandSize());
+            Assert.AreEqual(0, three.HandSize());
+            Assert.IsFalse(one.NormalActionsStalled());
+        }
     }
 }
