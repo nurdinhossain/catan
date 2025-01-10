@@ -351,7 +351,7 @@ namespace Catan
             // if we've rolled a 7 and haven't moved the knight yet, we cannot play the dev card
             if (_robberActivatedFromDice && !_robberHasBeenMoved) return false;
 
-            // if dev card has already been drawn this turn, we cannot play another one
+            // if dev card has already been played this turn, we cannot play another one
             if (_devCardPlayed) return false;
 
             // if we do not have any of this card, it is unplayable
@@ -359,9 +359,6 @@ namespace Catan
 
             // if dev card is a VP, it is unplayable
             if (card == DevelopmentCard.VictoryPoint) return false;
-
-            // if 7 was rolled and robber has not been moved, we cannot play dev card
-            if (_robberActivatedFromDice && !_robberHasBeenMoved) return false;
 
             // play dev card
             _devCardPlayed = true;
@@ -371,6 +368,17 @@ namespace Catan
                 case DevelopmentCard.Knight:
                     _knightPlayed = true;
                     Army++;
+                    break;
+                case DevelopmentCard.RoadBuilding:
+                    _roadBuildingPlayed = true;
+                    _devRoadsAvailable = 2;
+                    break;
+                case DevelopmentCard.YearOfPlenty:
+                    _yearOfPlentyPlayed = true;
+                    _plentyResourcesAvailable = 2;
+                    break;
+                case DevelopmentCard.Monopoly:
+                    _monopolyPlayed = true;
                     break;
             }
 

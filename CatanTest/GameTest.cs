@@ -1554,5 +1554,37 @@ namespace CatanTest
 
             Assert.IsFalse(game.MoveRobber(2, 2));
         }
+
+        [TestMethod]
+        public void TestEligibleRoadSpotsOne()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+            game.BuildRoad(player, 0, 1, Side.TopRight);
+            Assert.AreEqual(3, game.EligibleRoadSpots(player));
+        }
+
+        [TestMethod]
+        public void TestEligibleRoadSpotsTwo()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+            game.BuildRoad(player, 0, 1, Side.TopRight);
+            game.BuildBuilding(player, Building.Settlement, 1, 0, Vertex.BottomLeft);
+            Assert.AreEqual(6, game.EligibleRoadSpots(player));
+        }
+
+        [TestMethod]
+        public void TestEligibleRoadSpotsThree()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+            game.BuildRoad(player, 2, 4, Side.TopRight);
+            game.BuildRoad(player, 2, 4, Side.Right);
+            game.BuildRoad(player, 2, 4, Side.BottomRight);
+            game.BuildRoad(player, 2, 2, Side.BottomLeft);
+            game.BuildBuilding(player, Building.Settlement, 1, 0, Vertex.BottomLeft);
+            Assert.AreEqual(11, game.EligibleRoadSpots(player));
+        }
     }
 }

@@ -139,6 +139,12 @@
             return null;
         }
 
+        // check if tile borders a water tile
+        public bool BordersWater(int row, int col, Side side)
+        {
+            return GetNeighbor(row, col, side) == null;
+        }
+
         // check if any player must discard resources
         public bool PlayersMustDiscard()
         {
@@ -449,6 +455,32 @@
             }
 
             return false;
+        }
+
+        public int EligibleRoadSpots(Player player)
+        {
+            int landlockedSides = 0;
+            int sidesBorderingWater = 0;
+
+            for (int i = 0; i < _tiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < _tiles.GetLength(1); j++)
+                {
+                    // check each side
+                    for (int side = 0; side < Enum.GetNames(typeof(Side)).Length; side++) 
+                    {
+                        bool canBuild = CanBuildRoadAt(player, i, j, (Side)side);
+                        if (canBuild)
+                        {
+                            if (BordersWater(i, j, (Side)side)) sidesBorderingWater++;
+                            else landlockedSides++;
+                        }
+                    }
+                }
+            }
+
+            // divide landlocked sides by 2 because they will be counted twice
+            return (landlockedSides / 2) + sidesBorderingWater;
         }
 
         public void BuildBuilding(Player player, Building building, int row, int col, Vertex vertex)
