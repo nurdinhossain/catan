@@ -981,5 +981,27 @@ namespace CatanTest
             Assert.IsTrue(one.EndTurn());
             Assert.IsFalse(one.EndTurn());
         }
+
+        [TestMethod]
+        public void TestPlayerDiscard()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+            player.AddResource(Resource.Grain, 6);
+            player.AddResource(Resource.Brick, 3);
+            game.RespondToRoll(7);
+            Assert.IsTrue(player.NormalActionsStalled());
+
+            // discarding too little
+            Assert.IsFalse(player.Discard(new int[] {0, 3, 0, 0, 0, 0}));
+
+            // discarding too much
+            Assert.IsFalse(player.Discard(new int[] { 0, 0, 0, 0, 6, 0 }));
+
+            Assert.IsTrue(player.Discard(new int[] { 0, 1, 0, 0, 3, 0 }));
+            Assert.IsFalse(player.NormalActionsStalled());
+            Assert.AreEqual(20, game.GetBank().ResourceCount(Resource.Brick));
+            Assert.AreEqual(22, game.GetBank().ResourceCount(Resource.Grain));
+        }
     }
 }
