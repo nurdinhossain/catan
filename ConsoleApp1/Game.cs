@@ -156,6 +156,20 @@
             return false;
         }
 
+        // take a particular resource type away from every player and return the total resources collected
+        public int CollectResourceFromAllPlayers(Resource resource)
+        {
+            int total = 0;
+            foreach (Player player in _players)
+            {
+                int amount = player.ResourceCount(resource);
+                total += amount;
+                player.RemoveResource(resource, amount);
+            }
+
+            return total;
+        }
+
         // special methods for building 
         private bool RoadsMeetAtVertex(Player player, int row, int col, Vertex vertex)
         {

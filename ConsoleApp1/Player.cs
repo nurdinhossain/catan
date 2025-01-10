@@ -460,6 +460,19 @@ namespace Catan
             return true;
         }
 
+        public bool MonopolizeResource(Resource resource)
+        {
+            // if monopoly card has not been played, this method is invalid
+            if (!_monopolyPlayed) return false;
+
+            // otherwise, take all of this resource from every player
+            int collectedResources = _game.CollectResourceFromAllPlayers(resource);
+            AddResource(resource, collectedResources);
+            _monopolyPlayed = false; 
+
+            return true;
+        }
+
         // Change state upon ending turn given there are no prohibiting statuses activated
         public bool EndTurn()
         {
