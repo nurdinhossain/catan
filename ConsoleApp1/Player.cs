@@ -375,6 +375,28 @@ namespace Catan
                 case DevelopmentCard.Knight:
                     _robberActivated = true;
                     Army++;
+
+                    // largest army
+                    Player? currentLargestArmy = _game.GetPlayerWithLargestArmy();
+                    
+                    // if no one has taken largest army and we are the first to reach 3 knights, we get largest army card
+                    if (currentLargestArmy == null)
+                    {
+                        if (Army == 3)
+                        {
+                            VictoryPoints += 2;
+                            _game.SetLargestArmyPlayer(this);
+                        }
+                    }
+
+                    // otherwise, if our army is greater than the current largest army, take the card from them
+                    else if (Army > currentLargestArmy.Army)
+                    {
+                        VictoryPoints += 2;
+                        currentLargestArmy.VictoryPoints -= 2;
+                        _game.SetLargestArmyPlayer(this);
+                    }
+
                     break;
                 case DevelopmentCard.RoadBuilding:
                     // players should strive to build 2 roads if possible
