@@ -17,8 +17,6 @@
         // players holding title of longest road and largest army
         private Player? _longestRoadPlayer;
         private Player? _largestArmyPlayer;
-        private int _longestRoadSize;
-        private int _largestArmySize;
 
         // bank and deck of development cards
         private readonly Bank _bank;
@@ -35,8 +33,6 @@
             // init superlatives
             _longestRoadPlayer = null;
             _largestArmyPlayer = null;
-            _longestRoadSize = 0;
-            _largestArmySize = 0;
 
             // initialize bank and dev card deck
             _bank = new Bank();
