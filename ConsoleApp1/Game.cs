@@ -69,23 +69,12 @@
             if (_robberTile == null) throw new Exception("Game board does not contain desert tile.");
         }
 
-        // getters
+        // getters/setters
         public Tile? TileAt(int row, int col)
         {
             return _tiles[row, col];
         }
 
-        // add player to game
-        public bool AddPlayer(Player player)
-        {
-            if (_players.Contains(player)) return false;
-
-            _players.Add(player);
-
-            return true;
-        }
-
-        // ** for testing **
         public Tile GetRobberTile()
         {
             return _robberTile;
@@ -101,27 +90,47 @@
             return _devDeck;
         }
 
+        public Player? GetPlayerWithLongestRoad()
+        {
+            return _longestRoadPlayer;
+        }
+
+        public Player? GetPlayerWithLargestArmy()
+        {
+            return _largestArmyPlayer;
+        }
+
+        public void SetLongestRoadPlayer(Player p)
+        {
+            _longestRoadPlayer = p;
+        }
+
+        public void SetLargestArmyPlayer(Player p)
+        {
+            _largestArmyPlayer = p;
+        }
+
         public Tile? GetNeighbor(int row, int col, Side side)
         {
             if (side == Side.Left)
             {
                 // if we're on the left side of the board, there's no left pieces
                 if (col == 0) return null;
-                return _tiles[row, col-1];
+                return _tiles[row, col - 1];
             }
 
             else if (side == Side.Right)
             {
-                if (col == _tiles.GetLength(1)-1) return null;
-                return _tiles[row, col+1];
+                if (col == _tiles.GetLength(1) - 1) return null;
+                return _tiles[row, col + 1];
             }
 
             else if (side == Side.TopRight)
             {
                 if (row == 0) return null;
-                if (col == _tiles.GetLength(1) - 1 && row % 2 == 1) return null; 
+                if (col == _tiles.GetLength(1) - 1 && row % 2 == 1) return null;
                 if (row % 2 == 0) return _tiles[row - 1, col];
-                
+
                 return _tiles[row - 1, col + 1];
             }
             else if (side == Side.TopLeft)
@@ -152,6 +161,16 @@
             }
 
             return null;
+        }
+
+        // add player to game
+        public bool AddPlayer(Player player)
+        {
+            if (_players.Contains(player)) return false;
+
+            _players.Add(player);
+
+            return true;
         }
 
         // check if tile borders a water tile
