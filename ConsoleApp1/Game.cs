@@ -3,7 +3,7 @@
     public class Game
     {
         // constants
-        private const int MaxHandSize = 7; 
+        public const int MaxHandSize = 7; 
 
         // array of Tiles present in game board
         private Tile?[,] _tiles;
@@ -13,6 +13,12 @@
 
         // list of players playing this game
         private List<Player> _players;
+
+        // players holding title of longest road and largest army
+        private Player? _longestRoadPlayer;
+        private Player? _largestArmyPlayer;
+        private int _longestRoadSize;
+        private int _largestArmySize;
 
         // bank and deck of development cards
         private readonly Bank _bank;
@@ -25,6 +31,12 @@
 
             // initialize players list
             _players = new List<Player>();
+
+            // init superlatives
+            _longestRoadPlayer = null;
+            _largestArmyPlayer = null;
+            _longestRoadSize = 0;
+            _largestArmySize = 0;
 
             // initialize bank and dev card deck
             _bank = new Bank();
