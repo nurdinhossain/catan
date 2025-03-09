@@ -159,7 +159,7 @@
             return null;
         }
 
-        // add player to game
+        // add player to game (no player conditions/restrictions at the moment, will evaluate this later...)
         public bool AddPlayer(Player player)
         {
             if (_players.Contains(player)) return false;

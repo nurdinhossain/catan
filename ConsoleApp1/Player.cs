@@ -75,21 +75,6 @@ namespace Catan
             VictoryPoints = 0;
         }
 
-        public void ResetFlags()
-        {
-            // set all flags to false
-            _diceRolled = false;
-            _robberActivated = false;
-            _mustRobPlayer = false;
-            _mustDiscardExcessResources = false;
-
-            _monopolyPlayed = false;
-
-            // set dev values to 0
-            _devRoadsAvailable = 0;
-            _plentyResourcesAvailable = 0;
-        }
-
         // some info methods
         public int HandSize()
         {
@@ -408,7 +393,6 @@ namespace Catan
                 case DevelopmentCard.YearOfPlenty:
                     // players should strive to harvest 2 resources if possible
                     // the quantity of resources left in the bank sets the upper bound of this card if its less than 2
-                    // if the bank has 0 resources, set _yearOfPlentyPlayed to false, ending the effect of this card
                     _plentyResourcesAvailable = Math.Min(2, _game.GetBank().TotalResources());
                     break;
                 case DevelopmentCard.Monopoly:
@@ -443,12 +427,12 @@ namespace Catan
                     Player? playerAtVertex = robberTile.PlayerAtVertex((Vertex)i);
                     if (playerAtVertex != null && playerAtVertex != this && playerAtVertex.HandSize() > 0)
                     {
-                        playersToRob++;
+                        playersToRob++; // could make an optimization to break once playersToRob > 1, but that seems unnecessary
                         lastPlayer = playerAtVertex;
                     }
                 }
 
-                // if playrsToRob is greater than 0, set _mustRobPlayer to true because we must choose who to rob
+                // if playersToRob is greater than 0, set _mustRobPlayer to true because we must choose who to rob
                 if (playersToRob > 0) _mustRobPlayer = true;
 
                 // if playersToRob is equal to 1, rob the last player because they are the only option
@@ -543,7 +527,7 @@ namespace Catan
             // if length of toDiscard is wrong, return false
             if (toDiscard.Length != Enum.GetNames(typeof(Resource)).Length) return false;
 
-            // if NoResource != 0, return false
+            // if NoResource != 0, return false 
             if (toDiscard[0] != 0) return false;
 
             // if sum of discarded cards is not equal to half of hand size rounded down, return false
@@ -581,8 +565,8 @@ namespace Catan
                 _devCardsTemp.RemoveAt(_devCardsTemp.Count() - 1);
             }
 
-            // reset all flags
-            ResetFlags();
+            // un-roll the dice
+            _diceRolled = false; 
 
             return true;
         }
