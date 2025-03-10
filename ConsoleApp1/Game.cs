@@ -750,11 +750,10 @@
 
         // LONGEST ROAD CODE
 
-        // adds a full road pair instead of just the singular road on one side
-        public void AddRoadPair(int row, int col, Side side, int[,,] visited)
+        public void UpdateRoadPair(int row, int col, Side side, int[,,] visited, int value)
         {
             // add initial road
-            visited[row, col, (int)side] = 1;
+            visited[row, col, (int)side] = value;
 
             (int, int) neighbor = GetNeighborIndices(row, col, side);
             if (neighbor.Item1 != -1)
@@ -762,25 +761,35 @@
                 switch (side)
                 {
                     case Side.TopRight:
-                        visited[neighbor.Item1, neighbor.Item2, (int)Side.BottomLeft] = 1;
+                        visited[neighbor.Item1, neighbor.Item2, (int)Side.BottomLeft] = value;
                         break;
                     case Side.Right:
-                        visited[neighbor.Item1, neighbor.Item2, (int)Side.Left] = 1;
+                        visited[neighbor.Item1, neighbor.Item2, (int)Side.Left] = value;
                         break;
                     case Side.BottomRight:
-                        visited[neighbor.Item1, neighbor.Item2, (int)Side.TopLeft] = 1;
+                        visited[neighbor.Item1, neighbor.Item2, (int)Side.TopLeft] = value;
                         break;
                     case Side.BottomLeft:
-                        visited[neighbor.Item1, neighbor.Item2, (int)Side.TopRight] = 1;
+                        visited[neighbor.Item1, neighbor.Item2, (int)Side.TopRight] = value;
                         break;
                     case Side.Left:
-                        visited[neighbor.Item1, neighbor.Item2, (int)Side.Right] = 1;
+                        visited[neighbor.Item1, neighbor.Item2, (int)Side.Right] = value;
                         break;
                     case Side.TopLeft:
-                        visited[neighbor.Item1, neighbor.Item2, (int)Side.BottomRight] = 1;
+                        visited[neighbor.Item1, neighbor.Item2, (int)Side.BottomRight] = value;
                         break;
                 }
             }
+        }
+
+        public void AddRoadPair(int row, int col, Side side, int[,,] visited)
+        {
+            UpdateRoadPair(row, col, side, visited, 1);
+        }
+
+        public void UnAddRoadPair(int row, int col, Side side, int[,,] visited)
+        {
+            UpdateRoadPair(row, col, side, visited, 0);
         }
 
         public void VerifyRoadOnSide((int, int) tileIndices, Side evaluatedSide, Player player, List<(int, int, Side)> neighbors, int[,,] visited)
