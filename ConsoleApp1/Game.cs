@@ -179,7 +179,7 @@
         }
 
         // check if tile borders a water tile
-        public bool BordersWater(int row, int col, Side side)
+        private bool BordersWater(int row, int col, Side side)
         {
             return GetNeighbor(row, col, side) == null;
         }
@@ -874,24 +874,28 @@
 
             return neighbors;
         }
-        private void UpdateLongestRoad(int row, int col, Side side)
+        public int LongestPathFrom(int row, int col, Side side, Player player)
         {
             // array of visited roads 
             int[,,] visitedSides = new int[_tiles.GetLength(0), _tiles.GetLength(1), Enum.GetNames(typeof(Side)).Length];
 
-            // stack for DFS
-            Stack<(int, int, Side)> neighbors = new Stack<(int, int, Side)>();
+            return 1 + LongestPathFrom(row, col, side, player, visitedSides);
+        }
 
-            // push current row, col, side
-            neighbors.Push((row, col, side));
+        public int LongestPathFrom(int row, int col, Side side, Player player, int[,,] visited)
+        {
+            // get visitable neighbors
+            List<(int, int, Side)> neighbors = GetVisitableNeighbors(row, col, side, player, visited);
+            int longestPath = 0;
 
-            while (true)
+            AddRoadPair(row, col, side, visited);
+            foreach ((int curRow, int curCol, Side curSide) in neighbors)
             {
-                // pop from stack
-                (int currentRow, int currentCol, Side currentSide) = neighbors.Pop();
-
-                // 
+                longestPath = Math.Max(longestPath, 1 + LongestPathFrom(curRow, curCol, curSide, player, visited));
             }
+            UnAddRoadPair(row, col, side, visited);
+
+            return longestPath;
         }
 
         public void LoadMap(string fileName)
