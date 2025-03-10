@@ -1724,8 +1724,8 @@ namespace CatanTest
             game.BuildRoad(player, 2, 2, Side.BottomRight);
             game.BuildRoad(player, 3, 1, Side.TopLeft);
             game.BuildRoad(player, 3, 1, Side.Right);
-            visited[2, 2, (int)Side.Left] = 1;
-            visited[3, 1, (int)Side.Right] = 1;
+            game.AddRoadPair(2, 2, Side.Left, visited);
+            game.AddRoadPair(3, 1, Side.Right, visited);
             game.BuildRoad(player, 2, 2, Side.BottomLeft);
             game.UpdateVisitableNeighbors(2, 2, Side.BottomLeft, player, neighbors, visited);
 
@@ -1745,6 +1745,11 @@ namespace CatanTest
             game.BuildRoad(player, 0, 1, Side.Left);
             game.BuildRoad(player, 1, 0, Side.TopLeft);
             game.UpdateVisitableNeighbors(1, 0, Side.TopLeft, player, neighbors, visited);
+
+            foreach ((int, int, Side) item in neighbors)
+            {
+                Console.WriteLine(item.Item1 + " " + item.Item2 + " " + item.Item3);
+            }
 
             Assert.AreEqual(3, neighbors.Count);
         }

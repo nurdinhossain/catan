@@ -108,55 +108,57 @@
 
         public (int, int) GetNeighborIndices(int row, int col, Side side)
         {
+            (int, int) indices = (0, 0);
             if (side == Side.Left)
             {
                 // if we're on the left side of the board, there's no left pieces
                 if (col == 0) return (-1, -1);
-                return (row, col - 1);
+                indices = (row, col - 1);
             }
 
             else if (side == Side.Right)
             {
                 if (col == _tiles.GetLength(1) - 1) return (-1, -1);
-                return (row, col + 1);
+                indices = (row, col + 1);
             }
 
             else if (side == Side.TopRight)
             {
                 if (row == 0) return (-1, -1);
                 if (col == _tiles.GetLength(1) - 1 && row % 2 == 1) return (-1, -1);
-                if (row % 2 == 0) return (row - 1, col);
+                if (row % 2 == 0) indices = (row - 1, col);
 
-                return (row - 1, col + 1);
+                else indices = (row - 1, col + 1);
             }
             else if (side == Side.TopLeft)
             {
                 if (row == 0) return (-1, -1);
                 if (col == 0 && row % 2 == 0) return (-1, -1);
-                if (row % 2 == 1) return (row - 1, col);
+                if (row % 2 == 1) indices = (row - 1, col);
 
-                return (row - 1, col - 1);
+                else indices = (row - 1, col - 1);
             }
 
             else if (side == Side.BottomRight)
             {
                 if (row == _tiles.GetLength(0) - 1) return (-1, -1);
                 if (col == _tiles.GetLength(1) - 1 && row % 2 == 1) return (-1, -1);
-                if (row % 2 == 0) return (row + 1, col);
+                if (row % 2 == 0) indices = (row + 1, col);
 
-                return (row + 1, col + 1);
+                else indices = (row + 1, col + 1);
             }
 
             else if (side == Side.BottomLeft)
             {
                 if (row == _tiles.GetLength(0) - 1) return (-1, -1);
                 if (col == 0 && row % 2 == 0) return (-1, -1);
-                if (row % 2 == 1) return (row + 1, col);
+                if (row % 2 == 1) indices = (row + 1, col);
 
-                return (row + 1, col - 1);
+                else indices = (row + 1, col - 1);
             }
 
-            return (-1, -1);
+            if (TileAt(indices.Item1, indices.Item2) == null) return (-1, -1);
+            return indices;
         }
 
         public Tile? GetNeighbor(int row, int col, Side side)
