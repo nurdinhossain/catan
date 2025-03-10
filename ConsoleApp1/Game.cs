@@ -749,40 +749,33 @@
         // LONGEST ROAD CODE
 
         // adds a full road pair instead of just the singular road on one side
-        /*public void AddRoadPair(int row, int col, Side side, int[,,] visited)
+        public void AddRoadPair(int row, int col, Side side, int[,,] visited)
         {
             // add initial road
             visited[row, col, (int)side] = 1;
 
-            // add pair
-            switch (side)
-            {
-                case Side.TopRight:
-
-            }
-            Tile? neighbor = GetNeighbor(row, col, side);
-            if (neighbor != null)
+            (int, int) neighbor = GetNeighborIndices(row, col, side);
+            if (neighbor.Item1 != -1)
             {
                 switch (side)
                 {
                     case Side.TopRight:
-
-                        _roadMap.Add(neighbor, Side.BottomLeft);
+                        visited[neighbor.Item1, neighbor.Item2, (int)Side.BottomLeft] = 1;
                         break;
                     case Side.Right:
-                        _roadMap.Add(neighbor, Side.Left);
+                        visited[neighbor.Item1, neighbor.Item2, (int)Side.Left] = 1;
                         break;
                     case Side.BottomRight:
-                        _roadMap.Add(neighbor, Side.TopLeft);
+                        visited[neighbor.Item1, neighbor.Item2, (int)Side.TopLeft] = 1;
                         break;
                     case Side.BottomLeft:
-                        _roadMap.Add(neighbor, Side.TopRight);
+                        visited[neighbor.Item1, neighbor.Item2, (int)Side.TopRight] = 1;
                         break;
                     case Side.Left:
-                        _roadMap.Add(neighbor, Side.Right);
+                        visited[neighbor.Item1, neighbor.Item2, (int)Side.Right] = 1;
                         break;
                     case Side.TopLeft:
-                        _roadMap.Add(neighbor, Side.BottomRight);
+                        visited[neighbor.Item1, neighbor.Item2, (int)Side.BottomRight] = 1;
                         break;
                 }
             }
@@ -1050,7 +1043,7 @@
 
                     break;
             }
-        }*/
+        }
 
         public void LoadMap(string fileName)
         {
