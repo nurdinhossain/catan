@@ -781,7 +781,7 @@
             }
         }
 
-        private void UpdateLongestRoad(int row, int col, Side side)
+        /*private void UpdateLongestRoad(int row, int col, Side side)
         {
             // array of visited roads
             int[,,] visitedSides = new int[_tiles.GetLength(0), _tiles.GetLength(1), Enum.GetNames(typeof(Side)).Length];
@@ -1043,7 +1043,7 @@
 
                     break;
             }
-        }
+        }*/
 
         public void LoadMap(string fileName)
         {

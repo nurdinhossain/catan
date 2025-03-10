@@ -1611,5 +1611,32 @@ namespace CatanTest
             game.RespondToRoll(7);
             Assert.IsTrue(game.PlayersMustDiscard());
         }
+
+        [TestMethod]
+        public void TestAddRoadPair()
+        {
+            Game game = new Game("standard_map.txt");
+            int[,,] visited = new int[5, 5, 6];
+            game.AddRoadPair(2, 2, Side.TopRight, visited);
+            game.AddRoadPair(2, 2, Side.Right, visited);
+            game.AddRoadPair(2, 2, Side.BottomRight, visited);
+            game.AddRoadPair(2, 2, Side.BottomLeft, visited);
+            game.AddRoadPair(2, 2, Side.Left, visited);
+            game.AddRoadPair(2, 2, Side.TopLeft, visited);
+
+            Assert.AreEqual(1, visited[2, 2, (int)Side.TopRight]);
+            Assert.AreEqual(1, visited[2, 2, (int)Side.Right]);
+            Assert.AreEqual(1, visited[2, 2, (int)Side.BottomRight]);
+            Assert.AreEqual(1, visited[2, 2, (int)Side.BottomLeft]);
+            Assert.AreEqual(1, visited[2, 2, (int)Side.Left]);
+            Assert.AreEqual(1, visited[2, 2, (int)Side.TopLeft]);
+
+            Assert.AreEqual(1, visited[1, 2, (int)Side.BottomLeft]);
+            Assert.AreEqual(1, visited[2, 3, (int)Side.Left]);
+            Assert.AreEqual(1, visited[3, 2, (int)Side.TopLeft]);
+            Assert.AreEqual(1, visited[3, 1, (int)Side.TopRight]);
+            Assert.AreEqual(1, visited[2, 1, (int)Side.Right]);
+            Assert.AreEqual(1, visited[1, 1, (int)Side.BottomRight]);
+        }
     }
 }
