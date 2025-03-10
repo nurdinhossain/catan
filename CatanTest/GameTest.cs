@@ -1645,14 +1645,13 @@ namespace CatanTest
             Game game = new Game("standard_map.txt");
             int[,,] visited = new int[5, 5, 6];
             Player player = new Player(game, 0);
-            List<(int, int, Side)> neighbors = new List<(int, int, Side)>();
 
             game.BuildRoad(player, 2, 2, Side.TopLeft);
             game.BuildRoad(player, 2, 2, Side.Right);
             game.BuildRoad(player, 1, 2, Side.Left);
             game.BuildRoad(player, 1, 2, Side.BottomRight);
             game.BuildRoad(player, 2, 2, Side.TopRight);
-            game.UpdateVisitableNeighbors(2, 2, Side.TopRight, player, neighbors, visited);
+            List<(int, int, Side)> neighbors = game.GetVisitableNeighbors(2, 2, Side.TopRight, player, visited);
 
             Assert.AreEqual(4, neighbors.Count);
         }
@@ -1663,14 +1662,13 @@ namespace CatanTest
             Game game = new Game("standard_map.txt");
             int[,,] visited = new int[5, 5, 6];
             Player player = new Player(game, 0);
-            List<(int, int, Side)> neighbors = new List<(int, int, Side)>();
 
             game.BuildRoad(player, 2, 2, Side.Left);
             game.BuildRoad(player, 2, 2, Side.TopRight);
             game.BuildRoad(player, 1, 1, Side.BottomLeft);
             game.BuildRoad(player, 1, 1, Side.Right);
             game.BuildRoad(player, 2, 2, Side.TopLeft);
-            game.UpdateVisitableNeighbors(2, 2, Side.TopLeft, player, neighbors, visited);
+            List<(int, int, Side)> neighbors = game.GetVisitableNeighbors(2, 2, Side.TopLeft, player, visited);
 
             Assert.AreEqual(4, neighbors.Count);
         }
@@ -1681,14 +1679,13 @@ namespace CatanTest
             Game game = new Game("standard_map.txt");
             int[,,] visited = new int[5, 5, 6];
             Player player = new Player(game, 0);
-            List<(int, int, Side)> neighbors = new List<(int, int, Side)>();
 
             game.BuildRoad(player, 2, 2, Side.Left);
             game.BuildRoad(player, 2, 2, Side.BottomRight);
             game.BuildRoad(player, 3, 1, Side.TopLeft);
             game.BuildRoad(player, 3, 1, Side.Right);
             game.BuildRoad(player, 2, 2, Side.BottomLeft);
-            game.UpdateVisitableNeighbors(2, 2, Side.BottomLeft, player, neighbors, visited);
+            List<(int, int, Side)> neighbors = game.GetVisitableNeighbors(2, 2, Side.BottomLeft, player, visited);
 
             Assert.AreEqual(4, neighbors.Count);
         }
@@ -1700,14 +1697,13 @@ namespace CatanTest
             int[,,] visited = new int[5, 5, 6];
             Player player = new Player(game, 0);
             Player player2 = new Player(game, 1);
-            List<(int, int, Side)> neighbors = new List<(int, int, Side)>();
 
             game.BuildRoad(player, 2, 2, Side.Left);
             game.BuildRoad(player, 2, 2, Side.BottomRight);
             game.BuildRoad(player, 3, 1, Side.TopLeft);
             game.BuildRoad(player, 3, 1, Side.Right);
             game.BuildRoad(player, 2, 2, Side.BottomLeft);
-            game.UpdateVisitableNeighbors(2, 2, Side.BottomLeft, player2, neighbors, visited);
+            List<(int, int, Side)> neighbors = game.GetVisitableNeighbors(2, 2, Side.BottomLeft, player2, visited);
 
             Assert.AreEqual(0, neighbors.Count);
         }
@@ -1718,7 +1714,6 @@ namespace CatanTest
             Game game = new Game("standard_map.txt");
             int[,,] visited = new int[5, 5, 6];
             Player player = new Player(game, 0);
-            List<(int, int, Side)> neighbors = new List<(int, int, Side)>();
 
             game.BuildRoad(player, 2, 2, Side.Left);
             game.BuildRoad(player, 2, 2, Side.BottomRight);
@@ -1727,7 +1722,7 @@ namespace CatanTest
             game.AddRoadPair(2, 2, Side.Left, visited);
             game.AddRoadPair(3, 1, Side.Right, visited);
             game.BuildRoad(player, 2, 2, Side.BottomLeft);
-            game.UpdateVisitableNeighbors(2, 2, Side.BottomLeft, player, neighbors, visited);
+            List<(int, int, Side)> neighbors = game.GetVisitableNeighbors(2, 2, Side.BottomLeft, player, visited);
 
             Assert.AreEqual(2, neighbors.Count);
         }
@@ -1738,13 +1733,12 @@ namespace CatanTest
             Game game = new Game("standard_map.txt");
             int[,,] visited = new int[5, 5, 6];
             Player player = new Player(game, 0);
-            List<(int, int, Side)> neighbors = new List<(int, int, Side)>();
 
             game.BuildRoad(player, 1, 0, Side.Left);
             game.BuildRoad(player, 1, 0, Side.TopRight);
             game.BuildRoad(player, 0, 1, Side.Left);
             game.BuildRoad(player, 1, 0, Side.TopLeft);
-            game.UpdateVisitableNeighbors(1, 0, Side.TopLeft, player, neighbors, visited);
+            List<(int, int, Side)> neighbors = game.GetVisitableNeighbors(1, 0, Side.TopLeft, player, visited);
 
             Assert.AreEqual(3, neighbors.Count);
         }

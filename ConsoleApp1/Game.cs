@@ -809,8 +809,11 @@
         }
 
         // update valid visitable neighbors of a side
-        public void UpdateVisitableNeighbors(int row, int col, Side side, Player player, List<(int, int, Side)> neighbors, int[,,] visited)
+        public List<(int, int, Side)> GetVisitableNeighbors(int row, int col, Side side, Player player, int[,,] visited)
         {
+            // return
+            List<(int, int, Side)> neighbors = new List<(int, int, Side)>();
+
             // all neighbors
             (int, int) topRightNeighborIndices = GetNeighborIndices(row, col, Side.TopRight);
             (int, int) rightNeighborIndices = GetNeighborIndices(row, col, Side.Right);
@@ -859,23 +862,26 @@
                     VerifyTilePair(topLeftNeighborIndices, topRightNeighborIndices, Side.Right, Side.Left, player, neighbors, visited);
                     break;
             }
+
+            return neighbors;
         }
         private void UpdateLongestRoad(int row, int col, Side side)
         {
-            // array of visited roads
+            // array of visited roads 
             int[,,] visitedSides = new int[_tiles.GetLength(0), _tiles.GetLength(1), Enum.GetNames(typeof(Side)).Length];
 
-            // current tile/side we're on
-            (int, int) currentTile = (row, col);
-            Side currentSide = side;
+            // stack for DFS
+            Stack<(int, int, Side)> neighbors = new Stack<(int, int, Side)>();
 
-            // add current tile/side combo to dictionary
-            AddRoadPair(row, col, side, visitedSides);
-            int roadLength = 1;
+            // push current row, col, side
+            neighbors.Push((row, col, side));
 
             while (true)
             {
+                // pop from stack
+                (int currentRow, int currentCol, Side currentSide) = neighbors.Pop();
 
+                // 
             }
         }
 
