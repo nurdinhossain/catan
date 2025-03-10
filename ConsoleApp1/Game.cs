@@ -781,13 +781,90 @@
             }
         }
 
-        /*private void UpdateLongestRoad(int row, int col, Side side)
+        public void VerifyRoadOnSide((int, int) tileIndices, Side evaluatedSide, Player player, List<(int, int, Side)> neighbors, int[,,] visited)
+        {
+            Tile? tile = TileAt(tileIndices.Item1, tileIndices.Item2);
+
+            if (tile != null)
+            {
+                if (tile.RoadAt(evaluatedSide) == Road.Road && tile.PlayerAtSide(evaluatedSide) == player)
+                {
+                    if (visited[tileIndices.Item1, tileIndices.Item2, (int)evaluatedSide] == 0) neighbors.Add((tileIndices.Item1, tileIndices.Item2, evaluatedSide));
+                }
+            }
+        }
+
+        public void VerifyTilePair((int, int) tileIndicesOne, (int, int) tileIndicesTwo, Side evaluatedSideOne, Side evaluatedSideTwo, Player player, List<(int, int, Side)> neighbors, int[,,] visited)
+        {
+            if (tileIndicesOne.Item1 != -1)
+            {
+                VerifyRoadOnSide(tileIndicesOne, evaluatedSideOne, player, neighbors, visited);
+            }
+            else if (tileIndicesTwo.Item1 != -1)
+            {
+                VerifyRoadOnSide(tileIndicesTwo, evaluatedSideTwo, player, neighbors, visited);
+            }
+        }
+
+        // update valid visitable neighbors of a side
+        public void UpdateVisitableNeighbors(int row, int col, Side side, Player player, List<(int, int, Side)> neighbors, int[,,] visited)
+        {
+            // all neighbors
+            (int, int) topRightNeighborIndices = GetNeighborIndices(row, col, Side.TopRight);
+            (int, int) rightNeighborIndices = GetNeighborIndices(row, col, Side.Right);
+            (int, int) bottomRightNeighborIndices = GetNeighborIndices(row, col, Side.BottomRight);
+            (int, int) bottomLeftNeighborIndices = GetNeighborIndices(row, col, Side.BottomLeft);
+            (int, int) leftNeighborIndices = GetNeighborIndices(row, col, Side.Left);
+            (int, int) topLeftNeighborIndices = GetNeighborIndices(row, col, Side.TopLeft);
+
+            // check neighbors case-by-case
+            switch (side)
+            {
+                case Side.TopRight:
+                    VerifyRoadOnSide((row, col), Side.TopLeft, player, neighbors, visited);
+                    VerifyRoadOnSide((row, col), Side.Right, player, neighbors, visited);
+                    VerifyTilePair(topLeftNeighborIndices, topRightNeighborIndices, Side.Right, Side.Left, player, neighbors, visited);
+                    VerifyTilePair(topRightNeighborIndices, rightNeighborIndices, Side.BottomRight, Side.TopLeft, player, neighbors, visited);
+                    break;
+                case Side.Right:
+                    VerifyRoadOnSide((row, col), Side.TopRight, player, neighbors, visited);
+                    VerifyRoadOnSide((row, col), Side.BottomRight, player, neighbors, visited);
+                    VerifyTilePair(topRightNeighborIndices, rightNeighborIndices, Side.BottomRight, Side.TopLeft, player, neighbors, visited);
+                    VerifyTilePair(rightNeighborIndices, bottomRightNeighborIndices, Side.BottomLeft, Side.TopRight, player, neighbors, visited);
+                    break;
+                case Side.BottomRight:
+                    VerifyRoadOnSide((row, col), Side.Right, player, neighbors, visited);
+                    VerifyRoadOnSide((row, col), Side.BottomLeft, player, neighbors, visited);
+                    VerifyTilePair(rightNeighborIndices, bottomRightNeighborIndices, Side.BottomLeft, Side.TopRight, player, neighbors, visited);
+                    VerifyTilePair(bottomRightNeighborIndices, bottomLeftNeighborIndices, Side.Left, Side.Right, player, neighbors, visited);
+                    break;
+                case Side.BottomLeft:
+                    VerifyRoadOnSide((row, col), Side.BottomRight, player, neighbors, visited);
+                    VerifyRoadOnSide((row, col), Side.Left, player, neighbors, visited);
+                    VerifyTilePair(bottomRightNeighborIndices, bottomLeftNeighborIndices, Side.Left, Side.Right, player, neighbors, visited);
+                    VerifyTilePair(bottomLeftNeighborIndices, leftNeighborIndices, Side.TopLeft, Side.BottomRight, player, neighbors, visited);
+                    break;
+                case Side.Left:
+                    VerifyRoadOnSide((row, col), Side.BottomLeft, player, neighbors, visited);
+                    VerifyRoadOnSide((row, col), Side.TopLeft, player, neighbors, visited);
+                    VerifyTilePair(bottomLeftNeighborIndices, leftNeighborIndices, Side.TopLeft, Side.BottomRight, player, neighbors, visited);
+                    VerifyTilePair(leftNeighborIndices, topLeftNeighborIndices, Side.TopRight, Side.BottomLeft, player, neighbors, visited);
+                    break;
+                case Side.TopLeft:
+                    VerifyRoadOnSide((row, col), Side.Left, player, neighbors, visited);
+                    VerifyRoadOnSide((row, col), Side.TopRight, player, neighbors, visited);
+                    VerifyTilePair(leftNeighborIndices, topLeftNeighborIndices, Side.TopRight, Side.BottomLeft, player, neighbors, visited);
+                    VerifyTilePair(topLeftNeighborIndices, topRightNeighborIndices, Side.Right, Side.Left, player, neighbors, visited);
+                    break;
+            }
+        }
+        private void UpdateLongestRoad(int row, int col, Side side)
         {
             // array of visited roads
             int[,,] visitedSides = new int[_tiles.GetLength(0), _tiles.GetLength(1), Enum.GetNames(typeof(Side)).Length];
 
             // current tile/side we're on
-            Tile currentTile = _game.TileAt(row, col);
+            (int, int) currentTile = (row, col);
             Side currentSide = side;
 
             // add current tile/side combo to dictionary
@@ -799,251 +876,6 @@
 
             }
         }
-
-        // update valid visitable neighbors of a side
-        public void UpdateVisitableNeighbors(int row, int col, Side side, Player player, List<(Tile, Side)> neighbors, Dictionary<Tile, Side> visited)
-        {
-            // get tile
-            Tile tile = TileAt(row, col);
-
-            // all neighbors
-            Tile? topRightNeighbor = GetNeighbor(row, col, Side.TopRight);
-            Tile? rightNeighbor = GetNeighbor(row, col, Side.Right);
-            Tile? bottomRightNeighbor = GetNeighbor(row, col, Side.BottomRight);
-            Tile? bottomLeftNeighbor = GetNeighbor(row, col, Side.BottomLeft);
-            Tile? leftNeighbor = GetNeighbor(row, col, Side.Left);
-            Tile? topLeftNeighbor = GetNeighbor(row, col, Side.TopLeft);
-
-            // check neighbors case-by-case
-            Side sideLookup;
-            switch (side)
-            {
-                case Side.TopRight:
-                    // must check top-left, top-right, and right neighbor
-                    if (tile.RoadAt(Side.TopLeft) == Road.Road && tile.PlayerAtSide(Side.TopLeft) == player)
-                    {
-                        // only mark as candidate if it hasn't been visited before
-                        if (!visited.TryGetValue(tile, out sideLookup))
-                        {
-                            neighbors.Add((tile, Side.TopLeft));
-                        }
-                        else if (sideLookup != Side.TopLeft)
-                        {
-                            neighbors.Add((tile, Side.TopLeft));
-                        }
-                    }
-
-                    if (tile.RoadAt(Side.Right) == Road.Road && tile.PlayerAtSide(Side.Right) == this)
-                    {
-                        if (!visited.TryGetValue(tile, out sideLookup))
-                        {
-                            neighbors.Add((tile, Side.Right));
-                        }
-                        else if (sideLookup != Side.Right)
-                        {
-                            neighbors.Add((tile, Side.Right));
-                        }
-                    }
-
-                    if (topLeftNeighbor != null)
-                    {
-                        if (topLeftNeighbor.RoadAt(Side.Right) == Road.Road && topLeftNeighbor.PlayerAtSide(Side.Right) == this)
-                        {
-                            if (!visited.TryGetValue(topLeftNeighbor, out sideLookup))
-                            {
-                                neighbors.Add((topLeftNeighbor, Side.Right));
-                            }
-                            else if (sideLookup != Side.Right)
-                            {
-                                neighbors.Add((topLeftNeighbor, Side.Right));
-                            }
-                        }
-                    }
-                    else if (topRightNeighbor != null)
-                    {
-                        if (topRightNeighbor.RoadAt(Side.Left) == Road.Road && topRightNeighbor.PlayerAtSide(Side.Left) == this)
-                        {
-                            if (!visited.TryGetValue(topRightNeighbor, out sideLookup))
-                            {
-                                neighbors.Add((topRightNeighbor, Side.Left));
-                            }
-                            else if (sideLookup != Side.Left)
-                            {
-                                neighbors.Add((topRightNeighbor, Side.Left));
-                            }
-                        }
-                    }
-
-                    if (topRightNeighbor != null)
-                    {
-                        if (topRightNeighbor.RoadAt(Side.BottomRight) == Road.Road && topRightNeighbor.PlayerAtSide(Side.BottomRight) == this)
-                        {
-                            if (!visited.TryGetValue(topRightNeighbor, out sideLookup))
-                            {
-                                neighbors.Add((topRightNeighbor, Side.BottomRight));
-                            }
-                            else if (sideLookup != Side.BottomRight)
-                            {
-                                neighbors.Add((topRightNeighbor, Side.BottomRight));
-                            }
-                        }
-                    }
-                    else if (rightNeighbor != null)
-                    {
-                        if (rightNeighbor.RoadAt(Side.TopLeft) == Road.Road && rightNeighbor.PlayerAtSide(Side.TopLeft) == this)
-                        {
-                            if (!visited.TryGetValue(rightNeighbor, out sideLookup))
-                            {
-                                neighbors.Add((rightNeighbor, Side.TopLeft));
-                            }
-                            else if (sideLookup != Side.TopLeft)
-                            {
-                                neighbors.Add((rightNeighbor, Side.TopLeft));
-                            }
-                        }
-                    }
-                    break;
-                case Side.Right:
-                    if (tile.RoadAt(Side.TopRight) == Road.Road && tile.PlayerAtSide(Side.TopRight) == this)
-                    {
-                        if (!visited.TryGetValue(tile, out sideLookup))
-                        {
-                            neighbors.Add((tile, Side.TopRight));
-                        }
-                        else if (sideLookup != Side.TopRight)
-                        {
-                            neighbors.Add((tile, Side.TopRight));
-                        }
-                    }
-
-                    if (tile.RoadAt(Side.BottomRight) == Road.Road && tile.PlayerAtSide(Side.BottomRight) == this)
-                    {
-                        if (!visited.TryGetValue(tile, out sideLookup))
-                        {
-                            neighbors.Add((tile, Side.BottomRight));
-                        }
-                        else if (sideLookup != Side.BottomRight)
-                        {
-                            neighbors.Add((tile, Side.BottomRight));
-                        }
-                    }
-
-                    if (topRightNeighbor != null)
-                    {
-                        if (topRightNeighbor.RoadAt(Side.BottomRight) == Road.Road && topRightNeighbor.PlayerAtSide(Side.BottomRight) == this)
-                        {
-                            if (!visited.TryGetValue(topRightNeighbor, out sideLookup))
-                            {
-                                neighbors.Add((topRightNeighbor, Side.BottomRight));
-                            }
-                            else if (sideLookup != Side.BottomRight)
-                            {
-                                neighbors.Add((topRightNeighbor, Side.BottomRight));
-                            }
-                        }
-                    }
-                    else if (rightNeighbor != null)
-                    {
-                        if (rightNeighbor.RoadAt(Side.TopLeft) == Road.Road && rightNeighbor.PlayerAtSide(Side.TopLeft) == this)
-                        {
-                            if (!visited.TryGetValue(rightNeighbor, out sideLookup))
-                            {
-                                neighbors.Add((rightNeighbor, Side.TopLeft));
-                            }
-                            else if (sideLookup != Side.TopLeft)
-                            {
-                                neighbors.Add((rightNeighbor, Side.TopLeft));
-                            }
-                        }
-                    }
-
-                    if (rightNeighbor != null)
-                    {
-                        if (rightNeighbor.RoadAt(Side.BottomLeft) == Road.Road && rightNeighbor.PlayerAtSide(Side.BottomLeft) == this)
-                        {
-                            if (!visited.TryGetValue(rightNeighbor, out sideLookup))
-                            {
-                                neighbors.Add((rightNeighbor, Side.BottomLeft));
-                            }
-                            else if (sideLookup != Side.BottomLeft)
-                            {
-                                neighbors.Add((rightNeighbor, Side.BottomLeft));
-                            }
-                        }
-                    }
-                    else if (bottomRightNeighbor != null)
-                    {
-                        if (bottomRightNeighbor.RoadAt(Side.TopRight) == Road.Road && bottomRightNeighbor.PlayerAtSide(Side.TopRight) == this)
-                        {
-                            if (!visited.TryGetValue(bottomRightNeighbor, out sideLookup))
-                            {
-                                neighbors.Add((bottomRightNeighbor, Side.TopRight));
-                            }
-                            else if (sideLookup != Side.TopRight)
-                            {
-                                neighbors.Add((bottomRightNeighbor, Side.TopRight));
-                            }
-                        }
-                    }
-                    break;
-                case Side.BottomRight:
-                    if (tile.RoadAt(Side.Right) == Road.Road && tile.PlayerAtSide(Side.Right) == this)
-                    {
-                        if (!visited.TryGetValue(tile, out sideLookup))
-                        {
-                            neighbors.Add((tile, Side.Right));
-                        }
-                        else if (sideLookup != Side.Right)
-                        {
-                            neighbors.Add((tile, Side.Right));
-                        }
-                    }
-
-                    if (tile.RoadAt(Side.BottomLeft) == Road.Road && tile.PlayerAtSide(Side.BottomLeft) == this)
-                    {
-                        if (!visited.TryGetValue(tile, out sideLookup))
-                        {
-                            neighbors.Add((tile, Side.BottomLeft));
-                        }
-                        else if (sideLookup != Side.BottomLeft)
-                        {
-                            neighbors.Add((tile, Side.BottomLeft));
-                        }
-                    }
-
-                    if (rightNeighbor != null)
-                    {
-                        if (rightNeighbor.RoadAt(Side.BottomLeft) == Road.Road && rightNeighbor.PlayerAtSide(Side.BottomLeft) == this)
-                        {
-                            if (!visited.TryGetValue(rightNeighbor, out sideLookup))
-                            {
-                                neighbors.Add((rightNeighbor, Side.BottomLeft));
-                            }
-                            else if (sideLookup != Side.BottomLeft)
-                            {
-                                neighbors.Add((rightNeighbor, Side.BottomLeft));
-                            }
-                        }
-                    }
-                    else if (bottomRightNeighbor != null)
-                    {
-                        if (bottomRightNeighbor.RoadAt(Side.TopRight) == Road.Road && bottomRightNeighbor.PlayerAtSide(Side.TopRight) == this)
-                        {
-                            if (!visited.TryGetValue(bottomRightNeighbor, out sideLookup))
-                            {
-                                neighbors.Add((bottomRightNeighbor, Side.TopRight));
-                            }
-                            else if (sideLookup != Side.TopRight)
-                            {
-                                neighbors.Add((bottomRightNeighbor, Side.TopRight));
-                            }
-                        }
-                    }
-
-
-                    break;
-            }
-        }*/
 
         public void LoadMap(string fileName)
         {

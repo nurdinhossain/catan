@@ -1638,5 +1638,115 @@ namespace CatanTest
             Assert.AreEqual(1, visited[2, 1, (int)Side.Right]);
             Assert.AreEqual(1, visited[1, 1, (int)Side.BottomRight]);
         }
+
+        [TestMethod]
+        public void TestUpdateVistableNeighborsOne()
+        {
+            Game game = new Game("standard_map.txt");
+            int[,,] visited = new int[5, 5, 6];
+            Player player = new Player(game, 0);
+            List<(int, int, Side)> neighbors = new List<(int, int, Side)>();
+
+            game.BuildRoad(player, 2, 2, Side.TopLeft);
+            game.BuildRoad(player, 2, 2, Side.Right);
+            game.BuildRoad(player, 1, 2, Side.Left);
+            game.BuildRoad(player, 1, 2, Side.BottomRight);
+            game.BuildRoad(player, 2, 2, Side.TopRight);
+            game.UpdateVisitableNeighbors(2, 2, Side.TopRight, player, neighbors, visited);
+
+            Assert.AreEqual(4, neighbors.Count);
+        }
+
+        [TestMethod]
+        public void TestUpdateVistableNeighborsTwo()
+        {
+            Game game = new Game("standard_map.txt");
+            int[,,] visited = new int[5, 5, 6];
+            Player player = new Player(game, 0);
+            List<(int, int, Side)> neighbors = new List<(int, int, Side)>();
+
+            game.BuildRoad(player, 2, 2, Side.Left);
+            game.BuildRoad(player, 2, 2, Side.TopRight);
+            game.BuildRoad(player, 1, 1, Side.BottomLeft);
+            game.BuildRoad(player, 1, 1, Side.Right);
+            game.BuildRoad(player, 2, 2, Side.TopLeft);
+            game.UpdateVisitableNeighbors(2, 2, Side.TopLeft, player, neighbors, visited);
+
+            Assert.AreEqual(4, neighbors.Count);
+        }
+
+        [TestMethod]
+        public void TestUpdateVistableNeighborsThree()
+        {
+            Game game = new Game("standard_map.txt");
+            int[,,] visited = new int[5, 5, 6];
+            Player player = new Player(game, 0);
+            List<(int, int, Side)> neighbors = new List<(int, int, Side)>();
+
+            game.BuildRoad(player, 2, 2, Side.Left);
+            game.BuildRoad(player, 2, 2, Side.BottomRight);
+            game.BuildRoad(player, 3, 1, Side.TopLeft);
+            game.BuildRoad(player, 3, 1, Side.Right);
+            game.BuildRoad(player, 2, 2, Side.BottomLeft);
+            game.UpdateVisitableNeighbors(2, 2, Side.BottomLeft, player, neighbors, visited);
+
+            Assert.AreEqual(4, neighbors.Count);
+        }
+
+        [TestMethod]
+        public void TestUpdateVistableNeighborsWrongPlayer()
+        {
+            Game game = new Game("standard_map.txt");
+            int[,,] visited = new int[5, 5, 6];
+            Player player = new Player(game, 0);
+            Player player2 = new Player(game, 1);
+            List<(int, int, Side)> neighbors = new List<(int, int, Side)>();
+
+            game.BuildRoad(player, 2, 2, Side.Left);
+            game.BuildRoad(player, 2, 2, Side.BottomRight);
+            game.BuildRoad(player, 3, 1, Side.TopLeft);
+            game.BuildRoad(player, 3, 1, Side.Right);
+            game.BuildRoad(player, 2, 2, Side.BottomLeft);
+            game.UpdateVisitableNeighbors(2, 2, Side.BottomLeft, player2, neighbors, visited);
+
+            Assert.AreEqual(0, neighbors.Count);
+        }
+
+        [TestMethod]
+        public void TestUpdateVistableNeighborsVisited()
+        {
+            Game game = new Game("standard_map.txt");
+            int[,,] visited = new int[5, 5, 6];
+            Player player = new Player(game, 0);
+            List<(int, int, Side)> neighbors = new List<(int, int, Side)>();
+
+            game.BuildRoad(player, 2, 2, Side.Left);
+            game.BuildRoad(player, 2, 2, Side.BottomRight);
+            game.BuildRoad(player, 3, 1, Side.TopLeft);
+            game.BuildRoad(player, 3, 1, Side.Right);
+            visited[2, 2, (int)Side.Left] = 1;
+            visited[3, 1, (int)Side.Right] = 1;
+            game.BuildRoad(player, 2, 2, Side.BottomLeft);
+            game.UpdateVisitableNeighbors(2, 2, Side.BottomLeft, player, neighbors, visited);
+
+            Assert.AreEqual(2, neighbors.Count);
+        }
+
+        [TestMethod]
+        public void TestUpdateVistableNeighborsEdge()
+        {
+            Game game = new Game("standard_map.txt");
+            int[,,] visited = new int[5, 5, 6];
+            Player player = new Player(game, 0);
+            List<(int, int, Side)> neighbors = new List<(int, int, Side)>();
+
+            game.BuildRoad(player, 1, 0, Side.Left);
+            game.BuildRoad(player, 1, 0, Side.TopRight);
+            game.BuildRoad(player, 0, 1, Side.Left);
+            game.BuildRoad(player, 1, 0, Side.TopLeft);
+            game.UpdateVisitableNeighbors(1, 0, Side.TopLeft, player, neighbors, visited);
+
+            Assert.AreEqual(3, neighbors.Count);
+        }
     }
 }
