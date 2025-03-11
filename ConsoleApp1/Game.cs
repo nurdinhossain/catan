@@ -823,6 +823,8 @@
             // return
             List<(int, int, Side)> neighbors = new List<(int, int, Side)>();
 
+            Tile tile = TileAt(row, col);
+
             // all neighbors
             (int, int) topRightNeighborIndices = GetNeighborIndices(row, col, Side.TopRight);
             (int, int) rightNeighborIndices = GetNeighborIndices(row, col, Side.Right);
@@ -835,40 +837,82 @@
             switch (side)
             {
                 case Side.TopRight:
-                    VerifyRoadOnSide((row, col), Side.TopLeft, player, neighbors, visited);
-                    VerifyRoadOnSide((row, col), Side.Right, player, neighbors, visited);
-                    VerifyTilePair(topLeftNeighborIndices, topRightNeighborIndices, Side.Right, Side.Left, player, neighbors, visited);
-                    VerifyTilePair(topRightNeighborIndices, rightNeighborIndices, Side.BottomRight, Side.TopLeft, player, neighbors, visited);
+                    if (tile.PlayerAtVertex(Vertex.Top) == null || tile.PlayerAtVertex(Vertex.Top) == player)
+                    {
+                        VerifyRoadOnSide((row, col), Side.TopLeft, player, neighbors, visited);
+                        VerifyTilePair(topLeftNeighborIndices, topRightNeighborIndices, Side.Right, Side.Left, player, neighbors, visited);
+                    }
+
+                    if (tile.PlayerAtVertex(Vertex.TopRight) == null || tile.PlayerAtVertex(Vertex.TopRight) == player)
+                    {
+                        VerifyRoadOnSide((row, col), Side.Right, player, neighbors, visited);
+                        VerifyTilePair(topRightNeighborIndices, rightNeighborIndices, Side.BottomRight, Side.TopLeft, player, neighbors, visited);
+                    }
                     break;
                 case Side.Right:
-                    VerifyRoadOnSide((row, col), Side.TopRight, player, neighbors, visited);
-                    VerifyRoadOnSide((row, col), Side.BottomRight, player, neighbors, visited);
-                    VerifyTilePair(topRightNeighborIndices, rightNeighborIndices, Side.BottomRight, Side.TopLeft, player, neighbors, visited);
-                    VerifyTilePair(rightNeighborIndices, bottomRightNeighborIndices, Side.BottomLeft, Side.TopRight, player, neighbors, visited);
+                    if (tile.PlayerAtVertex(Vertex.TopRight) == null || tile.PlayerAtVertex(Vertex.TopRight) == player)
+                    {
+                        VerifyRoadOnSide((row, col), Side.TopRight, player, neighbors, visited);
+                        VerifyTilePair(topRightNeighborIndices, rightNeighborIndices, Side.BottomRight, Side.TopLeft, player, neighbors, visited);
+                    }
+
+                    if (tile.PlayerAtVertex(Vertex.BottomRight) == null || tile.PlayerAtVertex(Vertex.BottomRight) == player)
+                    {
+                        VerifyRoadOnSide((row, col), Side.BottomRight, player, neighbors, visited);
+                        VerifyTilePair(rightNeighborIndices, bottomRightNeighborIndices, Side.BottomLeft, Side.TopRight, player, neighbors, visited);
+                    }
                     break;
                 case Side.BottomRight:
-                    VerifyRoadOnSide((row, col), Side.Right, player, neighbors, visited);
-                    VerifyRoadOnSide((row, col), Side.BottomLeft, player, neighbors, visited);
-                    VerifyTilePair(rightNeighborIndices, bottomRightNeighborIndices, Side.BottomLeft, Side.TopRight, player, neighbors, visited);
-                    VerifyTilePair(bottomRightNeighborIndices, bottomLeftNeighborIndices, Side.Left, Side.Right, player, neighbors, visited);
+                    if (tile.PlayerAtVertex(Vertex.BottomRight) == null || tile.PlayerAtVertex(Vertex.BottomRight) == player)
+                    {
+                        VerifyRoadOnSide((row, col), Side.Right, player, neighbors, visited);
+                        VerifyTilePair(rightNeighborIndices, bottomRightNeighborIndices, Side.BottomLeft, Side.TopRight, player, neighbors, visited);
+                    }
+
+                    if (tile.PlayerAtVertex(Vertex.Bottom) == null || tile.PlayerAtVertex(Vertex.Bottom) == player)
+                    {
+                        VerifyRoadOnSide((row, col), Side.BottomLeft, player, neighbors, visited);
+                        VerifyTilePair(bottomRightNeighborIndices, bottomLeftNeighborIndices, Side.Left, Side.Right, player, neighbors, visited);
+                    }
                     break;
                 case Side.BottomLeft:
-                    VerifyRoadOnSide((row, col), Side.BottomRight, player, neighbors, visited);
-                    VerifyRoadOnSide((row, col), Side.Left, player, neighbors, visited);
-                    VerifyTilePair(bottomRightNeighborIndices, bottomLeftNeighborIndices, Side.Left, Side.Right, player, neighbors, visited);
-                    VerifyTilePair(bottomLeftNeighborIndices, leftNeighborIndices, Side.TopLeft, Side.BottomRight, player, neighbors, visited);
+                    if (tile.PlayerAtVertex(Vertex.Bottom) == null || tile.PlayerAtVertex(Vertex.Bottom) == player)
+                    {
+                        VerifyRoadOnSide((row, col), Side.BottomRight, player, neighbors, visited);
+                        VerifyTilePair(bottomRightNeighborIndices, bottomLeftNeighborIndices, Side.Left, Side.Right, player, neighbors, visited);
+                    }
+
+                    if (tile.PlayerAtVertex(Vertex.BottomLeft) == null || tile.PlayerAtVertex(Vertex.BottomLeft) == player)
+                    {
+                        VerifyRoadOnSide((row, col), Side.Left, player, neighbors, visited);
+                        VerifyTilePair(bottomLeftNeighborIndices, leftNeighborIndices, Side.TopLeft, Side.BottomRight, player, neighbors, visited);
+                    }
                     break;
                 case Side.Left:
-                    VerifyRoadOnSide((row, col), Side.BottomLeft, player, neighbors, visited);
-                    VerifyRoadOnSide((row, col), Side.TopLeft, player, neighbors, visited);
-                    VerifyTilePair(bottomLeftNeighborIndices, leftNeighborIndices, Side.TopLeft, Side.BottomRight, player, neighbors, visited);
-                    VerifyTilePair(leftNeighborIndices, topLeftNeighborIndices, Side.TopRight, Side.BottomLeft, player, neighbors, visited);
+                    if (tile.PlayerAtVertex(Vertex.BottomLeft) == null || tile.PlayerAtVertex(Vertex.BottomLeft) == player)
+                    {
+                        VerifyRoadOnSide((row, col), Side.BottomLeft, player, neighbors, visited);
+                        VerifyTilePair(bottomLeftNeighborIndices, leftNeighborIndices, Side.TopLeft, Side.BottomRight, player, neighbors, visited);
+                    }
+
+                    if (tile.PlayerAtVertex(Vertex.TopLeft) == null || tile.PlayerAtVertex(Vertex.TopLeft) == player)
+                    {
+                        VerifyRoadOnSide((row, col), Side.TopLeft, player, neighbors, visited);
+                        VerifyTilePair(leftNeighborIndices, topLeftNeighborIndices, Side.TopRight, Side.BottomLeft, player, neighbors, visited);
+                    }
                     break;
                 case Side.TopLeft:
-                    VerifyRoadOnSide((row, col), Side.Left, player, neighbors, visited);
-                    VerifyRoadOnSide((row, col), Side.TopRight, player, neighbors, visited);
-                    VerifyTilePair(leftNeighborIndices, topLeftNeighborIndices, Side.TopRight, Side.BottomLeft, player, neighbors, visited);
-                    VerifyTilePair(topLeftNeighborIndices, topRightNeighborIndices, Side.Right, Side.Left, player, neighbors, visited);
+                    if (tile.PlayerAtVertex(Vertex.TopLeft) == null || tile.PlayerAtVertex(Vertex.TopLeft) == player)
+                    {
+                        VerifyRoadOnSide((row, col), Side.Left, player, neighbors, visited);
+                        VerifyTilePair(leftNeighborIndices, topLeftNeighborIndices, Side.TopRight, Side.BottomLeft, player, neighbors, visited);
+                    }
+
+                    if (tile.PlayerAtVertex(Vertex.Top) == null || tile.PlayerAtVertex(Vertex.Top) == player)
+                    {
+                        VerifyRoadOnSide((row, col), Side.TopRight, player, neighbors, visited);
+                        VerifyTilePair(topLeftNeighborIndices, topRightNeighborIndices, Side.Right, Side.Left, player, neighbors, visited);
+                    }
                     break;
             }
 

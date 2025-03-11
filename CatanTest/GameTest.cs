@@ -1744,6 +1744,24 @@ namespace CatanTest
         }
 
         [TestMethod]
+        public void TestUpdateVisitableNeighborsEnemyBuilding()
+        {
+            Game game = new Game("standard_map.txt");
+            int[,,] visited = new int[5, 5, 6];
+            Player player = new Player(game, 0);
+            Player player2 = new Player(game, 1);
+
+            game.BuildRoad(player, 1, 0, Side.Left);
+            game.BuildRoad(player, 1, 0, Side.TopRight);
+            game.BuildRoad(player, 0, 1, Side.Left);
+            game.BuildRoad(player, 1, 0, Side.TopLeft);
+            game.BuildBuilding(player2, Building.Settlement, 1, 0, Vertex.Top);
+            List<(int, int, Side)> neighbors = game.GetVisitableNeighbors(1, 0, Side.TopLeft, player, visited);
+
+            Assert.AreEqual(1, neighbors.Count);
+        }
+
+        [TestMethod]
         public void TestLongestPathOne()
         {
             Game game = new Game("standard_map.txt");
