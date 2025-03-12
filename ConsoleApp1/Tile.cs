@@ -92,6 +92,17 @@
             _roads = new Road[Enum.GetNames(typeof(Side)).Length];
         }
 
+        // basic setters and getters
+        public void SetResource(Resource r)
+        {
+            _resource = r;
+        }
+
+        public void SetNumber(int n)
+        {
+            _number = n;
+        }
+
         // array getters
         public Building BuildingAt(Vertex vertex)
         {

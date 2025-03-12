@@ -24,6 +24,9 @@ namespace Catan
         private readonly Bank _bank;
         private readonly DevDeck _devDeck;
 
+        // for shuffling board
+        private static Random _random; 
+
         public Game(string fileName) 
         {
             // load map
@@ -65,6 +68,8 @@ namespace Catan
 
             // if robber tile is still null, this game board is invalid
             if (_robberTile == null) throw new Exception("Game board does not contain desert tile.");
+
+            _random = new Random();
         }
 
         // getters/setters
@@ -168,6 +173,76 @@ namespace Catan
             (int, int) indices = GetNeighborIndices(row, col, side);
             if (indices.Item1 == -1) return null;
             return _tiles[indices.Item1, indices.Item2];
+        }
+
+        // methods for shuffling board
+        public bool SwapTileResources(int row1, int col1, int row2, int col2)
+        {
+            Tile? tileOne = _tiles[row1, col1];
+            Tile? tileTwo = _tiles[row2, col2];
+
+            if (tileOne == null || tileTwo == null) return false;
+
+            Resource temp = tileOne.Resource;
+            tileOne.SetResource(tileTwo.Resource);
+            tileTwo.SetResource(temp);
+
+            return true;
+        }
+
+        // used to enforce rule that 6 and 8 tiles can't touch
+        public bool CanHaveRedTileHere(int row, int col)
+        {
+            for (int i = 0; i < Enum.GetNames(typeof(Side)).Length; i++)
+            {
+                Side s = (Side)i;
+                Tile? neighbor = GetNeighbor(row, col, s);
+                if (neighbor != null)
+                {
+                    if (neighbor.Number == 6 || neighbor.Number == 8) return false;
+                }
+            }
+
+            return true; 
+        }
+
+        public bool SwapTileNumbers(int row1, int col1, int row2, int col2)
+        {
+            Tile? tileOne = _tiles[row1, col1];
+            Tile? tileTwo = _tiles[row2, col2];
+
+            if (tileOne == null || tileTwo == null) return false;
+
+            if (tileOne.Number == 6 || tileOne.Number == 8)
+            {
+                if (!CanHaveRedTileHere(row2, col2)) return false;
+            }
+
+            if (tileTwo.Number == 6 || tileTwo.Number == 8)
+            {
+                if (!CanHaveRedTileHere(row1, col1)) return false;
+            }
+
+            int temp = tileOne.Number;
+            tileOne.SetNumber(tileTwo.Number);
+            tileTwo.SetNumber(temp);
+
+            return true;
+        }
+
+        public void Shuffle(int iterations)
+        {
+            for (int i = 0; i < iterations; i++)
+            {
+                int randRowOne = _random.Next(_tiles.GetLength(0));
+                int randColOne = _random.Next(_tiles.GetLength(1));
+
+                int randRowTwo = _random.Next(_tiles.GetLength(0));
+                int randColTwo = _random.Next(_tiles.GetLength(1));
+
+                SwapTileResources(randRowOne, randColOne, randRowTwo, randColTwo);
+                SwapTileNumbers(randRowOne, randColOne, randRowTwo, randColTwo);
+            }
         }
 
         // add player to game (no player conditions/restrictions at the moment, will evaluate this later...)
