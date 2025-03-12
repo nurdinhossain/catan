@@ -1019,6 +1019,25 @@ namespace Catan
 
                                     // update longest road for player
                                     player.LongestRoad = Math.Max(player.LongestRoad, LongestPathFrom(i, j, (Side)k, player));
+
+                                    // formally update longest road player
+                                    if (_longestRoadPlayer == null)
+                                    {
+                                        if (player.LongestRoad >= 5)
+                                        {
+                                            _longestRoadPlayer = player;
+                                            player.VictoryPoints += 2;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (player.LongestRoad > _longestRoadPlayer.LongestRoad)
+                                        {
+                                            _longestRoadPlayer.VictoryPoints -= 2;
+                                            _longestRoadPlayer = player;
+                                            _longestRoadPlayer.VictoryPoints += 2;
+                                        }
+                                    }
                                 }
                             }
                         }
