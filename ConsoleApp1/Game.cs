@@ -990,6 +990,43 @@ namespace Catan
             return longestPath;
         }
 
+        public void UpdateLongestRoad()
+        {
+            // some extra memory to ensure we don't initiate a search from the same road twice
+            int[,,] visited = new int[_tiles.GetLength(0), _tiles.GetLength(1), Enum.GetNames(typeof(Side)).Length];
+
+            // iterate thru all tiles on the board
+            for (int i = 0; i < _tiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < _tiles.GetLength(1); j++)
+                {
+                    Tile? tile = _tiles[i, j];
+
+                    if (tile != null)
+                    {
+                        for (int k = 0; k < Enum.GetNames(typeof(Side)).Length; k++)
+                        {
+                            if (tile.RoadAt((Side)k) == Road.Road)
+                            {
+                                // only continue if this road has not been visited
+                                if (visited[i, j, k] == 0)
+                                {
+                                    // visit road pair
+                                    AddRoadPair(i, j, (Side)k, visited);
+
+                                    // get player who built this road
+                                    Player player = tile.PlayerAtSide((Side)k);
+
+                                    // update longest road for player
+                                    player.LongestRoad = Math.Max(player.LongestRoad, LongestPathFrom(i, j, (Side)k, player));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public void LoadMap(string fileName)
         {
             // split data into lines
