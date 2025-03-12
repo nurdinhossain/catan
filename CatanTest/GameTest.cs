@@ -1927,5 +1927,103 @@ namespace CatanTest
             Assert.AreEqual(player, game.GetPlayerWithLongestRoad());
             Assert.AreEqual(2, player.VictoryPoints);
         }
+
+        [TestMethod]
+        public void TestUpdateLongestRoadOvertake()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+            Player player2 = new Player(game, 1);
+
+            game.BuildRoad(player, 2, 2, Side.TopLeft);
+            game.BuildRoad(player, 2, 2, Side.TopRight);
+            game.BuildRoad(player, 2, 3, Side.TopLeft);
+            game.BuildRoad(player, 2, 3, Side.TopRight);
+
+            Assert.AreEqual(null, game.GetPlayerWithLongestRoad());
+
+            game.BuildRoad(player, 2, 3, Side.Right);
+
+            Assert.AreEqual(player, game.GetPlayerWithLongestRoad());
+            Assert.AreEqual(2, player.VictoryPoints);
+
+            game.BuildRoad(player2, 0, 1, Side.TopLeft);
+            game.BuildRoad(player2, 0, 1, Side.TopRight);
+            game.BuildRoad(player2, 0, 1, Side.Right);
+            game.BuildRoad(player2, 0, 2, Side.BottomLeft);
+            game.BuildRoad(player2, 0, 2, Side.BottomRight);
+            game.BuildRoad(player2, 0, 2, Side.Right);
+
+            Assert.AreEqual(player2, game.GetPlayerWithLongestRoad());
+            Assert.AreEqual(2, player2.VictoryPoints);
+            Assert.AreEqual(0, player.VictoryPoints);
+        }
+
+        [TestMethod]
+        public void TestUpdateLongestRoadBreak()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+            Player player2 = new Player(game, 1);
+
+            game.BuildRoad(player, 2, 2, Side.TopLeft);
+            game.BuildRoad(player, 2, 2, Side.TopRight);
+            game.BuildRoad(player, 2, 3, Side.TopLeft);
+            game.BuildRoad(player, 2, 3, Side.TopRight);
+
+            Assert.AreEqual(null, game.GetPlayerWithLongestRoad());
+
+            game.BuildRoad(player, 2, 3, Side.Right);
+
+            Assert.AreEqual(player, game.GetPlayerWithLongestRoad());
+            Assert.AreEqual(2, player.VictoryPoints);
+
+            game.BuildRoad(player2, 0, 1, Side.TopLeft);
+            game.BuildRoad(player2, 0, 1, Side.TopRight);
+            game.BuildRoad(player2, 0, 1, Side.Right);
+            game.BuildRoad(player2, 0, 2, Side.BottomLeft);
+            game.BuildRoad(player2, 0, 2, Side.BottomRight);
+            game.BuildRoad(player2, 0, 2, Side.Right);
+
+            Assert.AreEqual(player2, game.GetPlayerWithLongestRoad());
+            Assert.AreEqual(2, player2.VictoryPoints);
+            Assert.AreEqual(0, player.VictoryPoints);
+
+            game.BuildBuilding(player, Building.Settlement, 0, 2, Vertex.BottomLeft);
+
+            Assert.AreEqual(player, game.GetPlayerWithLongestRoad());
+            Assert.AreEqual(2, player.VictoryPoints);
+            Assert.AreEqual(0, player2.VictoryPoints);
+        }
+
+        [TestMethod]
+        public void TestUpdateLongestRoadBreakNull()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+            Player player2 = new Player(game, 1);
+
+            game.BuildRoad(player, 2, 2, Side.TopLeft);
+            game.BuildRoad(player, 2, 2, Side.TopRight);
+            game.BuildRoad(player, 2, 3, Side.TopLeft);
+            game.BuildRoad(player, 2, 3, Side.TopRight);
+
+            game.BuildRoad(player2, 0, 1, Side.TopLeft);
+            game.BuildRoad(player2, 0, 1, Side.TopRight);
+            game.BuildRoad(player2, 0, 1, Side.Right);
+            game.BuildRoad(player2, 0, 2, Side.BottomLeft);
+            game.BuildRoad(player2, 0, 2, Side.BottomRight);
+            game.BuildRoad(player2, 0, 2, Side.Right);
+
+            Assert.AreEqual(player2, game.GetPlayerWithLongestRoad());
+            Assert.AreEqual(2, player2.VictoryPoints);
+            Assert.AreEqual(0, player.VictoryPoints);
+
+            game.BuildBuilding(player, Building.Settlement, 0, 2, Vertex.BottomLeft);
+
+            Assert.AreEqual(null, game.GetPlayerWithLongestRoad());
+            Assert.AreEqual(0, player.VictoryPoints);
+            Assert.AreEqual(0, player2.VictoryPoints);
+        }
     }
 }
