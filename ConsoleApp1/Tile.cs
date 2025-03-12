@@ -149,24 +149,5 @@
         {
             return roll == _number;
         }
-
-        // method for harvesting resources
-        public void Harvest(Bank bank)
-        {
-            for (int i = 0; i < _vertexPlayers.Length; i++)
-            {
-                // harvest 1 resource if settlement
-                if (_buildings[i] == Building.Settlement)
-                {
-                    bank.Withdraw(_vertexPlayers[i], _resource, 1);
-                }
-
-                // harvest 2 resources if city
-                else if (_buildings[i] == Building.City)
-                {
-                    bank.Withdraw(_vertexPlayers[i], _resource, 2);
-                }
-            }
-        }
     }
 }

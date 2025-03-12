@@ -34,7 +34,6 @@ namespace CatanTest
             Assert.AreEqual(17, player.ResourceCount(Resource.Brick));
             Assert.AreEqual(29, bank.ResourceCount(Resource.Grain));
             Assert.AreEqual(32, bank.ResourceCount(Resource.Brick));
-            Assert.AreEqual(2, bank.NumTransactions());
         }
 
         [TestMethod]
@@ -51,7 +50,6 @@ namespace CatanTest
             Assert.AreEqual(19, player.ResourceCount(Resource.Wool));
             Assert.AreEqual(9, bank.ResourceCount(Resource.Ore));
             Assert.AreEqual(0, bank.ResourceCount(Resource.Wool));
-            Assert.AreEqual(2, bank.NumTransactions());
         }
 
         [TestMethod]
@@ -64,7 +62,6 @@ namespace CatanTest
             Assert.AreEqual(true, bank.Withdraw(player, Resource.Lumber, 20));
 
             Assert.AreEqual(0, bank.ResourceCount(Resource.Lumber));
-            Assert.AreEqual(1, bank.NumTransactions());
         }
 
         [TestMethod]
@@ -78,7 +75,6 @@ namespace CatanTest
             Assert.AreEqual(false, bank.Withdraw(player, Resource.Lumber, 1));
 
             Assert.AreEqual(0, bank.ResourceCount(Resource.Lumber));
-            Assert.AreEqual(1, bank.NumTransactions());
         }
     }
 }

@@ -743,16 +743,69 @@ namespace Catan
             // otherwise, harvest resources
             else
             {
+                // collect harvestable tiles
+                List<Tile> harvestableTiles = new List<Tile>();
+
                 for (int i = 0; i < _tiles.GetLength(0); i++)
                 {
                     for (int j = 0; j < _tiles.GetLength(1); j++)
                     {
                         Tile? tile = _tiles[i, j];
 
-                        // if tile is not water and is harvestable given this roll, then harvest from it
+                        // if tile is not water and is harvestable given this roll, then add it to harvestable tiles
                         if (tile != null && tile.CanHarvest(roll))
                         {
-                            tile.Harvest(_bank);
+                            harvestableTiles.Add(tile);
+                        }
+                    }
+                }
+
+                // once we have tiles we can harvest from this round, get a dictionary representing how many of what resource each player should generate this round
+                Dictionary<Player, int[]> resourcesToharvest = new Dictionary<Player, int[]>();
+                int[] totalResourcesRequested = new int[Enum.GetNames(typeof(Resource)).Length];
+                List<Player>[] playersRequestingResource = new List<Player>[Enum.GetNames(typeof(Resource)).Length];
+                foreach (Player player in _players)
+                {
+                    resourcesToharvest.Add(player, new int[Enum.GetNames(typeof(Resource)).Length]);
+                }
+                for (int i = 0; i < playersRequestingResource.Length; i++)
+                {
+                    playersRequestingResource[i] = new List<Player>();
+                }
+
+                // populate dictionary
+                foreach (Tile tile in harvestableTiles)
+                {
+                    for (int i = 0; i < Enum.GetNames(typeof(Vertex)).Length; i++)
+                    {
+                        Vertex v = (Vertex)i;
+                        Player playerAtVertex = tile.PlayerAtVertex(v);
+                        int resourceToInt = (int)tile.Resource;
+
+                        if (tile.BuildingAt(v) == Building.Settlement)
+                        {
+                            resourcesToharvest[playerAtVertex][resourceToInt]++;
+                            totalResourcesRequested[resourceToInt]++;
+                            if (!playersRequestingResource[resourceToInt].Contains(playerAtVertex)) playersRequestingResource[resourceToInt].Add(playerAtVertex);
+                        }
+                        else if (tile.BuildingAt(v) == Building.City)
+                        {
+                            resourcesToharvest[playerAtVertex][resourceToInt] += 2;
+                            totalResourcesRequested[resourceToInt] += 2;
+                            if (!playersRequestingResource[resourceToInt].Contains(playerAtVertex)) playersRequestingResource[resourceToInt].Add(playerAtVertex);
+                        }
+                    }
+                }
+
+                // harvest
+                for (int i = (int)Resource.NoResource + 1; i < totalResourcesRequested.Length; i++)
+                {
+                    if (totalResourcesRequested[i] <= _bank.ResourceCount((Resource)i) || playersRequestingResource[i].Count == 1)
+                    {
+                        List<Player> playersForThisResource = playersRequestingResource[i];
+                        foreach (Player player in playersForThisResource)
+                        {
+                            _bank.Withdraw(player, (Resource)i, resourcesToharvest[player][i]);
                         }
                     }
                 }
