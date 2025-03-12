@@ -2025,5 +2025,60 @@ namespace CatanTest
             Assert.AreEqual(0, player.VictoryPoints);
             Assert.AreEqual(0, player2.VictoryPoints);
         }
+
+        [TestMethod]
+        public void TestSwapNull()
+        {
+            Game game = new Game("standard_map.txt");
+            Assert.IsFalse(game.SwapTileResources(0, 0, 0, 1));
+            Assert.IsFalse(game.SwapTileNumbers(0, 0, 0, 1));
+            Assert.AreEqual(null, game.TileAt(0, 0));
+            Assert.AreEqual(Resource.Ore, game.TileAt(0, 1).Resource);
+        }
+
+        [TestMethod]
+        public void TestSwapSuccess()
+        {
+            Game game = new Game("standard_map.txt");
+            Assert.IsTrue(game.SwapTileResources(0, 1, 0, 2));
+            Assert.IsTrue(game.SwapTileNumbers(0, 1, 0, 2));
+            Assert.AreEqual(Resource.Wool, game.TileAt(0, 1).Resource);
+            Assert.AreEqual(Resource.Ore, game.TileAt(0, 2).Resource);
+            Assert.AreEqual(2, game.TileAt(0, 1).Number);
+            Assert.AreEqual(10, game.TileAt(0, 2).Number);
+        }
+
+        [TestMethod]
+        public void TestSwapRedNumber()
+        {
+            Game game = new Game("standard_map.txt");
+
+            Assert.IsFalse(game.SwapTileNumbers(0, 1, 2, 4));
+            Assert.IsFalse(game.SwapTileNumbers(0, 2, 2, 4));
+            Assert.IsFalse(game.SwapTileNumbers(1, 0, 2, 4));
+            Assert.IsFalse(game.SwapTileNumbers(1, 2, 2, 4));
+            Assert.IsFalse(game.SwapTileNumbers(2, 1, 2, 4));
+            Assert.IsFalse(game.SwapTileNumbers(2, 2, 2, 4));
+        }
+
+        // no real way to test this, will just see what it looks like after shuffling
+        [TestMethod]
+        public void TestShuffleDisplay()
+        {
+            Game game = new Game("standard_map.txt");
+            game.Shuffle(10000);
+
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    Tile? tile = game.TileAt(i, j);
+                    if (tile == null) Console.Write("-\t");
+                    else Console.Write(tile.Resource + "" + tile.Number + "\t");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+        }
     }
 }
