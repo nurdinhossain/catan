@@ -1762,7 +1762,7 @@ namespace CatanTest
         }
 
         [TestMethod]
-        public void TestLongestPathOne()
+        public void TestLongestPathBasic()
         {
             Game game = new Game("standard_map.txt");
             Player player = new Player(game, 0);
@@ -1772,6 +1772,26 @@ namespace CatanTest
             game.BuildRoad(player, 2, 3, Side.TopLeft);
 
             Assert.AreEqual(3, game.LongestPathFrom(2, 2, Side.TopLeft, player));
+        }
+
+        [TestMethod]
+        public void TestLongestPathBranch()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+
+            game.BuildRoad(player, 2, 2, Side.TopLeft);
+            game.BuildRoad(player, 2, 2, Side.TopRight);
+            game.BuildRoad(player, 2, 2, Side.Right);
+            game.BuildRoad(player, 2, 3, Side.BottomLeft);
+            game.BuildRoad(player, 2, 3, Side.BottomRight);
+            game.BuildRoad(player, 2, 3, Side.TopLeft);
+            game.BuildRoad(player, 1, 1, Side.Right);
+            game.BuildRoad(player, 1, 2, Side.TopLeft);
+            game.BuildRoad(player, 0, 2, Side.Right);
+            game.BuildRoad(player, 0, 3, Side.TopLeft);
+
+            Assert.AreEqual(5, game.LongestPathFrom(2, 2, Side.TopLeft, player));
         }
     }
 }

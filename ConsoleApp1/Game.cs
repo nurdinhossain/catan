@@ -1,4 +1,6 @@
-﻿namespace Catan
+﻿using System.Drawing;
+
+namespace Catan
 {
     public class Game
     {
@@ -782,6 +784,34 @@
             }
         }
 
+        // TODO: can make optimization with this and other switch statements with basic arithmetic
+        public bool AreEquivalent(int row1, int col1, int row2, int col2, Side side1, Side side2)
+        {
+            if (row1 == row2 && col1 == col2 && side1 == side2) return true;
+
+            (int, int) neighbor = GetNeighborIndices(row1, col1, side1);
+
+            if (neighbor.Item1 != row2 || neighbor.Item2 != col2) return false;
+
+            switch (side1)
+            {
+                case Side.TopRight:
+                    return side2 == Side.BottomLeft;
+                case Side.Right:
+                    return side2 == Side.Left;
+                case Side.BottomRight:
+                    return side2 == Side.TopLeft;
+                case Side.BottomLeft:
+                    return side2 == Side.TopRight;
+                case Side.Left:
+                    return side2 == Side.Right;
+                case Side.TopLeft:
+                    return side2 == Side.BottomRight;
+            }
+
+            return false; 
+        }
+
         public void AddRoadPair(int row, int col, Side side, int[,,] visited)
         {
             UpdateRoadPair(row, col, side, visited, 1);
@@ -923,19 +953,37 @@
             // array of visited roads 
             int[,,] visitedSides = new int[_tiles.GetLength(0), _tiles.GetLength(1), Enum.GetNames(typeof(Side)).Length];
 
-            return 1 + LongestPathFrom(row, col, side, player, visitedSides);
+            return 1 + LongestPathFrom(row, col, side, player, visitedSides, new List<(int, int, Side)>());
         }
 
-        public int LongestPathFrom(int row, int col, Side side, Player player, int[,,] visited)
+        public int LongestPathFrom(int row, int col, Side side, Player player, int[,,] visited, List<(int, int, Side)> previousNeighbors)
         {
             // get visitable neighbors
-            List<(int, int, Side)> neighbors = GetVisitableNeighbors(row, col, side, player, visited);
+            List<(int, int, Side)> tempNeighbors = GetVisitableNeighbors(row, col, side, player, visited);
+
+            // remove any neighbors found in previous neighbors
+            List<(int, int, Side)> neighbors = new List<(int, int, Side)>();
+            foreach ((int r, int c, Side s) in tempNeighbors)
+            {
+                bool invalid = false;
+                foreach ((int pr, int pc, Side ps) in previousNeighbors)
+                {
+                    if (AreEquivalent(r, c, pr, pc, s, ps))
+                    {
+                        invalid = true;
+                        break;
+                    }
+                }
+
+                if (!invalid) neighbors.Add((r, c, s));
+            }
+
             int longestPath = 0;
 
             AddRoadPair(row, col, side, visited);
             foreach ((int curRow, int curCol, Side curSide) in neighbors)
             {
-                longestPath = Math.Max(longestPath, 1 + LongestPathFrom(curRow, curCol, curSide, player, visited));
+                longestPath = Math.Max(longestPath, 1 + LongestPathFrom(curRow, curCol, curSide, player, visited, neighbors));
             }
             UnAddRoadPair(row, col, side, visited);
 
