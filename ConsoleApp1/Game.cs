@@ -1004,6 +1004,12 @@ namespace Catan
             // some extra memory to ensure we don't initiate a search from the same road twice
             int[,,] visited = new int[_tiles.GetLength(0), _tiles.GetLength(1), Enum.GetNames(typeof(Side)).Length];
 
+            // reset longest road to 0 for all players
+            foreach (Player player in _players)
+            {
+                player.LongestRoad = 0;
+            }
+
             // iterate thru all tiles on the board
             for (int i = 0; i < _tiles.GetLength(0); i++)
             {
@@ -1051,6 +1057,16 @@ namespace Catan
                             }
                         }
                     }
+                }
+            }
+
+            // check if longest road player has road length >= 5. If not, set longest player back to null 
+            if (_longestRoadPlayer != null)
+            {
+                if (_longestRoadPlayer.LongestRoad < 5)
+                {
+                    _longestRoadPlayer.VictoryPoints -= 2;
+                    _longestRoadPlayer = null; 
                 }
             }
         }

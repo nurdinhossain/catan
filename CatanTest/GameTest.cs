@@ -1908,5 +1908,24 @@ namespace CatanTest
 
             Console.WriteLine(game.LongestPathFrom(1, 0, Side.TopLeft, player));
         }
+
+        [TestMethod]
+        public void TestUpdateLongestRoadFiveRoads()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+
+            game.BuildRoad(player, 2, 2, Side.TopLeft);
+            game.BuildRoad(player, 2, 2, Side.TopRight);
+            game.BuildRoad(player, 2, 3, Side.TopLeft);
+            game.BuildRoad(player, 2, 3, Side.TopRight);
+
+            Assert.AreEqual(null, game.GetPlayerWithLongestRoad());
+
+            game.BuildRoad(player, 2, 3, Side.Right);
+
+            Assert.AreEqual(player, game.GetPlayerWithLongestRoad());
+            Assert.AreEqual(2, player.VictoryPoints);
+        }
     }
 }
