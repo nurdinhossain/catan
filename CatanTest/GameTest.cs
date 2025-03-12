@@ -2080,5 +2080,81 @@ namespace CatanTest
             }
             Console.WriteLine();
         }
+
+        [TestMethod]
+        public void BankNoResourceOnePlayer()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+
+            game.BuildBuilding(player, Building.Settlement, 0, 1, Vertex.Top);
+            game.BuildBuilding(player, Building.City, 0, 1, Vertex.BottomRight);
+
+            game.GetBank().Withdraw(player, Resource.Ore, 17);
+            game.RespondToRoll(10);
+
+            Assert.AreEqual(19, player.ResourceCount(Resource.Ore));
+            Assert.AreEqual(0, game.GetBank().ResourceCount(Resource.Ore));
+        }
+
+        [TestMethod]
+        public void BankNoResourceTwoPlayers()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+            Player player2 = new Player(game, 1);
+
+            game.BuildBuilding(player, Building.Settlement, 0, 1, Vertex.Top);
+            game.BuildBuilding(player, Building.City, 0, 1, Vertex.BottomRight);
+            game.BuildBuilding(player2, Building.Settlement, 0, 1, Vertex.BottomLeft);
+
+            game.GetBank().Withdraw(player, Resource.Ore, 17);
+            game.RespondToRoll(10);
+
+            Assert.AreEqual(17, player.ResourceCount(Resource.Ore));
+            Assert.AreEqual(2, game.GetBank().ResourceCount(Resource.Ore));
+        }
+
+        [TestMethod]
+        public void HarvestSuccessMultipleTiles()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+            Player player2 = new Player(game, 1);
+
+            game.SwapTileNumbers(1, 0, 0, 3);
+            game.TileAt(2, 1).SetNumber(9);
+            game.BuildBuilding(player, Building.Settlement, 1, 0, Vertex.Top);
+            game.BuildBuilding(player, Building.City, 1, 0, Vertex.BottomRight);
+            game.BuildBuilding(player2, Building.Settlement, 2, 0, Vertex.TopLeft);
+
+            game.RespondToRoll(9);
+
+            Assert.AreEqual(3, player.ResourceCount(Resource.Grain));
+            Assert.AreEqual(2, player.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(1, player2.ResourceCount(Resource.Grain));
+        }
+
+        [TestMethod]
+        public void HarvestFailMultipleTiles()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+            Player player2 = new Player(game, 1);
+
+            game.GetBank().Withdraw(player, Resource.Grain, 17);
+
+            game.SwapTileNumbers(1, 0, 0, 3);
+            game.TileAt(2, 1).SetNumber(9);
+            game.BuildBuilding(player, Building.Settlement, 1, 0, Vertex.Top);
+            game.BuildBuilding(player, Building.City, 1, 0, Vertex.BottomRight);
+            game.BuildBuilding(player2, Building.Settlement, 2, 0, Vertex.TopLeft);
+
+            game.RespondToRoll(9);
+
+            Assert.AreEqual(17, player.ResourceCount(Resource.Grain));
+            Assert.AreEqual(2, player.ResourceCount(Resource.Lumber));
+            Assert.AreEqual(0, player2.ResourceCount(Resource.Grain));
+        }
     }
 }
