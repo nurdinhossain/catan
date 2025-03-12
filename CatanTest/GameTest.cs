@@ -1793,5 +1793,32 @@ namespace CatanTest
 
             Assert.AreEqual(5, game.LongestPathFrom(2, 2, Side.TopLeft, player));
         }
+
+        [TestMethod]
+        public void TestLongestPathBranchBothSides()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+
+            game.BuildRoad(player, 2, 2, Side.TopLeft);
+            game.BuildRoad(player, 2, 2, Side.TopRight);
+            game.BuildRoad(player, 2, 2, Side.Right);
+            game.BuildRoad(player, 2, 3, Side.BottomLeft);
+            game.BuildRoad(player, 2, 3, Side.BottomRight);
+            game.BuildRoad(player, 2, 3, Side.TopLeft);
+            game.BuildRoad(player, 1, 1, Side.Right);
+            game.BuildRoad(player, 1, 2, Side.TopLeft);
+            game.BuildRoad(player, 0, 2, Side.Right);
+            game.BuildRoad(player, 0, 3, Side.TopLeft);
+
+            game.BuildRoad(player, 2, 2, Side.Left);
+            game.BuildRoad(player, 2, 2, Side.BottomLeft);
+            game.BuildRoad(player, 3, 1, Side.Right);
+            game.BuildRoad(player, 3, 1, Side.BottomRight);
+            game.BuildRoad(player, 4, 1, Side.Right);
+
+            Assert.AreEqual(6, game.LongestPathFrom(2, 2, Side.TopLeft, player));
+            Assert.AreEqual(10, game.LongestPathFrom(4, 2, Side.Left, player));
+        }
     }
 }
