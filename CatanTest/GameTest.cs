@@ -1820,5 +1820,93 @@ namespace CatanTest
             Assert.AreEqual(6, game.LongestPathFrom(2, 2, Side.TopLeft, player));
             Assert.AreEqual(10, game.LongestPathFrom(4, 2, Side.Left, player));
         }
+
+        [TestMethod]
+        public void TestLongestPathBasicLoop()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+
+            game.BuildRoad(player, 2, 2, Side.TopLeft);
+            game.BuildRoad(player, 2, 2, Side.TopRight);
+            game.BuildRoad(player, 2, 2, Side.Right);
+            game.BuildRoad(player, 2, 2, Side.BottomRight);
+            game.BuildRoad(player, 2, 2, Side.BottomLeft);
+            game.BuildRoad(player, 2, 2, Side.Left);
+
+            Assert.AreEqual(6, game.LongestPathFrom(2, 2, Side.TopLeft, player));
+        }
+
+        [TestMethod]
+        public void TestLongestPathDoubleLoopOptimal()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+
+            game.BuildRoad(player, 0, 1, Side.TopLeft);
+            game.BuildRoad(player, 0, 1, Side.TopRight);
+            game.BuildRoad(player, 0, 1, Side.Right);
+            game.BuildRoad(player, 0, 1, Side.BottomRight);
+            game.BuildRoad(player, 0, 1, Side.BottomLeft);
+            game.BuildRoad(player, 0, 1, Side.Left);
+
+            game.BuildRoad(player, 1, 0, Side.TopLeft);
+            game.BuildRoad(player, 1, 0, Side.TopRight);
+            game.BuildRoad(player, 1, 0, Side.Right);
+            game.BuildRoad(player, 1, 0, Side.BottomRight);
+            game.BuildRoad(player, 1, 0, Side.BottomLeft);
+            game.BuildRoad(player, 1, 0, Side.Left);
+
+            Assert.AreEqual(11, game.LongestPathFrom(0, 1, Side.BottomLeft, player));
+        }
+
+        [TestMethod]
+        public void TestLongestPathDoubleLoopSubOptimal()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+
+            game.BuildRoad(player, 0, 1, Side.TopLeft);
+            game.BuildRoad(player, 0, 1, Side.TopRight);
+            game.BuildRoad(player, 0, 1, Side.Right);
+            game.BuildRoad(player, 0, 1, Side.BottomRight);
+            game.BuildRoad(player, 0, 1, Side.BottomLeft);
+            game.BuildRoad(player, 0, 1, Side.Left);
+
+            game.BuildRoad(player, 1, 0, Side.TopLeft);
+            game.BuildRoad(player, 1, 0, Side.TopRight);
+            game.BuildRoad(player, 1, 0, Side.Right);
+            game.BuildRoad(player, 1, 0, Side.BottomRight);
+            game.BuildRoad(player, 1, 0, Side.BottomLeft);
+            game.BuildRoad(player, 1, 0, Side.Left);
+
+            Assert.AreEqual(10, game.LongestPathFrom(0, 1, Side.Right, player));
+        }
+
+        // not really a test case for algorithm accuracy, but stress test for efficiency
+        [TestMethod]
+        public void LongestPathNoStackOverflow()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    Tile? tile = game.TileAt(i, j);
+                    if (tile != null)
+                    {
+                        for (int k = 0; k < 6; k++)
+                        {
+                            tile.SetPlayerAtSide((Side)k, player);
+                            tile.SetRoadAt((Side)k, Road.Road);
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine(game.LongestPathFrom(1, 0, Side.TopLeft, player));
+        }
     }
 }
