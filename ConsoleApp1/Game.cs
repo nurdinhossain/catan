@@ -634,6 +634,12 @@ namespace Catan
 
             // add port
             player.AddPort(tile.PortAt(vertex));
+
+            // if building is a settlement, it could threaten someone's longest road, so we update it here
+            if (building == Building.Settlement)
+            {
+                UpdateLongestRoad();
+            }
         }
 
         public void BuildRoad(Player player, int row, int col, Side side)
@@ -697,6 +703,9 @@ namespace Catan
                     }
                     break;
             }
+
+            // building a new road can change the longest road
+            UpdateLongestRoad();
         }
 
         // method for moving robber
