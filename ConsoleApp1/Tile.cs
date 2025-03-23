@@ -68,10 +68,10 @@
         private Building[] _buildings;
 
         // players controlling each building
-        private Player[] _vertexPlayers;
+        private Player?[] _vertexPlayers;
 
         // players controlling each road
-        private Player[] _sidePlayers; 
+        private Player?[] _sidePlayers; 
 
         // ports on vertices
         private Port[] _ports;

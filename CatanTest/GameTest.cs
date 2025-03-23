@@ -2156,5 +2156,30 @@ namespace CatanTest
             Assert.AreEqual(2, player.ResourceCount(Resource.Lumber));
             Assert.AreEqual(0, player2.ResourceCount(Resource.Grain));
         }
+
+        [TestMethod]
+        public void TestAddPlayer()
+        {
+            Game game = new Game("standard_map.txt");
+            Player p1 = new Player(game, 0);
+            Player p2 = new Player(game, 1);
+            Player p3 = new Player(game, 2);
+            Player p4 = new Player(game, 3);
+        }
+
+        [TestMethod]
+        public void TestShufflePlayers()
+        {
+            Game game = new Game("standard_map.txt");
+
+            Assert.IsFalse(game.ShufflePlayers());
+
+            Player p1 = new Player(game, 0);
+            Player p2 = new Player(game, 1);
+            Player p3 = new Player(game, 2);
+            Player p4 = new Player(game, 3);
+
+            Assert.IsTrue(game.ShufflePlayers());
+        }
     }
 }

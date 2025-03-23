@@ -5,7 +5,9 @@ namespace Catan
     public class Game
     {
         // constants
-        public const int MaxHandSize = 7; 
+        public const int MaxHandSize = 7;
+        public const int PlayerMin = 1; 
+        public const int PlayerCap = 4; 
 
         // array of Tiles present in game board
         private Tile?[,] _tiles;
@@ -25,7 +27,11 @@ namespace Catan
         private readonly DevDeck _devDeck;
 
         // for shuffling board
-        private static Random _random; 
+        private static Random _random;
+
+        // keep track of who's turn it is
+        private int _currentTurnIndex;
+        private bool _playersLocked; 
 
         public Game(string fileName) 
         {
@@ -70,6 +76,36 @@ namespace Catan
             if (_robberTile == null) throw new Exception("Game board does not contain desert tile.");
 
             _random = new Random();
+            _currentTurnIndex = 0;
+            _playersLocked = false;
+        }
+
+        // shuffle list of players once we have all of them
+        public bool ShufflePlayers()
+        {
+            if (_playersLocked) return false;
+
+            if (_players.Count < Game.PlayerMin) return false;
+
+            // shuffle
+            for (int i = _players.Count - 1; i >= 0; i--)
+            {
+                int roll = _random.Next(i + 1);
+                Player temp = _players[i];
+                _players[i] = _players[roll];
+                _players[roll] = temp;
+            }
+
+            // don't allow more players to be added to game
+            _playersLocked = true;
+
+            return true;
+        }
+
+        // get current player that should be playing
+        public Player GetTurn()
+        {
+            return _players[_currentTurnIndex];
         }
 
         // getters/setters
@@ -245,10 +281,14 @@ namespace Catan
             }
         }
 
-        // add player to game (no player conditions/restrictions at the moment, will evaluate this later...)
+        // add player to game
         public bool AddPlayer(Player player)
         {
+            if (_players.Count == PlayerCap) return false;
+
             if (_players.Contains(player)) return false;
+
+            if (_playersLocked) return false;
 
             _players.Add(player);
 
@@ -287,7 +327,7 @@ namespace Catan
         }
 
         // special methods for building 
-        private bool RoadsMeetAtVertex(Player player, int row, int col, Vertex vertex)
+        public bool RoadsMeetAtVertex(Player player, int row, int col, Vertex vertex)
         {
             // get tile (assumed not null)
             Tile? tile = _tiles[row, col];
@@ -374,7 +414,7 @@ namespace Catan
             return hasRoad;
         }
 
-        private bool BuildingProximityValid(int row, int col, Vertex vertex)
+        public bool BuildingProximityValid(int row, int col, Vertex vertex)
         {
             // get tile (assumed not null)
             Tile? tile = _tiles[row, col];

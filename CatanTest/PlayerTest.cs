@@ -1003,5 +1003,69 @@ namespace CatanTest
             Assert.AreEqual(20, game.GetBank().ResourceCount(Resource.Brick));
             Assert.AreEqual(22, game.GetBank().ResourceCount(Resource.Grain));
         }
+
+        [TestMethod]
+        public void TestPlaceFirstSettlement()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+
+            Assert.IsFalse(player.PlaceInitialBuilding(0, 0, Vertex.TopRight));
+            Assert.IsTrue(player.PlaceInitialBuilding(1, 0, Vertex.TopRight));
+            Assert.AreEqual(Building.Settlement, game.TileAt(1, 0).BuildingAt(Vertex.TopRight));
+            Assert.AreEqual(Building.Settlement, game.TileAt(1, 1).BuildingAt(Vertex.TopLeft));
+            Assert.AreEqual(Building.Settlement, game.TileAt(0, 1).BuildingAt(Vertex.Bottom));
+        }
+
+        [TestMethod]
+        public void TestPlaceFirstRoad()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+            Assert.IsTrue(player.PlaceInitialBuilding(1, 0, Vertex.TopRight));
+
+            Assert.IsFalse(player.PlaceInitialRoad(1, 0, Side.BottomRight));
+            Assert.IsFalse(player.PlaceInitialRoad(0, 2, Side.TopRight));
+            Assert.IsTrue(player.PlaceInitialRoad(1, 1, Side.TopLeft));
+            Assert.IsFalse(player.PlaceInitialRoad(1, 0, Side.TopRight));
+            Assert.IsFalse(player.PlaceInitialRoad(0, 1, Side.BottomLeft));
+            Assert.IsFalse(player.PlaceInitialRoad(1, 1, Side.Left));
+
+            Assert.AreEqual(Road.Road, game.TileAt(1, 1).RoadAt(Side.TopLeft));
+            Assert.AreEqual(Road.Road, game.TileAt(0, 1).RoadAt(Side.BottomRight));
+        }
+
+        [TestMethod]
+        public void TestPlaceSecondSettlement()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+            Assert.IsTrue(player.PlaceInitialBuilding(1, 0, Vertex.TopRight));
+            Assert.IsTrue(player.PlaceInitialRoad(1, 1, Side.TopLeft));
+
+            Assert.IsFalse(player.PlaceInitialBuilding(1, 0, Vertex.Top));
+            Assert.IsFalse(player.PlaceInitialBuilding(1, 1, Vertex.Top));
+            Assert.IsFalse(player.PlaceInitialBuilding(1, 0, Vertex.BottomRight));
+
+            Assert.IsTrue(player.PlaceInitialBuilding(2, 0, Vertex.TopRight));
+            Assert.AreEqual(2, player.ResourceCount(Resource.Grain));
+            Assert.AreEqual(1, player.ResourceCount(Resource.Lumber));
+        }
+
+        [TestMethod]
+        public void TestPlaceSecondRoad()
+        {
+            Game game = new Game("standard_map.txt");
+            Player player = new Player(game, 0);
+            Assert.IsTrue(player.PlaceInitialBuilding(1, 0, Vertex.TopRight));
+            Assert.IsTrue(player.PlaceInitialRoad(1, 1, Side.TopLeft));
+            Assert.IsTrue(player.PlaceInitialBuilding(2, 0, Vertex.TopRight));
+
+            Assert.IsFalse(player.PlaceInitialRoad(1, 0, Side.TopRight));
+            Assert.IsFalse(player.PlaceInitialRoad(1, 0, Side.Right));
+            Assert.IsFalse(player.PlaceInitialRoad(2, 2, Side.TopRight));
+
+            Assert.IsTrue(player.PlaceInitialRoad(2, 0, Side.Right));
+        }
     }
 }

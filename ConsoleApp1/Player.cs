@@ -34,6 +34,12 @@ namespace Catan
         private int _devRoadsAvailable = 0;
         private int _plentyResourcesAvailable = 0;
 
+        // initial placement
+        private (int row, int col, Vertex vertex) _firstSettlement;
+        private (int row, int col, Side side) _firstRoad; 
+        private (int row, int col, Vertex vertex) _secondSettlement;
+        private (int row, int col, Side side) _secondRoad;
+
         // unique identifier for each player
         public int ID { get; set; }
 
@@ -63,6 +69,12 @@ namespace Catan
             _devCards = new int[Enum.GetNames(typeof(DevelopmentCard)).Length];
             _devCardsTemp = new List<DevelopmentCard>();
             _ports = new bool[Enum.GetNames(typeof(Port)).Length];
+
+            // initial placement
+            _firstSettlement = (-1, -1, Vertex.Top);
+            _firstRoad = (-1, -1, Side.TopRight);
+            _secondSettlement = (-1, -1, Vertex.Top);
+            _secondRoad = (-1, -1, Side.TopRight);
 
             // default quantities for structures
             Settlements = 5;
@@ -676,6 +688,199 @@ namespace Catan
             }
 
             return true;
+        }
+
+        // methods for initial road/settlement placement
+        private void HarvestInitialResources()
+        {
+            Tile? topLeftNeighbor = _game.GetNeighbor(_secondSettlement.row, _secondSettlement.col, Side.TopLeft);
+            Tile? topRightNeighbor = _game.GetNeighbor(_secondSettlement.row, _secondSettlement.col, Side.TopRight);
+            Tile? rightNeighbor = _game.GetNeighbor(_secondSettlement.row, _secondSettlement.col, Side.Right);
+            Tile? bottomRightNeighbor = _game.GetNeighbor(_secondSettlement.row, _secondSettlement.col, Side.BottomRight);
+            Tile? bottomLeftNeighbor = _game.GetNeighbor(_secondSettlement.row, _secondSettlement.col, Side.BottomLeft);
+            Tile? leftNeighbor = _game.GetNeighbor(_secondSettlement.row, _secondSettlement.col, Side.Left);
+            Bank bank = _game.GetBank();
+
+            switch (_secondSettlement.vertex)
+            {
+                case Vertex.Top:
+                    if (topLeftNeighbor != null)
+                    {
+                        bank.Withdraw(this, topLeftNeighbor.Resource, 1);
+                    }
+
+                    if (topRightNeighbor != null)
+                    {
+                        bank.Withdraw(this, topRightNeighbor.Resource, 1);
+                    }
+                    break;
+                case Vertex.TopRight:
+                    if (topRightNeighbor != null)
+                    {
+                        bank.Withdraw(this, topRightNeighbor.Resource, 1);
+                    }
+                    if (rightNeighbor != null)
+                    {
+                        bank.Withdraw(this, rightNeighbor.Resource, 1);
+                    }
+                    break;
+                case Vertex.BottomRight:
+                    if (rightNeighbor != null)
+                    {
+                        bank.Withdraw(this, rightNeighbor.Resource, 1);
+                    }
+                    if (bottomRightNeighbor != null)
+                    {
+                        bank.Withdraw(this, bottomRightNeighbor.Resource, 1);
+                    }
+                    break;
+                case Vertex.Bottom:
+                    if (bottomRightNeighbor != null)
+                    {
+                        bank.Withdraw(this, bottomRightNeighbor.Resource, 1);
+                    }
+                    if (bottomLeftNeighbor != null)
+                    {
+                        bank.Withdraw(this, bottomLeftNeighbor.Resource, 1);
+                    }
+                    break;
+                case Vertex.BottomLeft:
+                    if (bottomLeftNeighbor != null)
+                    {
+                        bank.Withdraw(this, bottomLeftNeighbor.Resource, 1);
+                    }
+                    if (leftNeighbor != null)
+                    {
+                        bank.Withdraw(this, leftNeighbor.Resource, 1);
+                    }
+                    break;
+                case Vertex.TopLeft:
+                    if (leftNeighbor != null)
+                    {
+                        bank.Withdraw(this, leftNeighbor.Resource, 1);
+                    }
+                    if (topLeftNeighbor != null)
+                    {
+                        bank.Withdraw(this, topLeftNeighbor.Resource, 1);
+                    }
+                    break;
+            }
+
+            bank.Withdraw(this, _game.TileAt(_secondSettlement.row, _secondSettlement.col).Resource, 1);
+        }
+
+        private bool EdgeNextToCorrectSettlement(int row, int col, Side side)
+        {
+            // vaid scenarios: placing first road next to first settlement and second road next to second settlement
+            if (_firstRoad.row == -1)
+            {
+                return _game.CanBuildRoadAt(this, row, col, side);
+            }
+            else
+            {
+                // pseudo "place" road down
+                _game.TileAt(row, col).SetRoadAt(side, Road.Road);
+                _game.TileAt(row, col).SetPlayerAtSide(side, this);
+
+                // see if roads meet at second settlement vertex
+                bool valid = _game.RoadsMeetAtVertex(this, _secondSettlement.row, _secondSettlement.col, _secondSettlement.vertex);
+
+                // pseudo "remove" road
+                _game.TileAt(row, col).SetRoadAt(side, Road.NoRoad);
+                _game.TileAt(row, col).SetPlayerAtSide(side, null);
+
+                return valid; 
+            }
+        }
+
+        public bool PlaceInitialBuilding(int row, int col, Vertex vertex)
+        {
+            // cannot execute this method if second initial building has already been placed
+            if (_secondSettlement.row != -1) return false;
+
+            // cannot execute this method if first building has been placed but no road has been placed
+            if (_firstSettlement.row != -1 && _firstRoad.row == -1) return false;
+
+            // cannot execute this method if it is not our turn
+            if (_game.GetTurn() != this) return false;
+
+            // method fails if we attempt to place building on null tile
+            Tile? tile = _game.TileAt(row, col);
+            if (tile == null) return false;
+
+            // method fails if vertex already has building on it
+            if (tile.BuildingAt(vertex) != Building.NoBuilding) return false;
+
+            // method fails if vertex violates building -> building distance rule
+            if (!_game.BuildingProximityValid(row, col, vertex)) return false;
+
+            // build
+            Settlements--;
+            _game.BuildBuilding(this, Building.Settlement, row, col, vertex);
+            VictoryPoints++;
+
+            // if first building, then set _firstSettlement
+            if (_firstSettlement.row == -1)
+            {
+                _firstSettlement.row = row;
+                _firstSettlement.col = col;
+                _firstSettlement.vertex = vertex;
+            }
+
+            // if second settlement, then set _secondSettlement and harvest resources
+            else
+            {
+                _secondSettlement.row = row;
+                _secondSettlement.col = col;
+                _secondSettlement.vertex = vertex;
+                HarvestInitialResources();
+            }
+
+            return true; 
+        }
+
+        public bool PlaceInitialRoad(int row, int col, Side side)
+        {
+            // cannot execute this method if second road has been placed
+            if (_secondRoad.row != -1) return false;
+
+            // cannot execute this method if first road has been placed but no second settlement
+            if (_firstRoad.row != -1 && _secondSettlement.row == -1) return false;
+
+            // cannot execute this method if no settlement has been placed period
+            if (_firstSettlement.row == -1) return false;
+
+            // cannot execute this method if it is not our turn 
+            if (_game.GetTurn() != this) return false;
+
+            // method fails if we attempt to build road on null tile
+            Tile? tile = _game.TileAt(row, col);
+            if (tile == null) return false;
+
+            // method fails if road is not placed next to corresponding settlement
+            if (!EdgeNextToCorrectSettlement(row, col, side)) return false;
+
+            // build
+            Roads--;
+            _game.BuildRoad(this, row, col, side);
+
+            // if first road, then set _firstRoad
+            if (_firstRoad.row == -1)
+            {
+                _firstRoad.row = row;
+                _firstRoad.col = col;
+                _firstRoad.side = side;
+            }
+
+            // if second road, then set _secondRoad
+            else
+            {
+                _secondRoad.row = row;
+                _secondRoad.col = col;
+                _secondRoad.side = side;
+            }
+
+            return true; 
         }
     }
 }
