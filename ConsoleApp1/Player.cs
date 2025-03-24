@@ -150,11 +150,12 @@ namespace Catan
 
         public bool NormalActionsStalled()
         {
+            bool notTurn = _game.GetTurn() != this;
             bool diceNotRolled = !_diceRolled;
             bool mustDiscard = _game.PlayersMustDiscard();
             bool robberShenanigans = _robberActivated || _mustRobPlayer;
             bool devCardStall = _devRoadsAvailable > 0 || _plentyResourcesAvailable > 0 || _monopolyPlayed;
-            return diceNotRolled || mustDiscard || robberShenanigans || devCardStall;
+            return notTurn || diceNotRolled || mustDiscard || robberShenanigans || devCardStall;
         }
 
         // player interaction
@@ -346,6 +347,9 @@ namespace Catan
         // methods for playing dev cards
         public bool PlayDevCard(DevelopmentCard card)
         {
+            // if its not our turn, we can't play dev card
+            if (_game.GetTurn() != this) return false; 
+
             // if players need to discard, we cannot play dev card just yet
             if (_game.PlayersMustDiscard()) return false;
 
@@ -578,7 +582,10 @@ namespace Catan
             }
 
             // un-roll the dice
-            _diceRolled = false; 
+            _diceRolled = false;
+
+            // change turn within game
+            _game.ChangeTurn();
 
             return true;
         }
@@ -586,6 +593,9 @@ namespace Catan
         // roll dice
         public bool RollDice()
         {
+            // if its not our turn, we can't roll dice
+            if (_game.GetTurn() != this) return false;
+
             // if dice has already been rolled, we cannot roll it again
             if (_diceRolled) return false;
 

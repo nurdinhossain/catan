@@ -312,6 +312,12 @@ namespace Catan
             return false;
         }
 
+        // increment player turn 
+        public void ChangeTurn()
+        {
+            _currentTurnIndex = (_currentTurnIndex + 1) % _players.Count;
+        }
+
         // take a particular resource type away from every player and return the total resources collected
         public int CollectResourceFromAllPlayers(Resource resource)
         {
